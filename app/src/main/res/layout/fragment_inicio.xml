@@ -246,18 +246,32 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cards_resumo" />
 
-            <CalendarView
-                android:id="@+id/calendario"
+<!--            <CalendarView-->
+<!--                android:id="@+id/calendario"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="319dp"-->
+<!--                android:layout_marginTop="8dp"-->
+<!--                android:clickable="true"-->
+<!--                android:dateTextAppearance="@style/CalenderViewDateCustomText"-->
+<!--                android:focusable="true"-->
+<!--                android:theme="@style/CalenderViewCustom"-->
+<!--                android:weekDayTextAppearance="@style/CalenderViewDateCustomText"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintHorizontal_bias="0.5"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento" />-->
+
+            <com.kizitonwose.calendar.view.CalendarView
+                android:id="@+id/calendarView"
                 android:layout_width="match_parent"
-                android:layout_height="319dp"
-                android:layout_marginTop="15dp"
-                android:clickable="true"
-                android:dateTextAppearance="@style/CalenderViewDateCustomText"
-                android:focusable="true"
-                android:theme="@style/CalenderViewCustom"
-                android:weekDayTextAppearance="@style/CalenderViewDateCustomText"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="27dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="33dp"
+                app:cv_dayViewResource="@layout/day_view_layout"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento" />
 
