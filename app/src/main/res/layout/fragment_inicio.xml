@@ -246,20 +246,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cards_resumo" />
 
-<!--            <CalendarView-->
-<!--                android:id="@+id/calendario"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="319dp"-->
-<!--                android:layout_marginTop="8dp"-->
-<!--                android:clickable="true"-->
-<!--                android:dateTextAppearance="@style/CalenderViewDateCustomText"-->
-<!--                android:focusable="true"-->
-<!--                android:theme="@style/CalenderViewCustom"-->
-<!--                android:weekDayTextAppearance="@style/CalenderViewDateCustomText"-->
-<!--                app:layout_constraintEnd_toEndOf="parent"-->
-<!--                app:layout_constraintHorizontal_bias="0.5"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento" />-->
+            <include
+                android:id="@+id/titlesContainer"
+                layout="@layout/calendar_day_titles_container" />
 
             <com.kizitonwose.calendar.view.CalendarView
                 android:id="@+id/calendarView"
@@ -273,7 +262,8 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento" />
+                app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento"
+                />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
