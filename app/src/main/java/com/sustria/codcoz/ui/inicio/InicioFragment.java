@@ -1,12 +1,14 @@
 package com.sustria.codcoz.ui.inicio;
 
-
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -15,11 +17,24 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.kizitonwose.calendar.core.CalendarDay;
+import com.kizitonwose.calendar.view.CalendarView;
+import com.kizitonwose.calendar.view.MonthDayBinder;
+import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 
+import java.time.DayOfWeek;
+import java.time.YearMonth;
+import java.time.ZoneId;
+import java.time.temporal.WeekFields;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.time.LocalDate;
+
 
 public class InicioFragment extends Fragment {
 
@@ -149,5 +164,92 @@ public class InicioFragment extends Fragment {
         public String getData() {
             return data;
         }
+    }
+
+    // Calendário
+    public class DayViewContainer extends ViewContainer {
+        public final TextView textView;
+        public final View bolinha;
+        public CalendarDay dia;
+        public DayViewContainer(@NonNull View view) {
+            super(view);
+            textView = view.findViewById(R.id.calendarDayText);
+            bolinha = view.findViewById(R.id.calendarDayTask);
+
+            view.setOnClickListener(v -> {
+                if (dia != null) {
+
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Map<LocalDate, String> diaTarefa = new HashMap<>();
+        diaTarefa.put(LocalDate.of(2025, 9, 25), "Realizar auditoria");
+
+        CalendarView calendarView = binding.calendarView;
+
+        YearMonth currentMonth = YearMonth.now();
+        YearMonth startMonth = currentMonth.minusMonths(100);
+        YearMonth endMonth = currentMonth.plusMonths(100);
+        DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
+
+        calendarView.setDayBinder(new MonthDayBinder<DayViewContainer>() {
+            @NonNull
+            @Override
+            public DayViewContainer create(@NonNull View dayView) {
+                return new DayViewContainer(dayView);
+            }
+
+            @Override
+            public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay data) {
+                container.dia = data;
+
+                LocalDate date = LocalDate.of(
+                        data.getDate().getYear(),
+                        data.getDate().getMonth(),
+                        data.getDate().getDayOfMonth()
+                );
+                int dia = date.getDayOfMonth();
+
+                container.textView.setText(String.valueOf(dia));
+
+                container.bolinha.setVisibility(View.GONE);
+                container.textView.setBackground(null);
+
+                if (date.equals(LocalDate.now(ZoneId.systemDefault()))) {
+                    container.textView.setBackgroundResource(R.drawable.bolinha_normal);
+                }
+
+                if (diaTarefa.containsKey(date)) {
+                    container.bolinha.setVisibility(View.VISIBLE);
+                }
+
+                container.getView().setOnClickListener(v -> {
+                    LocalDate dataTarefa = container.dia.getDate();
+
+                    if (diaTarefa.containsKey(dataTarefa)) {
+                        String tarefa = diaTarefa.get(dataTarefa);
+
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(String.valueOf(dataTarefa))
+                                .setMessage(tarefa)
+                                .setPositiveButton("OK", null)
+                                .show();
+                    } else {
+                        new AlertDialog.Builder(requireContext())
+                                .setTitle(String.valueOf(dataTarefa))
+                                .setMessage("Nenhuma tarefa para este dia.")
+                                .setPositiveButton("OK", null)
+                                .show();
+                    }
+                });
+            }
+        });
+
+        calendarView.setup(startMonth, endMonth, firstDayOfWeek);
+        calendarView.scrollToMonth(currentMonth);
     }
 }
