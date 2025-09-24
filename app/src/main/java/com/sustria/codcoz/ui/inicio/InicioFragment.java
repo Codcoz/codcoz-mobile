@@ -1,10 +1,12 @@
 package com.sustria.codcoz.ui.inicio;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,15 +20,23 @@ import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
 import com.kizitonwose.calendar.core.CalendarDay;
+import com.kizitonwose.calendar.core.CalendarMonth;
+import com.kizitonwose.calendar.core.DayPosition;
+import com.kizitonwose.calendar.core.WeekDay;
 import com.kizitonwose.calendar.view.CalendarView;
 import com.kizitonwose.calendar.view.MonthDayBinder;
+import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 
+import org.w3c.dom.Text;
+
 import java.time.DayOfWeek;
 import java.time.YearMonth;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -175,12 +185,14 @@ public class InicioFragment extends Fragment {
             super(view);
             textView = view.findViewById(R.id.calendarDayText);
             bolinha = view.findViewById(R.id.calendarDayTask);
+        }
+    }
 
-            view.setOnClickListener(v -> {
-                if (dia != null) {
-
-                }
-            });
+    public class MonthViewContainer extends ViewContainer {
+        public final View view;
+        public MonthViewContainer(@NonNull View view) {
+            super(view);
+            this.view = view;
         }
     }
 
@@ -195,6 +207,29 @@ public class InicioFragment extends Fragment {
         YearMonth startMonth = currentMonth.minusMonths(100);
         YearMonth endMonth = currentMonth.plusMonths(100);
         DayOfWeek firstDayOfWeek = WeekFields.of(Locale.getDefault()).getFirstDayOfWeek();
+
+        TextView txtMonthYear = view.findViewById(R.id.mesTxt);
+        ImageButton btnAnterior = view.findViewById(R.id.btnPrevMonth);
+        ImageButton btnProximo = view.findViewById(R.id.btnNextMonth);
+
+        calendarView.setMonthScrollListener(calendarMonth -> {
+            YearMonth yearMonth = calendarMonth.getYearMonth();
+            String monthYear = yearMonth.getMonth()
+                    .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"))
+                    + " " + yearMonth.getYear();
+            txtMonthYear.setText(monthYear);
+            return null;
+        });
+
+        btnAnterior.setOnClickListener(v -> {
+            YearMonth prevMonth = calendarView.findFirstVisibleMonth().getYearMonth().minusMonths(1);
+            calendarView.smoothScrollToMonth(prevMonth);
+        });
+
+        btnProximo.setOnClickListener(v -> {
+            YearMonth nextMonth = calendarView.findFirstVisibleMonth().getYearMonth().plusMonths(1);
+            calendarView.smoothScrollToMonth(nextMonth);
+        });
 
         calendarView.setDayBinder(new MonthDayBinder<DayViewContainer>() {
             @NonNull
@@ -216,6 +251,13 @@ public class InicioFragment extends Fragment {
 
                 container.textView.setText(String.valueOf(dia));
 
+                container.textView.setText(String.valueOf(data.getDate().getDayOfMonth()));
+                if (data.getPosition() == DayPosition.MonthDate) {
+                    container.textView.setTextColor(Color.parseColor("#0F1829"));
+                } else {
+                    container.textView.setTextColor(Color.parseColor("#D4D4D4"));
+                }
+
                 container.bolinha.setVisibility(View.GONE);
                 container.textView.setBackground(null);
 
@@ -234,18 +276,40 @@ public class InicioFragment extends Fragment {
                         String tarefa = diaTarefa.get(dataTarefa);
 
                         new AlertDialog.Builder(requireContext())
-                                .setTitle(String.valueOf(dataTarefa))
+                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
                                 .setMessage(tarefa)
                                 .setPositiveButton("OK", null)
                                 .show();
                     } else {
                         new AlertDialog.Builder(requireContext())
-                                .setTitle(String.valueOf(dataTarefa))
+                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
                                 .setMessage("Nenhuma tarefa para este dia.")
                                 .setPositiveButton("OK", null)
                                 .show();
                     }
                 });
+            }
+        });
+
+        calendarView.setMonthHeaderBinder(new MonthHeaderFooterBinder<MonthViewContainer>() {
+            @NonNull
+            @Override
+            public MonthViewContainer create(@NonNull View view) {
+                return new MonthViewContainer(view);
+            }
+
+            @Override
+            public void bind(@NonNull MonthViewContainer container, CalendarMonth calendarMonth) {
+                ViewGroup titlesContainer = view.findViewById(R.id.titlesContainer);
+                String[] dias = {"DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"};
+
+                for (int i = 0; i < titlesContainer.getChildCount(); i++) {
+                    View child = titlesContainer.getChildAt(i);
+                    if (child instanceof TextView) {
+                        TextView texto = (TextView) child;
+                        texto.setText(dias[i]);
+                    }
+                }
             }
         });
 
