@@ -85,9 +85,10 @@ public class LoginActivity extends AppCompatActivity {
                     binding.tvEsqueceuSenha.setVisibility(View.VISIBLE);
                     binding.btnAvancar.setText(R.string.entrar);
                 } else {
-                    Toast.makeText(LoginActivity.this,
-                            "Erro ao verificar o e-mail: " + task.getException().getMessage(),
-                            Toast.LENGTH_LONG).show();
+                    // E-mail não existe, vai para cadastro
+                    Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
+                    intent.putExtra("email", email);
+                    startActivity(intent);
                 }
             } else {
                 Toast.makeText(LoginActivity.this,
@@ -136,7 +137,6 @@ public class LoginActivity extends AppCompatActivity {
                                             intent = new Intent(LoginActivity.this, MainActivity.class);
                                             Toast.makeText(LoginActivity.this,
                                                     "Login bem-sucedido!", Toast.LENGTH_SHORT).show();
-
                                             startActivity(intent);
                                             finish();
                                         }
