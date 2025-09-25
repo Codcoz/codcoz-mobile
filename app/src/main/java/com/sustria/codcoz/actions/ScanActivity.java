@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.material.snackbar.Snackbar;
 import com.sustria.codcoz.databinding.ActivityScanBinding;
 
 public class ScanActivity extends AppCompatActivity {
@@ -21,7 +20,6 @@ public class ScanActivity extends AppCompatActivity {
         setupHeader();
 
 //        Placeholder; integrar biblioteca de scanner posteriormente (ML Kit/ZXing)
-        Snackbar.make(binding.getRoot(), "Abrir câmera para escanear (a implementar)", Snackbar.LENGTH_LONG).show();
     }
 
     private void setupHeader() {

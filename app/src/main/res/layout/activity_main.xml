@@ -19,6 +19,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:navGraph="@navigation/mobile_navigation" />
 
+    <View
+        android:id="@+id/overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:clickable="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
@@ -37,30 +49,19 @@
         app:layout_constraintRight_toRightOf="parent"
         app:menu="@menu/bottom_nav_menu" />
 
-    <!-- popup overlay -->
-    <View
-        android:id="@+id/overlay"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#80000000"
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/popup_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/md_theme_onTertiary"
+        android:translationZ="48dp"
         android:visibility="gone"
+        app:cardElevation="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <androidx.cardview.widget.CardView
-        android:id="@+id/popup_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="16dp"
-        android:layout_marginBottom="80dp"
-        android:visibility="gone"
-        app:cardBackgroundColor="@android:color/white"
-        app:cardCornerRadius="16dp"
-        app:layout_constraintBottom_toTopOf="@id/nav_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:shapeAppearance="@style/CustomCardShape">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -68,14 +69,15 @@
             android:orientation="vertical"
             android:padding="5dp">
 
-            <!-- Abas Entrada / Baixa -->
+            <!-- Abas Entrada/Baixa -->
             <LinearLayout
                 android:id="@+id/tab_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="4dp">
 
                 <TextView
                     android:id="@+id/tab_entrada"
@@ -86,7 +88,7 @@
                     android:background="@drawable/bg_tab_selected"
                     android:gravity="center"
                     android:text="Entrada"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/md_theme_primary"
                     android:textStyle="bold" />
 
                 <TextView
@@ -98,7 +100,7 @@
                     android:background="@drawable/bg_tab_unselected"
                     android:gravity="center"
                     android:text="Baixa"
-                    android:textColor="@android:color/black"
+                    android:textColor="@color/md_theme_primary"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -107,7 +109,7 @@
                 android:layout_height="1dp"
                 android:background="#33FFFFFF" />
 
-            <!-- Conteúdo: Entrada -->
+            <!-- Entrada -->
             <LinearLayout
                 android:id="@+id/content_entrada"
                 android:layout_width="match_parent"
@@ -116,92 +118,9 @@
                 android:padding="16dp">
 
                 <LinearLayout
-                    android:id="@+id/option_entrada_xml"
+                    android:id="@+id/option_escanear_produto_entrada"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_marginEnd="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_summary_card"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_upload" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Entrada XML"
-                        android:textColor="@color/md_theme_onSurface"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Importar nota fiscal"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/option_entrada_manual"
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_summary_card"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:padding="16dp">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:src="@drawable/ic_entrada_manual" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Entrada manual"
-                        android:textColor="@color/md_theme_onSurface"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Cadastrar produtos manualmente"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
-                        android:textSize="12sp" />
-
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <!-- Conteúdo: Baixa -->
-            <LinearLayout
-                android:id="@+id/content_baixa"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="16dp"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/option_escanear_produto"
-                    android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_marginEnd="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_summary_card"
@@ -228,6 +147,92 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Escanear código de barras"
+                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/option_entrada_manual"
+                    android:layout_width="0dp"
+                    android:layout_height="125dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_summary_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_entrada_manual" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Entrada manual"
+                        android:textColor="@color/md_theme_onSurface"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Cadastrar produtos manualmente"
+                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Baixa -->
+            <LinearLayout
+                android:id="@+id/content_baixa"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <LinearLayout
+                    android:id="@+id/option_escanear_produto"
+                    android:layout_width="0dp"
+                    android:layout_height="125dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_summary_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@drawable/ic_barcode_scan" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Escanear produto"
+                        android:textColor="@color/md_theme_onSurface"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="Escanear código de barras"
                         android:textColor="@color/md_theme_onSurfaceVariant"
                         android:textSize="12sp" />
@@ -237,7 +242,7 @@
                 <LinearLayout
                     android:id="@+id/option_baixa_manual"
                     android:layout_width="0dp"
-                    android:layout_height="120dp"
+                    android:layout_height="125dp"
                     android:layout_marginStart="8dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_summary_card"
@@ -264,6 +269,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:gravity="center"
                         android:text="Digitar o código de barras"
                         android:textColor="@color/md_theme_onSurfaceVariant"
                         android:textSize="12sp" />
@@ -274,18 +280,17 @@
 
         </LinearLayout>
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
-    <!-- Botão -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_add"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
         app:backgroundTint="@color/md_theme_secondaryContainer"
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
         app:srcCompat="@drawable/ic_add"
         app:tint="@color/md_theme_background" />
 

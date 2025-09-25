@@ -22,7 +22,6 @@ import com.github.mikephil.charting.data.PieEntry;
 import com.kizitonwose.calendar.core.CalendarDay;
 import com.kizitonwose.calendar.core.CalendarMonth;
 import com.kizitonwose.calendar.core.DayPosition;
-import com.kizitonwose.calendar.core.WeekDay;
 import com.kizitonwose.calendar.view.CalendarView;
 import com.kizitonwose.calendar.view.MonthDayBinder;
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
@@ -30,9 +29,8 @@ import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 
-import org.w3c.dom.Text;
-
 import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -43,7 +41,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.time.LocalDate;
 
 
 public class InicioFragment extends Fragment {
@@ -57,7 +54,6 @@ public class InicioFragment extends Fragment {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Inicializar ViewModel
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
         // Observar dados do estoque
@@ -121,66 +117,12 @@ public class InicioFragment extends Fragment {
         }
     }
 
-    private void loadAtividadesRecentes() {
-//         Simular carregamento de atividades recentes
-
-//         carregar dinamicamente (só nao sei ainda)
-
-//         Exemplo de como adicionar atividades dinamicamente:
-        /*
-        Atividade atividade1 = new Atividade(
-            "Fulano de Tal",
-            "XML importado - 32 produtos",
-            "16:50",
-            "hoje"
-        );
-        */
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
-    }
-
-    //    Classe para representar uma atividade, ainda nao usado dinamicamente,
-//    futuramentevou ver como faz isso 🥲
-    public static class Atividade {
-        private String nome;
-        private String descricao;
-        private String hora;
-        private String data;
-
-        public Atividade(String nome, String descricao, String hora, String data) {
-            this.nome = nome;
-            this.descricao = descricao;
-            this.hora = hora;
-            this.data = data;
-        }
-
-        // Getters
-        public String getNome() {
-            return nome;
-        }
-
-        public String getDescricao() {
-            return descricao;
-        }
-
-        public String getHora() {
-            return hora;
-        }
-
-        public String getData() {
-            return data;
-        }
-    }
-
     // Calendário
     public class DayViewContainer extends ViewContainer {
         public final TextView textView;
         public final View bolinha;
         public CalendarDay dia;
+
         public DayViewContainer(@NonNull View view) {
             super(view);
             textView = view.findViewById(R.id.calendarDayText);
@@ -190,6 +132,7 @@ public class InicioFragment extends Fragment {
 
     public class MonthViewContainer extends ViewContainer {
         public final View view;
+
         public MonthViewContainer(@NonNull View view) {
             super(view);
             this.view = view;
@@ -315,5 +258,11 @@ public class InicioFragment extends Fragment {
 
         calendarView.setup(startMonth, endMonth, firstDayOfWeek);
         calendarView.scrollToMonth(currentMonth);
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
     }
 }

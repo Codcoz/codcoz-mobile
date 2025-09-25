@@ -12,5 +12,5 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_auditoria">Auditoria</string>
     <string name="title_historico">Histórico</string>
-
+    <string name="clear_filters"><u>Limpar filtros</u></string>
 </resources>

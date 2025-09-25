@@ -10,6 +10,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
+import com.sustria.codcoz.actions.BaixaManualActivity;
 import com.sustria.codcoz.actions.ScanActivity;
 import com.sustria.codcoz.databinding.ActivityMainBinding;
 
@@ -85,8 +86,14 @@ public class MainActivity extends AppCompatActivity {
         binding.tabBaixa.setOnClickListener(v -> selectTab(false));
 
         // Conteúdo - Entrada
+        binding.optionEscanearProdutoEntrada.setOnClickListener(v -> {
+            hidePopup();
+            startActivity(new Intent(this, ScanActivity.class));
+        });
+
         binding.optionEntradaManual.setOnClickListener(v -> {
             hidePopup();
+            startActivity(new Intent(this, BaixaManualActivity.class));
         });
 
         // Conteúdo - Baixa
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.optionBaixaManual.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, com.sustria.codcoz.actions.BaixaManualActivity.class));
+            startActivity(new Intent(this, BaixaManualActivity.class));
         });
 
         // Estado inicial

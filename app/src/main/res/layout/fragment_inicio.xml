@@ -125,7 +125,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
-                        android:text="78%"
+                        android:text=""
                         android:textColor="@color/md_theme_primaryContainer"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -145,7 +145,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_estoque_geral">
 
-                <!-- Card Ativos -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="100dp"
@@ -156,7 +155,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/ativos"
+                        android:id="@+id/prodEstoques"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
@@ -185,7 +184,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/estoquistas"
+                        android:id="@+id/baixoEstoque"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
@@ -213,7 +212,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/gestores"
+                        android:id="@+id/proximosValidade"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
@@ -251,12 +250,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="372dp"
+                android:background="@drawable/bg_summary_card"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:background="@drawable/bg_summary_card" >
+                app:layout_constraintTop_toTopOf="parent">
 
                 <LinearLayout
                     android:id="@+id/calendarHeader"
@@ -271,8 +270,8 @@
                         android:id="@+id/btnPrevMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/anterior"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/anterior" />
 
                     <TextView
                         android:id="@+id/mesTxt"
@@ -287,8 +286,8 @@
                         android:id="@+id/btnNextMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@drawable/proximo"
-                        android:background="?attr/selectableItemBackgroundBorderless" />
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/proximo" />
                 </LinearLayout>
 
                 <include
