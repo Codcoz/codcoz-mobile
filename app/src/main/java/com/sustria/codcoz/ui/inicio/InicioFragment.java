@@ -142,7 +142,7 @@ public class InicioFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         Map<LocalDate, String> diaTarefa = new HashMap<>();
-        diaTarefa.put(LocalDate.of(2025, 9, 25), "Realizar auditoria");
+        diaTarefa.put(LocalDate.of(2025, 9, 23), "Realizar auditoria");
 
         CalendarView calendarView = binding.calendarView;
 
