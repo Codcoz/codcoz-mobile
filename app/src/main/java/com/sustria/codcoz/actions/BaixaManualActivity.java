@@ -17,8 +17,8 @@ public class BaixaManualActivity extends AppCompatActivity {
         binding = ActivityBaixaManualBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.headerBaixaManual.headerFragmentTitle.setText("Realizar Nova Baixa");
-        binding.headerBaixaManual.headerFragmentIcon.setOnClickListener(v -> finish());
+        binding.headerBaixaManual.headerActivityBackTitle.setText("Realizar Nova Baixa");
+        binding.headerBaixaManual.headerActivityBackTitle.setOnClickListener(v -> finish());
 
         binding.btnAvancar.setOnClickListener(v -> {
             String codigo = binding.etCodigoProduto.getText() != null ? binding.etCodigoProduto.getText().toString().trim() : "";
