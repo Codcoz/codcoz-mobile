@@ -51,7 +51,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
                         android:text="Estoque Geral"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
 
                     <LinearLayout
@@ -66,7 +66,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunito_bold"
                             android:text="Status: "
-                            android:textColor="@color/md_theme_primaryContainer"
+                            android:textColor="@color/colorPrimary"
                             android:textSize="18sp" />
 
                         <TextView
@@ -75,7 +75,7 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/nunito_bold"
                             android:text="Ótimo!"
-                            android:textColor="@color/md_theme_onCorrect"
+                            android:textColor="@color/custom_green_success"
                             android:textSize="18sp" />
 
                     </LinearLayout>
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Dia anterior: "
-                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
 
                     <TextView
@@ -94,7 +94,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Percentual: 62%"
-                        android:textColor="@color/md_theme_primaryContainer"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -103,7 +103,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Status: bom"
-                        android:textColor="@color/md_theme_primaryContainer"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -126,7 +126,7 @@
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text=""
-                        android:textColor="@color/md_theme_primaryContainer"
+                        android:textColor="@color/colorPrimary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
 
@@ -160,7 +160,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
                         android:text="247"
-                        android:textColor="@color/md_theme_onPrimaryFixed"
+                        android:textColor="@color/colorOnPrimaryContainer"
                         android:textSize="20sp" />
 
                     <TextView
@@ -169,7 +169,7 @@
                         android:fontFamily="@font/nunito_regular"
                         android:gravity="center"
                         android:text="Produtos em estoque"
-                        android:textColor="@color/md_theme_onPrimaryContainer"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -189,7 +189,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
                         android:text="12"
-                        android:textColor="@color/md_theme_onPrimaryFixed"
+                        android:textColor="@color/colorOnPrimaryContainer"
                         android:textSize="20sp" />
 
                     <TextView
@@ -198,7 +198,7 @@
                         android:fontFamily="@font/nunito_regular"
                         android:gravity="center"
                         android:text="Produtos em baixo estoque"
-                        android:textColor="@color/md_theme_onPrimaryContainer"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -217,7 +217,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
                         android:text="10"
-                        android:textColor="@color/md_theme_onPrimaryFixed"
+                        android:textColor="@color/colorOnPrimaryContainer"
                         android:textSize="20sp" />
 
                     <TextView
@@ -226,7 +226,7 @@
                         android:fontFamily="@font/nunito_regular"
                         android:gravity="center"
                         android:text="Próximos à validade"
-                        android:textColor="@color/md_theme_onPrimaryContainer"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -239,7 +239,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:text="Planejamento Mensal"
-                android:textColor="@color/md_theme_primaryContainer"
                 android:textSize="21sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -279,8 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:gravity="center"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
+                        android:textSize="20sp" />
 
                     <ImageButton
                         android:id="@+id/btnNextMonth"

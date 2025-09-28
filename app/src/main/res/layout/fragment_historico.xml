@@ -67,8 +67,8 @@
                             android:hint="Buscar por nome..."
                             android:imeOptions="actionSearch"
                             android:inputType="text"
-                            android:textColor="@color/md_theme_onBackground"
-                            android:textColorHint="@color/md_theme_onPrimaryContainer"
+                            android:textColor="@color/colorOnSurfaceVariant"
+                            android:textColorHint="@color/colorPrimary"
                             android:textSize="14sp" />
 
                     </LinearLayout>

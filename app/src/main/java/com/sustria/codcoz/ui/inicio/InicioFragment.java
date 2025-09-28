@@ -65,8 +65,8 @@ public class InicioFragment extends Fragment {
             entries.add(new PieEntry(100f - percentual, ""));
             PieDataSet dataSet = new PieDataSet(entries, "");
             dataSet.setColors(
-                    ContextCompat.getColor(requireContext(), R.color.md_theme_onCorrect),
-                    ContextCompat.getColor(requireContext(), R.color.md_theme_onSurfaceVariant)
+                    ContextCompat.getColor(requireContext(), R.color.custom_green_success),
+                    ContextCompat.getColor(requireContext(), R.color.colorOnSurfaceVariant)
             );
             dataSet.setDrawValues(false);
             PieData data = new PieData(dataSet);

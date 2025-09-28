@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Arroz"
-                android:textColor="@color/md_theme_onBackground"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
             <LinearLayout
@@ -34,9 +34,8 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:backgroundTint="@color/md_theme_onBlueOpacity"
                     android:text="Unidades: "
-                    android:textColor="@color/md_theme_onPrimaryContainer"
+                    android:textColor="@color/colorOnSurfaceVariant"
                     android:textSize="12sp" />
 
                 <TextView
@@ -45,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
                     android:text="10"
-                    android:textColor="@color/md_theme_onBackground"
+                    android:textColor="@color/colorPrimary"
                     android:textSize="12sp" />
             </LinearLayout>
 
@@ -54,7 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Código do produto:"
-                android:textColor="@color/md_theme_onPrimaryContainer"
+                android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
             <TextView
@@ -62,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="012345678910"
-                android:textColor="@color/md_theme_onBackground"
+                android:textColor="@color/colorPrimary"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -78,18 +77,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/md_theme_onBlueOpacity"
                 android:text="Data e hora:"
-                android:textColor="@color/md_theme_onPrimaryContainer"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/dataMovimentacao"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:backgroundTint="@color/md_theme_onBlueOpacity"
                 android:text="01 Janeiro | 12:00"
-                android:textColor="@color/md_theme_onBackground"
+                android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp" />
 
         </LinearLayout>

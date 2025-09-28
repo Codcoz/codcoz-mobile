@@ -25,7 +25,7 @@
             android:layout_weight="1"
             android:fontFamily="@font/nunito_bold"
             android:text="Filtrar registros no histórico"
-            android:textColor="@color/md_theme_onBackground"
+            android:textColor="@color/colorPrimary"
             android:textSize="18sp" />
     </LinearLayout>
 
@@ -35,7 +35,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/nunito_semibold"
         android:text="Ordenar por"
-        android:textColor="@color/md_theme_onBackground"
+        android:textColor="@color/colorPrimary"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -52,7 +52,7 @@
             android:background="@drawable/bg_tab_selected"
             android:gravity="center"
             android:text="Mais recentes"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -63,7 +63,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Mais antigos"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -74,7 +74,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/nunito_semibold"
         android:text="Tipo de registro"
-        android:textColor="@color/md_theme_onBackground"
+        android:textColor="@color/colorPrimary"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -91,7 +91,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Entrada"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -102,7 +102,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Baixa"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -113,7 +113,7 @@
         android:layout_marginTop="16dp"
         android:fontFamily="@font/nunito_semibold"
         android:text="Período"
-        android:textColor="@color/md_theme_onBackground"
+        android:textColor="@color/colorPrimary"
         android:textSize="14sp" />
 
     <LinearLayout
@@ -131,7 +131,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Hoje"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -144,7 +144,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Ontem"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -156,7 +156,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Últimos 7 dias"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -175,7 +175,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Últimos 15 dias"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -187,7 +187,7 @@
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Últimos 30 dias"
-            android:textColor="@color/md_theme_primary"
+            android:textColor="@color/colorPrimary"
             android:textSize="12sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -206,10 +206,11 @@
         android:layout_height="60dp"
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:backgroundTint="@color/md_theme_secondaryContainer"
+        android:backgroundTint="@color/colorSecondary"
         android:text="Aplicar Filtros"
         android:textAllCaps="false"
-        android:textColor="@color/md_theme_primary"
+        android:textColor="@color/colorPrimary"
+        android:textSize="20sp"
         android:textStyle="bold" />
 
     <TextView
@@ -220,7 +221,7 @@
         android:layout_marginTop="8dp"
         android:fontFamily="@font/nunito_semibold"
         android:text="@string/clear_filters"
-        android:textColor="@color/md_theme_primary" />
+        android:textColor="@color/colorPrimary" />
 
 </LinearLayout>
 

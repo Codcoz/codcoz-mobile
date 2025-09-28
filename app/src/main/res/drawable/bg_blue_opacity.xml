@@ -1,6 +1,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="@color/md_theme_onBlueOpacity" />
-    <stroke android:width="2dp" android:color="@color/md_theme_onBlue" />
+    <solid android:color="@color/custom_blue_link_opacity_44" />
+    <stroke android:width="2dp" android:color="@color/custom_blue_link" />
     <corners android:radius="20dp" />
 </shape>

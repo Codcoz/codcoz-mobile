@@ -20,7 +20,6 @@
             android:layout_height="30dp"
             android:layout_marginEnd="16dp"
             android:background="@drawable/ic_prato"
-            android:backgroundTint="@color/md_theme_onBlue"
             android:padding="100dp" />
 
         <!-- Informações do Colaborador -->
@@ -36,7 +35,7 @@
                 android:layout_marginTop="4dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Macarrão a bolonhesa"
-                android:textColor="@color/md_theme_onBackground"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16sp" />
 
             <TextView
@@ -44,14 +43,14 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_tag_status"
-                android:backgroundTint="@color/md_theme_onBlueOpacity"
+                android:backgroundTint="@color/custom_blue_link_opacity_44"
                 android:fontFamily="@font/nunito_semibold"
                 android:paddingStart="8dp"
                 android:paddingTop="4dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="4dp"
                 android:text="122 porções possíveis"
-                android:textColor="@color/md_theme_onBlue"
+                android:textColor="@color/custom_blue_link"
                 android:textSize="12sp" />
 
 

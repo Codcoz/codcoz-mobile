@@ -35,11 +35,11 @@
         android:id="@+id/nav_view"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/md_theme_onTertiary"
-        android:backgroundTint="@color/md_theme_onTertiary"
+        android:background="@color/colorBackground"
+        android:backgroundTint="@color/colorBackground"
         android:clickable="true"
         android:focusable="true"
-        app:itemActiveIndicatorStyle="@style/NoActiveIndicator"
+        app:itemActiveIndicatorStyle="@style/NoIndicator"
         app:itemIconSize="28dp"
         app:itemIconTint="@color/bottom_nav_selector"
         app:itemTextColor="@color/bottom_nav_selector"
@@ -54,7 +54,7 @@
         android:id="@+id/popup_card"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/md_theme_onTertiary"
+        android:backgroundTint="@color/colorBackground"
         android:translationZ="48dp"
         android:visibility="gone"
         app:cardElevation="32dp"
@@ -88,7 +88,7 @@
                     android:background="@drawable/bg_tab_selected"
                     android:gravity="center"
                     android:text="Entrada"
-                    android:textColor="@color/md_theme_primary"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold" />
 
                 <TextView
@@ -100,14 +100,9 @@
                     android:background="@drawable/bg_tab_unselected"
                     android:gravity="center"
                     android:text="Baixa"
-                    android:textColor="@color/md_theme_primary"
+                    android:textColor="@color/colorPrimary"
                     android:textStyle="bold" />
             </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#33FFFFFF" />
 
             <!-- Entrada -->
             <LinearLayout
@@ -141,7 +136,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Escanear produto"
-                        android:textColor="@color/md_theme_onSurface"
+                        android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
 
                     <TextView
@@ -149,7 +144,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Escanear código de barras"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -178,7 +173,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Entrada manual"
-                        android:textColor="@color/md_theme_onSurface"
+                        android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
 
                     <TextView
@@ -186,7 +181,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Cadastrar produtos manualmente"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -226,7 +221,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Escanear produto"
-                        android:textColor="@color/md_theme_onSurface"
+                        android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
 
                     <TextView
@@ -234,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Escanear código de barras"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -263,7 +258,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Baixa manual"
-                        android:textColor="@color/md_theme_onSurface"
+                        android:textColor="@color/colorPrimary"
                         android:textStyle="bold" />
 
                     <TextView
@@ -271,7 +266,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Digitar o código de barras"
-                        android:textColor="@color/md_theme_onSurfaceVariant"
+                        android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="12sp" />
 
                 </LinearLayout>
@@ -287,11 +282,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        app:backgroundTint="@color/md_theme_secondaryContainer"
+        app:backgroundTint="@color/colorSecondary"
         app:layout_constraintBottom_toTopOf="@id/nav_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:shapeAppearance="@style/ShapeAppearance.Material3.Corner.ExtraLarge"
         app:srcCompat="@drawable/ic_add"
-        app:tint="@color/md_theme_background" />
+        app:tint="@color/colorOnPrimary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

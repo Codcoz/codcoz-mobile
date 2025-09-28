@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.baixa.BaixaManual">
+    tools:context=".actions.BaixaManualActivity">
 
     <include
         android:id="@+id/header_baixa"
@@ -33,16 +33,16 @@
             android:layout_width="372dp"
             android:layout_height="60dp"
             android:layout_marginStart="2dp"
+            android:layout_marginTop="125dp"
             android:layout_marginEnd="1dp"
-            android:layout_marginBottom="288dp"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
             app:boxCornerRadiusTopStart="15dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.405"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
@@ -52,19 +52,19 @@
 
         <Button
             android:id="@+id/btnAvancarCodigoProdt"
-            android:layout_width="165dp"
+            android:layout_width="245dp"
             android:layout_height="60dp"
             android:layout_marginStart="123dp"
+            android:layout_marginTop="50dp"
             android:layout_marginEnd="123dp"
-            android:layout_marginBottom="206dp"
             android:backgroundTint="@color/bottom_nav_add_selector"
             android:fontFamily="@font/nunito_semibold"
             android:text="Avançar"
-            android:textColor="@color/ic_launcher_background"
+            android:textColor="@color/colorPrimary"
             android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
