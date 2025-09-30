@@ -3,23 +3,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@id/navigation_inicio">
 
     <fragment
-        android:id="@+id/navigation_home"
-        android:name="com.sustria.codcoz.ui.home.HomeFragment"
+        android:id="@+id/navigation_inicio"
+        android:name="com.sustria.codcoz.ui.inicio.InicioFragment"
         android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_inicio" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.sustria.codcoz.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_cardapio"
+        android:name="com.sustria.codcoz.ui.cardapio.CardapioFragment"
+        android:label="@string/title_cardapio"
+        tools:layout="@layout/fragment_cardapio" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.sustria.codcoz.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_historico"
+        android:name="com.sustria.codcoz.ui.historico.HistoricoFragment"
+        android:label="@string/title_historico"
+        tools:layout="@layout/fragment_historico" />
 </navigation>

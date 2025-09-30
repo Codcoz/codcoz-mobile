@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="CalenderViewCustom" parent="Theme.AppCompat">
+        <item name="colorControlActivated">@color/colorSecondary</item>
+        <item name="android:textColorPrimary">@color/colorPrimary</item>
+    </style>
+
+    <style name="CalenderViewWeekCustomText" parent="android:TextAppearance.DeviceDefault.Small">
+        <item name="android:textColor">#FFE08B</item>
+    </style>
+
+    <style name="CalenderViewDateCustomText" parent="android:TextAppearance.Holo.Small">
+        <item name="android:textColor">@color/colorPrimary</item>
+        <item name="android:weekNumberColor">@color/colorSecondary</item>
+    </style>
+
+    <style name="NoIndicator" parent="Widget.Material3.TabLayout">
+        <item name="tabIndicator">@null</item>
+        <item name="tabIndicatorHeight">0dp</item>
+    </style>
+
+    <style name="CustomCardShape">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSizeTopLeft">30dp</item>
+        <item name="cornerSizeTopRight">30dp</item>
+        <item name="cornerSizeBottomLeft">0dp</item>
+        <item name="cornerSizeBottomRight">0dp</item>
+    </style>
+</resources>

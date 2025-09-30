@@ -1,6 +1,16 @@
 <resources>
-    <string name="app_name">Codcoz</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
+    <string name="app_name">CodCoz</string>
+    <string name="entrar">Entrar</string>
+    <string name="cadastrar">Cadastrar</string>
+    <string name="title_activity_home">Início</string>
+    <string name="title_home">Início</string>
+    <string name="title_colaboradores">Colaboradores</string>
+    <string name="title_cardapio">Cardápio</string>
+    <string name="title_dados">Dados</string>
+    <string name="entrada">Entrada</string>
+    <string name="baixa">Baixa</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_auditoria">Auditoria</string>
+    <string name="title_historico">Histórico</string>
+    <string name="clear_filters"><u>Limpar filtros</u></string>
 </resources>
