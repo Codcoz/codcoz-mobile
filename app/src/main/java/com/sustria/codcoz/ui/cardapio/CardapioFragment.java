@@ -1,5 +1,6 @@
 package com.sustria.codcoz.ui.cardapio;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.sustria.codcoz.databinding.FragmentCardapioBinding;
+import com.sustria.codcoz.ui.cardapio.actions.CardapioSemanal;
 
 public class CardapioFragment extends Fragment {
 
@@ -25,6 +27,7 @@ public class CardapioFragment extends Fragment {
 
         // Configura o header do fragment
         setupHeader();
+        botao();
 
         return root;
     }
@@ -38,5 +41,12 @@ public class CardapioFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void botao() {
+        binding.cardsResumo.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), CardapioSemanal.class);
+            startActivity(intent);
+        });
     }
 }
