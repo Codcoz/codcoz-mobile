@@ -17,6 +17,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".actions.ScanActivity" />
+        <activity android:name=".actions.BaixaManualActivity" />
+        <activity android:name=".auth.SplashScreenActivity" />
+        <activity android:name=".auth.LoginActivity" />
+        <activity android:name=".auth.CadastroActivity" />
         <activity
             android:name=".actions.PerfilActivity"
             android:exported="false" />
