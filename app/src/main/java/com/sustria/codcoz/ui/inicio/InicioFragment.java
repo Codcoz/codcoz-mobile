@@ -1,6 +1,7 @@
 package com.sustria.codcoz.ui.inicio;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -27,6 +28,7 @@ import com.kizitonwose.calendar.view.MonthDayBinder;
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.actions.PerfilActivity;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 
 import java.time.DayOfWeek;
@@ -85,6 +87,10 @@ public class InicioFragment extends Fragment {
             } else {
                 binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
             }
+        });
+
+        binding.headerHome.headerPerfil.setOnClickListener(v -> {
+            startActivity(new Intent(getContext(), PerfilActivity.class));
         });
 
         inicioViewModel.getEstoqueStatus().observe(getViewLifecycleOwner(), status -> {

@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
+
+
         setupNavigation();
         setupPopup();
 

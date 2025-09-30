@@ -11,10 +11,8 @@
     <color name="colorOnErrorContainer">#410002</color>
 
     <color name="colorBackground">#FFFFFF</color>
-    <color name="colorOnBackground">#191C1E</color>
     <color name="colorSurface">#F8F8F8</color>
-    <color name="colorOnSurface">#191C1E</color>
-    <color name="colorSurfaceVariant">#E9E9E9</color>
+    <color name="colorSurfaceVariant">#D1D1D1</color>
     <color name="colorOnSurfaceVariant">#999999</color>
 
     <color name="custom_blue_link">#0C8CE9</color>

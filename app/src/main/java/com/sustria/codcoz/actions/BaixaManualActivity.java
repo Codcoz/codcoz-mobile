@@ -17,8 +17,7 @@ public class BaixaManualActivity extends AppCompatActivity {
         binding = ActivityBaixaManualBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        binding.headerBaixaManual.headerActivityBackTitle.setText("Realizar Nova Baixa");
-        binding.headerBaixaManual.headerActivityBackTitle.setOnClickListener(v -> finish());
+        setupHeader();
 
         binding.btnAvancar.setOnClickListener(v -> {
             String codigo = binding.etCodigoProduto.getText() != null ? binding.etCodigoProduto.getText().toString().trim() : "";
@@ -26,6 +25,11 @@ public class BaixaManualActivity extends AppCompatActivity {
                 binding.etCodigoProduto.setError("Informe o código do produto");
             }
         });
+    }
+
+    private void setupHeader() {
+        binding.headerBaixaManual.headerActivityBackTitle.setText("Realizar Nova Baixa");
+        binding.headerBaixaManual.headerActivityBackTitle.setOnClickListener(v -> finish());
     }
 }
 
