@@ -1,9 +1,7 @@
 package com.sustria.codcoz.ui.cardapio.actions;
 
 import android.os.Bundle;
-import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -16,8 +14,11 @@ import java.util.List;
 public class CardapioSemanal extends AppCompatActivity {
 
     ExpandableListView expandableListView;
-    ExpandableListAdapter adapter;
+    android.widget.ExpandableListAdapter adapter;
     List<String> diaSemana;
+    List<String> cafeDaManha;
+    List<String> almoco;
+    List<String> cafeDaTarde;
     HashMap<String, List<String>> itemRefeicao;
 
     @Override
@@ -28,6 +29,9 @@ public class CardapioSemanal extends AppCompatActivity {
 
         diaSemana = new ArrayList<>();
         itemRefeicao = new HashMap<>();
+        cafeDaManha = new ArrayList<>();
+        almoco = new ArrayList<>();
+        cafeDaTarde = new ArrayList<>();
 
         diaSemana.add("Segunda-feira");
         diaSemana.add("Terça-feira");
@@ -35,27 +39,45 @@ public class CardapioSemanal extends AppCompatActivity {
         diaSemana.add("Quinta-feira");
         diaSemana.add("Sexta-feira");
 
-        List<String> frutas = new ArrayList<>();
-        frutas.add("Maçã");
-        frutas.add("Banana");
-        frutas.add("Laranja");
+        cafeDaManha.add("Pão");
+        cafeDaManha.add("Suco");
+        cafeDaManha.add("Ovos mexidos");
 
-        List<String> legumes = new ArrayList<>();
-        legumes.add("Cenoura");
-        legumes.add("Batata");
-        legumes.add("Tomate");
+        almoco.add("Carne assada");
+        almoco.add("Arroz branco");
+        almoco.add("Farofa");
 
-        itemRefeicao.put(diaSemana.get(0), frutas);
-        itemRefeicao.put(diaSemana.get(1), legumes);
+        cafeDaTarde.add("Bolo");
+        cafeDaTarde.add("Suco");
+        cafeDaTarde.add("Pão");
 
-        adapter = new ExpandableListAdapterr(this, diaSemana, itemRefeicao);
+        StringBuilder cafeManha = new StringBuilder();
+        for (String i : cafeDaManha) {
+            cafeManha.append("\n- ").append(i);
+        }
+
+        StringBuilder cafeTarde = new StringBuilder();
+        for (String i : cafeDaTarde) {
+            cafeTarde.append("\n- ").append(i);
+        }
+
+        StringBuilder almocoTxt = new StringBuilder();
+        for (String i : almoco) {
+            almocoTxt.append("\n- ").append(i);
+        }
+
+        List<String> refeicao = new ArrayList<>();
+        refeicao.add("Café da manhã: " + cafeManha);
+        refeicao.add("Almoço: " + almocoTxt);
+        refeicao.add("Café da tarde: " + cafeTarde);
+
+        itemRefeicao.put(diaSemana.get(0), refeicao);
+        itemRefeicao.put(diaSemana.get(1), refeicao);
+        itemRefeicao.put(diaSemana.get(2), refeicao);
+        itemRefeicao.put(diaSemana.get(3), refeicao);
+        itemRefeicao.put(diaSemana.get(4), refeicao);
+
+        adapter = new ExpandableListAdapter(this, diaSemana, itemRefeicao);
         expandableListView.setAdapter(adapter);
-
-        // Clique no filho
-        expandableListView.setOnChildClickListener((parent, v, groupPosition, childPosition, id) -> {
-            String item = itemRefeicao.get(diaSemana.get(groupPosition)).get(childPosition);
-            Toast.makeText(this, "Selecionado: " + item, Toast.LENGTH_SHORT).show();
-            return true;
-        });
     }
 }
