@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/ic_launcher_background"
+    android:background="@color/colorPrimary"
     tools:context=".auth.CadastroActivity">
 
     <ImageView
@@ -36,10 +36,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="45dp"
             android:layout_marginBottom="45dp"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar Senha"
-            android:textColor="@color/md_theme_primaryContainer"
+            android:textColor="@color/colorPrimary"
             android:textSize="32sp" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -47,10 +48,10 @@
             android:layout_width="294dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            app:boxStrokeColor="@color/md_theme_primaryContainer"
-            app:hintTextColor="@color/md_theme_primaryContainer"
+            app:boxStrokeColor="@color/colorOnSurfaceVariant"
+            app:hintTextColor="@color/colorOnSurfaceVariant"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/md_theme_primaryContainer">
+            app:passwordToggleTint="@color/colorOnSurfaceVariant">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/novaSenha"
@@ -58,7 +59,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Nova senha"
                 android:inputType="textPassword"
-                android:textColor="@color/md_theme_primaryContainer" />
+                android:textColor="@color/colorPrimary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -67,10 +68,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
-            app:boxStrokeColor="@color/md_theme_primaryContainer"
-            app:hintTextColor="@color/md_theme_primaryContainer"
+            app:boxStrokeColor="@color/colorOnSurfaceVariant"
+            app:hintTextColor="@color/colorOnSurfaceVariant"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/md_theme_primaryContainer">
+            app:passwordToggleTint="@color/colorOnSurfaceVariant">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/editConfirmacaoSenha"
@@ -78,7 +79,7 @@
                 android:layout_height="wrap_content"
                 android:hint="Confirme sua senha"
                 android:inputType="textPassword"
-                android:textColor="@color/md_theme_primaryContainer" />
+                android:textColor="@color/colorPrimary" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
@@ -87,12 +88,12 @@
             android:layout_height="60dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="55dp"
-            android:backgroundTint="@color/md_theme_secondaryContainer"
+            android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar"
-            android:textColor="@color/md_theme_primaryContainer"
+            android:textColor="@color/colorPrimary"
             android:textSize="20sp"
-            app:cornerRadius="15dp" />
+            app:cornerRadius="30dp" />
 
     </LinearLayout>
 
