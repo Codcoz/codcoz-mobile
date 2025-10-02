@@ -1,11 +1,14 @@
 package com.sustria.codcoz.ui.cardapio.actions;
 
 import android.os.Bundle;
-import android.widget.ExpandableListView;
+import android.widget.ExpandableListAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.sustria.codcoz.R;
+import com.sustria.codcoz.databinding.ActivityCardapioSemanalBinding;
+import com.sustria.codcoz.models.DiaSemana;
+import com.sustria.codcoz.models.ItemRefeicao;
+import com.sustria.codcoz.models.MockDataProvider;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,71 +16,50 @@ import java.util.List;
 
 public class CardapioSemanal extends AppCompatActivity {
 
-    ExpandableListView expandableListView;
-    android.widget.ExpandableListAdapter adapter;
-    List<String> diaSemana;
-    List<String> cafeDaManha;
-    List<String> almoco;
-    List<String> cafeDaTarde;
-    HashMap<String, List<String>> itemRefeicao;
+    private ActivityCardapioSemanalBinding binding;
+    private ExpandableListAdapter adapter;
+    private List<String> diaSemana;
+    private HashMap<String, List<String>> itemRefeicao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_cardapio_semanal);
-        expandableListView = findViewById(R.id.expandableListView);
+
+        binding = ActivityCardapioSemanalBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        setupHeader();
+        setupExpandableListView();
+    }
+
+    private void setupHeader() {
+        binding.headerCardapioSemanal.headerActivityBackTitle.setText("Cardápio Semanal");
+        binding.headerCardapioSemanal.headerActivityBackArrow.setOnClickListener(v -> finish());
+    }
+
+    private void setupExpandableListView() {
+        List<DiaSemana> cardapioSemanal = MockDataProvider.getMockCardapioSemanal();
 
         diaSemana = new ArrayList<>();
         itemRefeicao = new HashMap<>();
-        cafeDaManha = new ArrayList<>();
-        almoco = new ArrayList<>();
-        cafeDaTarde = new ArrayList<>();
 
-        diaSemana.add("Segunda-feira");
-        diaSemana.add("Terça-feira");
-        diaSemana.add("Quarta-feira");
-        diaSemana.add("Quinta-feira");
-        diaSemana.add("Sexta-feira");
+        for (DiaSemana dia : cardapioSemanal) {
+            diaSemana.add(dia.getDia());
 
-        cafeDaManha.add("Pão");
-        cafeDaManha.add("Suco");
-        cafeDaManha.add("Ovos mexidos");
+            List<String> refeicoesTexto = new ArrayList<>();
+            for (ItemRefeicao refeicao : dia.getRefeicoes()) {
+                StringBuilder refeicaoTxt = new StringBuilder();
+                refeicaoTxt.append(refeicao.getTipo()).append(":");
+                for (String item : refeicao.getItens()) {
+                    refeicaoTxt.append("\n- ").append(item);
+                }
+                refeicoesTexto.add(refeicaoTxt.toString());
+            }
 
-        almoco.add("Carne assada");
-        almoco.add("Arroz branco");
-        almoco.add("Farofa");
-
-        cafeDaTarde.add("Bolo");
-        cafeDaTarde.add("Suco");
-        cafeDaTarde.add("Pão");
-
-        StringBuilder cafeManha = new StringBuilder();
-        for (String i : cafeDaManha) {
-            cafeManha.append("\n- ").append(i);
+            itemRefeicao.put(dia.getDia(), refeicoesTexto);
         }
 
-        StringBuilder cafeTarde = new StringBuilder();
-        for (String i : cafeDaTarde) {
-            cafeTarde.append("\n- ").append(i);
-        }
-
-        StringBuilder almocoTxt = new StringBuilder();
-        for (String i : almoco) {
-            almocoTxt.append("\n- ").append(i);
-        }
-
-        List<String> refeicao = new ArrayList<>();
-        refeicao.add("Café da manhã: " + cafeManha);
-        refeicao.add("Almoço: " + almocoTxt);
-        refeicao.add("Café da tarde: " + cafeTarde);
-
-        itemRefeicao.put(diaSemana.get(0), refeicao);
-        itemRefeicao.put(diaSemana.get(1), refeicao);
-        itemRefeicao.put(diaSemana.get(2), refeicao);
-        itemRefeicao.put(diaSemana.get(3), refeicao);
-        itemRefeicao.put(diaSemana.get(4), refeicao);
-
-        adapter = new ExpandableListAdapter(this, diaSemana, itemRefeicao);
-        expandableListView.setAdapter(adapter);
+        adapter = new com.sustria.codcoz.ui.cardapio.actions.ExpandableListAdapter(this, diaSemana, itemRefeicao);
+        binding.expandableListView.setAdapter(adapter);
     }
 }
