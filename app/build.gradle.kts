@@ -67,6 +67,10 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.glide)
+
+    // Biblioteca para API
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
     
     // Biblioteca para scanner de código de barras
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")
