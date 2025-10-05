@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
-import com.sustria.codcoz.models.MockDataProvider;
-import com.sustria.codcoz.models.RegistroHistorico;
+import com.sustria.codcoz.model.MockDataProvider;
+import com.sustria.codcoz.model.RegistroHistorico;
 
 import java.util.ArrayList;
 import java.util.Comparator;

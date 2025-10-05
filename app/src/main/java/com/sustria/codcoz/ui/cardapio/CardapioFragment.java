@@ -16,8 +16,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.DetalhesReceitaActivity;
 import com.sustria.codcoz.databinding.FragmentCardapioBinding;
-import com.sustria.codcoz.models.MockDataProvider;
-import com.sustria.codcoz.models.Receita;
+import com.sustria.codcoz.model.MockDataProvider;
+import com.sustria.codcoz.model.Receita;
 import com.sustria.codcoz.ui.cardapio.actions.CardapioSemanal;
 
 import java.util.ArrayList;
