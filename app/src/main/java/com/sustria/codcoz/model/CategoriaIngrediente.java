@@ -1,8 +1,8 @@
-package com.sustria.codcoz.models;
+package com.sustria.codcoz.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class UnidadeMedida {
+public class CategoriaIngrediente {
     @SerializedName("id")
     private Long id;
 
@@ -16,10 +16,10 @@ public class UnidadeMedida {
     private String descricao;
 
     // Construtor padrão
-    public UnidadeMedida() {}
+    public CategoriaIngrediente() {}
 
     // Construtor principal
-    public UnidadeMedida(Long id, Long empresaId, String nome, String descricao) {
+    public CategoriaIngrediente(Long id, Long empresaId, String nome, String descricao) {
         this.id = id;
         this.empresaId = empresaId;
         this.nome = nome;

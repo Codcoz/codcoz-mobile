@@ -1,28 +1,33 @@
-package com.sustria.codcoz.models;
+package com.sustria.codcoz.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CategoriaIngrediente {
+public class TipoMovimentacao {
     @SerializedName("id")
     private Long id;
 
     @SerializedName("empresa_id")
     private Long empresaId;
 
-    @SerializedName("nome")
-    private String nome;
+    @SerializedName("motivo")
+    private String motivo;
+
+    @SerializedName("tipo")
+    private String tipo;
 
     @SerializedName("descricao")
     private String descricao;
 
     // Construtor padrão
-    public CategoriaIngrediente() {}
+    public TipoMovimentacao() {}
 
     // Construtor principal
-    public CategoriaIngrediente(Long id, Long empresaId, String nome, String descricao) {
+
+    public TipoMovimentacao(Long id, Long empresaId, String motivo, String tipo, String descricao) {
         this.id = id;
         this.empresaId = empresaId;
-        this.nome = nome;
+        this.motivo = motivo;
+        this.tipo = tipo;
         this.descricao = descricao;
     }
 
@@ -44,12 +49,20 @@ public class CategoriaIngrediente {
         this.empresaId = empresaId;
     }
 
-    public String getNome() {
-        return nome;
+    public String getMotivo() {
+        return motivo;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setMotivo(String motivo) {
+        this.motivo = motivo;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setTipo(String tipo) {
+        this.tipo = tipo;
     }
 
     public String getDescricao() {

@@ -1,33 +1,33 @@
-package com.sustria.codcoz.models;
+package com.sustria.codcoz.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TipoMovimentacao {
+public class Ingrediente {
     @SerializedName("id")
     private Long id;
 
     @SerializedName("empresa_id")
     private Long empresaId;
 
-    @SerializedName("motivo")
-    private String motivo;
+    @SerializedName("categoria_ingrediente_id")
+    private Long categoriaIngredienteId;
 
-    @SerializedName("tipo")
-    private String tipo;
+    @SerializedName("nome")
+    private String nome;
 
     @SerializedName("descricao")
     private String descricao;
 
     // Construtor padrão
-    public TipoMovimentacao() {}
+    public Ingrediente() {}
 
     // Construtor principal
 
-    public TipoMovimentacao(Long id, Long empresaId, String motivo, String tipo, String descricao) {
+    public Ingrediente(Long id, Long empresaId, Long categoriaIngredienteId, String nome, String descricao) {
         this.id = id;
         this.empresaId = empresaId;
-        this.motivo = motivo;
-        this.tipo = tipo;
+        this.categoriaIngredienteId = categoriaIngredienteId;
+        this.nome = nome;
         this.descricao = descricao;
     }
 
@@ -49,20 +49,20 @@ public class TipoMovimentacao {
         this.empresaId = empresaId;
     }
 
-    public String getMotivo() {
-        return motivo;
+    public Long getCategoriaIngredienteId() {
+        return categoriaIngredienteId;
     }
 
-    public void setMotivo(String motivo) {
-        this.motivo = motivo;
+    public void setCategoriaIngredienteId(Long categoriaIngredienteId) {
+        this.categoriaIngredienteId = categoriaIngredienteId;
     }
 
-    public String getTipo() {
-        return tipo;
+    public String getNome() {
+        return nome;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
     public String getDescricao() {

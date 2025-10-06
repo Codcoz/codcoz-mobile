@@ -1,16 +1,13 @@
-package com.sustria.codcoz.models;
+package com.sustria.codcoz.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Ingrediente {
+public class TipoTarefa {
     @SerializedName("id")
     private Long id;
 
     @SerializedName("empresa_id")
     private Long empresaId;
-
-    @SerializedName("categoria_ingrediente_id")
-    private Long categoriaIngredienteId;
 
     @SerializedName("nome")
     private String nome;
@@ -19,14 +16,13 @@ public class Ingrediente {
     private String descricao;
 
     // Construtor padrão
-    public Ingrediente() {}
+    public TipoTarefa() {}
 
     // Construtor principal
 
-    public Ingrediente(Long id, Long empresaId, Long categoriaIngredienteId, String nome, String descricao) {
+    public TipoTarefa(Long id, Long empresaId, String nome, String descricao) {
         this.id = id;
         this.empresaId = empresaId;
-        this.categoriaIngredienteId = categoriaIngredienteId;
         this.nome = nome;
         this.descricao = descricao;
     }
@@ -47,14 +43,6 @@ public class Ingrediente {
 
     public void setEmpresaId(Long empresaId) {
         this.empresaId = empresaId;
-    }
-
-    public Long getCategoriaIngredienteId() {
-        return categoriaIngredienteId;
-    }
-
-    public void setCategoriaIngredienteId(Long categoriaIngredienteId) {
-        this.categoriaIngredienteId = categoriaIngredienteId;
     }
 
     public String getNome() {

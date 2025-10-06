@@ -12,15 +12,13 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.databinding.BottomsheetProdutoEscaneadoBinding;
 import com.sustria.codcoz.model.Produto;
-import com.sustria.codcoz.actions.ConfirmacaoBottomSheetDialogFragment;
-import com.sustria.codcoz.repository.ProdutoRepository;
 
 public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
     private BottomsheetProdutoEscaneadoBinding binding;
     private static final String ARG_CODIGO = "arg_codigo";
     private static final String ARG_TIPO_MOV = "arg_tipo_mov"; // "baixa" ou "entrada"
-    private ProdutoRepository produtoRepository;
+    //    private ProdutoRepository produtoRepository;
     private Produto produto;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -33,13 +31,13 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        produtoRepository = new ProdutoRepository(requireContext());
+//        produtoRepository = new ProdutoRepository(requireContext());
 
         String codigo = getArguments() != null ? getArguments().getString(ARG_CODIGO) : null;
         String tipoMov = getArguments() != null ? getArguments().getString(ARG_TIPO_MOV) : null;
 
         if (codigo != null) {
-            produto = produtoRepository.buscarPorCodigo(codigo);
+//            produto = produtoRepository.buscarPorCodigo(codigo);
         }
 
         if (produto == null) {
@@ -49,11 +47,11 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         }
 
         if (produto != null) {
-            binding.codigoProduto.setText(produto.getCodigo());
-            binding.nomeProduto.setText(produto.getNome());
-            binding.fornecedorProduto.setText(produto.getFornecedor());
-            binding.pesoUnit.setText(produto.getPesoUnit());
-            binding.qntTotal.setText(produto.getQuantidadeTotal());
+//            binding.codigoProduto.setText(produto.getCodigo());
+//            binding.nomeProduto.setText(produto.getNome());
+//            binding.fornecedorProduto.setText(produto.getFornecedor());
+//            binding.pesoUnit.setText(produto.getPesoUnit());
+//            binding.qntTotal.setText(produto.getQuantidadeTotal());
         }
 
         binding.btnClosePopup.setOnClickListener(v -> dismiss());
@@ -64,9 +62,9 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
             }
             try {
                 if ("baixa".equalsIgnoreCase(tipoMov)) {
-                    produtoRepository.realizarBaixa(produto);
+//                    produtoRepository.realizarBaixa(produto);
                 } else if ("entrada".equalsIgnoreCase(tipoMov)) {
-                    produtoRepository.realizarEntrada(produto);
+//                    produtoRepository.realizarEntrada(produto);
                 }
                 dismiss();
                 ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());

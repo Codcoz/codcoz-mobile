@@ -1,8 +1,10 @@
-package com.sustria.codcoz.models;
+package com.sustria.codcoz.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProdutoIngrediente {
+import java.util.Date;
+
+public class Movimentacao {
     @SerializedName("id")
     private Long id;
 
@@ -12,19 +14,23 @@ public class ProdutoIngrediente {
     @SerializedName("produto_id")
     private Long produtoId;
 
-    @SerializedName("ingrediente_id")
-    private Long ingredienteId;
+    @SerializedName("tipo_movimentacao_id")
+    private Long tipoMovimentacaoId;
+
+    @SerializedName("data")
+    private Date data;
 
     // Construtor padrão
-    public ProdutoIngrediente() {}
+    public Movimentacao() {}
 
     // Construtor principal
 
-    public ProdutoIngrediente(Long id, Long empresaId, Long produtoId, Long ingredienteId) {
+    public Movimentacao(Long id, Long empresaId, Long produtoId, Long tipoMovimentacaoId, Date data) {
         this.id = id;
         this.empresaId = empresaId;
         this.produtoId = produtoId;
-        this.ingredienteId = ingredienteId;
+        this.tipoMovimentacaoId = tipoMovimentacaoId;
+        this.data = data;
     }
 
     // Getters e Setters
@@ -53,11 +59,19 @@ public class ProdutoIngrediente {
         this.produtoId = produtoId;
     }
 
-    public Long getIngredienteId() {
-        return ingredienteId;
+    public Long getTipoMovimentacaoId() {
+        return tipoMovimentacaoId;
     }
 
-    public void setIngredienteId(Long ingredienteId) {
-        this.ingredienteId = ingredienteId;
+    public void setTipoMovimentacaoId(Long tipoMovimentacaoId) {
+        this.tipoMovimentacaoId = tipoMovimentacaoId;
+    }
+
+    public Date getData() {
+        return data;
+    }
+
+    public void setData(Date data) {
+        this.data = data;
     }
 }
