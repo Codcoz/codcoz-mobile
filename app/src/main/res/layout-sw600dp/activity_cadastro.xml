@@ -10,19 +10,18 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="185dp"
-        android:layout_height="149dp"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
         app:layout_constraintBottom_toTopOf="@+id/containerCadastro"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_vazada_codcoz" />
 
     <LinearLayout
         android:id="@+id/containerCadastro"
-        android:layout_width="393dp"
-        android:layout_height="584dp"
+        android:layout_width="match_parent"
+        android:layout_height="850dp"
         android:background="@drawable/bg_branco_login"
         android:orientation="vertical"
         android:padding="24dp"
@@ -37,15 +36,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="45dp"
-            android:layout_marginBottom="45dp"
+            android:layout_marginBottom="80dp"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar Senha"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="64sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutNovaSenha"
-            android:layout_width="294dp"
+            android:layout_width="600dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
@@ -59,15 +58,16 @@
                 android:layout_height="wrap_content"
                 android:hint="Nova senha"
                 android:inputType="textPassword"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutConfirmacaoSenha"
-            android:layout_width="294dp"
+            android:layout_width="600dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="80dp"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
             app:hintTextColor="@color/colorOnSurfaceVariant"
             app:passwordToggleEnabled="true"
@@ -79,20 +79,21 @@
                 android:layout_height="wrap_content"
                 android:hint="Confirme sua senha"
                 android:inputType="textPassword"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_width="245dp"
-            android:layout_height="60dp"
+            android:layout_width="500dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="55dp"
+            android:layout_marginTop="80dp"
             android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
+            android:textSize="28sp"
             app:cornerRadius="30dp" />
 
     </LinearLayout>

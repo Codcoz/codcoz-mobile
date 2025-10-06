@@ -6,23 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".auth.CadastroActivity">
+    tools:context=".auth.LoginActivity">
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="185dp"
-        android:layout_height="149dp"
-        app:layout_constraintBottom_toTopOf="@+id/containerCadastro"
+        android:layout_width="300dp"
+        android:layout_height="250dp"
+        app:layout_constraintBottom_toTopOf="@+id/containerLogin"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/logo_vazada_codcoz" />
 
     <LinearLayout
-        android:id="@+id/containerCadastro"
-        android:layout_width="393dp"
-        android:layout_height="584dp"
+        android:id="@+id/containerLogin"
+        android:layout_width="match_parent"
+        android:layout_height="850dp"
         android:background="@drawable/bg_branco_login"
         android:orientation="vertical"
         android:padding="24dp"
@@ -36,64 +35,76 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
-            android:layout_marginBottom="45dp"
+            android:layout_marginBottom="80dp"
             android:fontFamily="@font/nunito_semibold"
-            android:text="Cadastrar Senha"
+            android:text="Login"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="64sp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutNovaSenha"
-            android:layout_width="294dp"
+            android:id="@+id/inputLayoutEmail"
+            android:layout_width="600dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
-            app:hintTextColor="@color/colorOnSurfaceVariant"
-            app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/colorOnSurfaceVariant">
+            app:hintTextColor="@color/colorOnSurfaceVariant">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/novaSenha"
+                android:id="@+id/editEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nova senha"
-                android:inputType="textPassword"
-                android:textColor="@color/colorPrimary" />
+                android:layout_gravity="center_horizontal"
+                android:hint="Digite seu e-mail"
+                android:inputType="textEmailAddress"
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutConfirmacaoSenha"
-            android:layout_width="294dp"
+            android:id="@+id/inputLayoutSenha"
+            android:layout_width="600dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="80dp"
+            android:visibility="gone"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
             app:hintTextColor="@color/colorOnSurfaceVariant"
             app:passwordToggleEnabled="true"
-            app:passwordToggleTint="@color/colorOnSurfaceVariant">
+            app:passwordToggleTint="@color/colorPrimary">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editConfirmacaoSenha"
+                android:id="@+id/editSenha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Confirme sua senha"
+                android:hint="Senha"
                 android:inputType="textPassword"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textSize="24sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btnCadastrar"
-            android:layout_width="245dp"
-            android:layout_height="60dp"
+            android:id="@+id/btnAvancar"
+            android:layout_width="500dp"
+            android:layout_height="75dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="55dp"
             android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_semibold"
-            android:text="Cadastrar"
+            android:text="Avançar"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
+            android:textSize="32sp"
             app:cornerRadius="30dp" />
+
+        <TextView
+            android:id="@+id/tvEsqueceuSenha"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:text="@string/esqueceu_a_senha"
+            android:textColor="@color/colorOnSurfaceVariant"
+            android:textSize="28sp"
+            android:visibility="gone" />
 
     </LinearLayout>
 

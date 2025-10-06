@@ -16,8 +16,8 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.sustria.codcoz.actions.BaixaManualActivity;
-import com.sustria.codcoz.actions.ScanActivity;
-import com.sustria.codcoz.databinding.ActivityDetalhesReceitaBinding;
+import com.sustria.codcoz.actions.BaixaScanActivity;
+import com.sustria.codcoz.actions.EntradaScanActivity;
 import com.sustria.codcoz.databinding.ActivityMainBinding;
 
 
@@ -49,7 +49,6 @@ public class MainActivity extends AppCompatActivity {
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
 
 
         setupNavigation();
@@ -106,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // Conteúdo - Entrada
         binding.optionEscanearProdutoEntrada.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, ScanActivity.class));
+            startActivity(new Intent(this, EntradaScanActivity.class));
         });
 
         binding.optionEntradaManual.setOnClickListener(v -> {
@@ -117,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         // Conteúdo - Baixa
         binding.optionEscanearProduto.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, ScanActivity.class));
+            startActivity(new Intent(this, BaixaScanActivity.class));
         });
         binding.optionBaixaManual.setOnClickListener(v -> {
             hidePopup();

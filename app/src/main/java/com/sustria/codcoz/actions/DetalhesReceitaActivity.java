@@ -18,8 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.ActivityDetalhesReceitaBinding;
-import com.sustria.codcoz.models.MockDataProvider;
-import com.sustria.codcoz.models.Receita;
+import com.sustria.codcoz.model.MockDataProvider;
+import com.sustria.codcoz.model.Receita;
 
 import java.util.ArrayList;
 import java.util.List;

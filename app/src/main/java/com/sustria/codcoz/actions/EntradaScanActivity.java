@@ -1,7 +1,6 @@
 package com.sustria.codcoz.actions;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.widget.Toast;
@@ -15,7 +14,7 @@ import com.journeyapps.barcodescanner.BarcodeResult;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 import com.sustria.codcoz.databinding.ActivityScanBinding;
 
-public class ScanActivity extends AppCompatActivity implements BarcodeCallback {
+public class EntradaScanActivity extends AppCompatActivity implements BarcodeCallback {
     private static final int CAMERA_REQUEST_CODE = 1888;
     private ActivityScanBinding binding;
     private DecoratedBarcodeView barcodeView;
@@ -38,7 +37,7 @@ public class ScanActivity extends AppCompatActivity implements BarcodeCallback {
     }
 
     private void setupHeader() {
-        binding.headerScan.headerActivityBackTitle.setText("Realizar Nova Baixa");
+        binding.headerScan.headerActivityBackTitle.setText("Realizar Entrada");
         binding.headerScan.headerActivityBackArrow.setOnClickListener(v -> finish());
     }
 
@@ -64,21 +63,11 @@ public class ScanActivity extends AppCompatActivity implements BarcodeCallback {
     public void barcodeResult(BarcodeResult result) {
         if (result != null && result.getText() != null) {
             String scannedCode = result.getText();
-            Toast.makeText(this, "Código escaneado: " + scannedCode, Toast.LENGTH_LONG).show();
-
-            // Processa o código escaneado
-            processScannedCode(scannedCode);
+            // Pausa scanner para evitar múltiplas leituras enquanto o bottom sheet está aberto
+            barcodeView.pause();
+            // Abre o bottom sheet para confirmar entrada, apenas se existir no repositório
+            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, "entrada");
         }
-    }
-
-    private void processScannedCode(String code) {
-        // Pausa o scanner antes de finalizar para evitar scans múltiplos
-        barcodeView.pause();
-
-        Intent resultIntent = new Intent();
-        resultIntent.putExtra("scanned_code", code);
-        setResult(RESULT_OK, resultIntent);
-        finish();
     }
 
     @Override
