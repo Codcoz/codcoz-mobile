@@ -166,7 +166,9 @@ public class InicioFragment extends Fragment {
             String monthYear = yearMonth.getMonth()
                     .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"))
                     + " " + yearMonth.getYear();
-            txtMonthYear.setText(monthYear);
+            String monthYearFomated = "";
+            monthYearFomated = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1);
+            txtMonthYear.setText(monthYearFomated);
             return null;
         });
 
