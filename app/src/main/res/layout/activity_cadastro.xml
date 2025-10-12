@@ -12,7 +12,7 @@
         android:id="@+id/imageViewLogo"
         android:layout_width="185dp"
         android:layout_height="149dp"
-        android:layout_marginTop="55dp"
+        app:layout_constraintBottom_toTopOf="@+id/containerCadastro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -44,7 +44,7 @@
             android:textSize="32sp" />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutNovaSenha"
+            android:id="@+id/inputLayoutSenha"
             android:layout_width="294dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -54,7 +54,7 @@
             app:passwordToggleTint="@color/colorOnSurfaceVariant">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/novaSenha"
+                android:id="@+id/editSenha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Nova senha"
@@ -63,7 +63,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/inputLayoutConfirmacaoSenha"
+            android:id="@+id/inputLayoutConfirmarSenha"
             android:layout_width="294dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -74,7 +74,7 @@
             app:passwordToggleTint="@color/colorOnSurfaceVariant">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/editConfirmacaoSenha"
+                android:id="@+id/editConfirmarSenha"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Confirme sua senha"

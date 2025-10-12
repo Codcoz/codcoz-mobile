@@ -8,19 +8,20 @@
     tools:context=".actions.BaixaManualActivity">
 
     <include
-        android:id="@+id/header_baixa"
-        layout="@layout/header_fragments"
+        android:id="@+id/header_baixa_manual"
+        layout="@layout/header_back"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_margin="16dp">
 
         <ImageView
             android:id="@+id/imageView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
             android:layout_marginStart="139dp"
             android:layout_marginTop="168dp"
             android:layout_marginEnd="139dp"
@@ -31,11 +32,9 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
-            android:layout_width="372dp"
-            android:layout_height="60dp"
-            android:layout_marginStart="2dp"
-            android:layout_marginTop="125dp"
-            android:layout_marginEnd="1dp"
+            android:layout_width="750dp"
+            android:layout_height="80dp"
+            android:layout_marginTop="150dp"
             app:boxCornerRadiusBottomEnd="15dp"
             app:boxCornerRadiusBottomStart="15dp"
             app:boxCornerRadiusTopEnd="15dp"
@@ -46,23 +45,25 @@
             app:layout_constraintTop_toBottomOf="@+id/imageView">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCodigoProduto"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="24sp"
                 android:hint="Insira o código do produto" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
-            android:id="@+id/btnAvancarCodigoProdt"
-            android:layout_width="245dp"
-            android:layout_height="60dp"
+            android:id="@+id/btnAvancar"
+            android:layout_width="500dp"
+            android:layout_height="70dp"
             android:layout_marginStart="123dp"
             android:layout_marginTop="50dp"
             android:layout_marginEnd="123dp"
-            android:backgroundTint="@color/bottom_nav_add_selector"
+            android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_semibold"
             android:text="Avançar"
             android:textColor="@color/colorPrimary"
-            android:textSize="20dp"
+            android:textSize="28sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />

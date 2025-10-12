@@ -5,13 +5,19 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
 import com.sustria.codcoz.actions.BaixaManualActivity;
-import com.sustria.codcoz.actions.ScanActivity;
+import com.sustria.codcoz.actions.BaixaScanActivity;
+import com.sustria.codcoz.actions.EntradaScanActivity;
 import com.sustria.codcoz.databinding.ActivityMainBinding;
 
 
@@ -28,12 +34,21 @@ public class MainActivity extends AppCompatActivity {
 
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        EdgeToEdge.enable(this);
+
+        // da a cor para a parte que fica de status(onde fica a bateria, rede, etc...)
+        getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        getWindow().setNavigationBarColor(ContextCompat.getColor(this, R.color.colorBackground));
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
+            Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return WindowInsetsCompat.CONSUMED;
+        });
 
         // Esconder a ActionBar padrão
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
-
 
 
         setupNavigation();
@@ -90,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         // Conteúdo - Entrada
         binding.optionEscanearProdutoEntrada.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, ScanActivity.class));
+            startActivity(new Intent(this, EntradaScanActivity.class));
         });
 
         binding.optionEntradaManual.setOnClickListener(v -> {
@@ -101,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         // Conteúdo - Baixa
         binding.optionEscanearProduto.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, ScanActivity.class));
+            startActivity(new Intent(this, BaixaScanActivity.class));
         });
         binding.optionBaixaManual.setOnClickListener(v -> {
             hidePopup();

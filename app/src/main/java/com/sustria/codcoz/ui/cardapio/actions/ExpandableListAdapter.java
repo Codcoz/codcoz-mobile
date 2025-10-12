@@ -7,6 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
 
+import androidx.annotation.ColorInt;
+
+import com.sustria.codcoz.R;
+
 import java.util.HashMap;
 import java.util.List;
 
@@ -64,9 +68,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String groupTitle = (String) getGroup(groupPosition);
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
-                    .inflate(android.R.layout.simple_expandable_list_item_1, parent, false);
+                    .inflate(R.layout.group_item, parent, false);
         }
-        TextView textView = convertView.findViewById(android.R.id.text1);
+        TextView textView = convertView.findViewById(R.id.groupTitle);
         textView.setText(groupTitle);
         return convertView;
     }
@@ -77,9 +81,9 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         String childTitle = (String) getChild(groupPosition, childPosition);
         if (convertView == null) {
             convertView = LayoutInflater.from(context)
-                    .inflate(android.R.layout.simple_list_item_1, parent, false);
+                    .inflate(R.layout.child_item, parent, false);
         }
-        TextView textView = convertView.findViewById(android.R.id.text1);
+        TextView textView = convertView.findViewById(R.id.childTitle);
         textView.setText(childTitle);
         return convertView;
     }

@@ -12,6 +12,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
+import com.sustria.codcoz.model.MockDataProvider;
+import com.sustria.codcoz.model.RegistroHistorico;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -128,19 +130,8 @@ public class HistoricoFragment extends Fragment {
 
     private void seedDadosMock() {
         dadosOriginais.clear();
-        long now = System.currentTimeMillis();
-        dadosOriginais.add(new RegistroHistorico("Arroz", 10, "0001",
-                now - 60 * 60 * 1000, TipoFiltro.ENTRADA));
-        dadosOriginais.add(new RegistroHistorico("Feijão", 5, "0002",
-                now - 26 * 60 * 60 * 1000, TipoFiltro.BAIXA));
-        dadosOriginais.add(new RegistroHistorico("Macarrão", 12, "0003",
-                now - 5 * 24 * 60 * 60 * 1000, TipoFiltro.ENTRADA));
-        dadosOriginais.add(new RegistroHistorico("Açúcar", 2, "0004",
-                now - 9 * 24 * 60 * 60 * 1000, TipoFiltro.BAIXA));
-        dadosOriginais.add(new RegistroHistorico("Sal", 18, "0005",
-                now - 20 * 24 * 60 * 60 * 1000, TipoFiltro.BAIXA));
-        dadosOriginais.add(new RegistroHistorico("Óleo", 7, "0006",
-                now - 29L * 24 * 60 * 60 * 1000, TipoFiltro.ENTRADA));
+        // Usar dados mockados do MockDataProvider
+        dadosOriginais.addAll(MockDataProvider.getMockRegistrosHistorico());
         aplicarFiltrosEBusca();
     }
 
@@ -166,12 +157,13 @@ public class HistoricoFragment extends Fragment {
         long now = System.currentTimeMillis();
         List<RegistroHistorico> filtrados = new ArrayList<>();
         for (RegistroHistorico r : dadosOriginais) {
-            if (!termo.isEmpty() && !r.nome.toLowerCase().contains(termo)) continue;
-            if (tipoFiltro != TipoFiltro.TODOS && r.tipo != tipoFiltro) continue;
-            if (!periodoFiltro.passa(r.epochMillis, now)) continue;
+            if (!termo.isEmpty() && !r.getNome().toLowerCase().contains(termo)) continue;
+            if (tipoFiltro != TipoFiltro.TODOS && !r.getTipo().toString().equals(tipoFiltro.toString()))
+                continue;
+            if (!periodoFiltro.passa(r.getEpochMillis(), now)) continue;
             filtrados.add(r);
         }
-        Comparator<RegistroHistorico> comp = Comparator.comparingLong(a -> a.epochMillis);
+        Comparator<RegistroHistorico> comp = Comparator.comparingLong(RegistroHistorico::getEpochMillis);
         if (sortOrder == SortOrder.MAIS_RECENTES) filtrados.sort(comp.reversed());
         else filtrados.sort(comp);
         adapter.submit(filtrados);
@@ -205,21 +197,6 @@ public class HistoricoFragment extends Fragment {
         }
     }
 
-    static class RegistroHistorico {
-        final String nome;
-        final int unidades;
-        final String codigo;
-        final long epochMillis;
-        final TipoFiltro tipo;
-
-        RegistroHistorico(String nome, int unidades, String codigo, long epochMillis, TipoFiltro tipo) {
-            this.nome = nome;
-            this.unidades = unidades;
-            this.codigo = codigo;
-            this.epochMillis = epochMillis;
-            this.tipo = tipo;
-        }
-    }
 
     static class HistoricoListAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<HistoricoListAdapter.VH> {
         private final List<RegistroHistorico> itens = new ArrayList<>();
@@ -233,11 +210,11 @@ public class HistoricoFragment extends Fragment {
         @Override
         public void onBindViewHolder(VH h, int position) {
             RegistroHistorico r = itens.get(position);
-            h.nome.setText(r.nome);
-            h.unidades.setText(String.valueOf(r.unidades));
-            h.codigo.setText(r.codigo);
+            h.nome.setText(r.getNome());
+            h.unidades.setText(String.valueOf(r.getUnidades()));
+            h.codigo.setText(r.getCodigo());
             java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMMM | HH:mm", java.util.Locale.getDefault());
-            h.data.setText(sdf.format(new java.util.Date(r.epochMillis)));
+            h.data.setText(sdf.format(new java.util.Date(r.getEpochMillis())));
         }
 
         @Override

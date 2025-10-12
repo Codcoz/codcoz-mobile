@@ -30,6 +30,7 @@ import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.PerfilActivity;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
+import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -57,6 +58,9 @@ public class InicioFragment extends Fragment {
         View root = binding.getRoot();
 
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
+        
+        // Carregar dados do usuário do cache
+        carregarDadosUsuario();
 
         // Observar dados do estoque
         inicioViewModel.getEstoquePercentual().observe(getViewLifecycleOwner(), percentual -> {
@@ -166,7 +170,9 @@ public class InicioFragment extends Fragment {
             String monthYear = yearMonth.getMonth()
                     .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"))
                     + " " + yearMonth.getYear();
-            txtMonthYear.setText(monthYear);
+            String monthYearFomated = "";
+            monthYearFomated = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1);
+            txtMonthYear.setText(monthYearFomated);
             return null;
         });
 
@@ -264,6 +270,26 @@ public class InicioFragment extends Fragment {
 
         calendarView.setup(startMonth, endMonth, firstDayOfWeek);
         calendarView.scrollToMonth(currentMonth);
+    }
+
+    private void carregarDadosUsuario() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+        
+        if (userDataManager.isDataLoaded()) {
+            // Dados já estão no cache, usar diretamente
+            atualizarHeaderUsuario();
+        } else {
+            // Dados não estão no cache, usar dados padrão
+            binding.headerHome.headerNome.setText("Olá, Usuário!");
+            binding.headerHome.headerFuncao.setText("Estoquista");
+        }
+    }
+
+    private void atualizarHeaderUsuario() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+        String nomeCompleto = userDataManager.getNomeCompleto();
+        binding.headerHome.headerNome.setText("Olá, " + nomeCompleto + "!");
+        binding.headerHome.headerFuncao.setText("Estoquista");
     }
 
     @Override
