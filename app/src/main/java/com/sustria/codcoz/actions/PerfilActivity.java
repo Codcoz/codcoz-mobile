@@ -12,6 +12,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.ActivityPerfilBinding;
+import com.sustria.codcoz.utils.UserDataManager;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -36,6 +37,7 @@ public class PerfilActivity extends AppCompatActivity {
 
         setupHeader();
         setupUi();
+        carregarDadosUsuario();
     }
 
     private void setupHeader() {
@@ -72,5 +74,29 @@ public class PerfilActivity extends AppCompatActivity {
         binding.op7dias.setBackgroundResource(R.drawable.bg_tab_unselected);
         binding.op30dias.setBackgroundResource(R.drawable.bg_tab_unselected);
         binding.op90dias.setBackgroundResource(R.drawable.bg_tab_unselected);
+    }
+
+    private void carregarDadosUsuario() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+        
+        if (userDataManager.isDataLoaded()) {
+            // Dados já estão no cache, usar diretamente
+            atualizarDadosPerfil();
+        } else {
+            // Dados não estão no cache, usar dados padrão
+            binding.tvNome.setText("Usuário");
+            binding.tvFuncao.setText("Estoquista");
+            binding.tvDesde.setText("Desde --/--/----");
+        }
+    }
+
+    private void atualizarDadosPerfil() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+        String nomeCompleto = userDataManager.getNomeCompleto();
+        String dataFormatada = userDataManager.getDataContratacaoFormatada();
+        
+        binding.tvNome.setText(nomeCompleto);
+        binding.tvFuncao.setText("Estoquista");
+        binding.tvDesde.setText("Desde " + dataFormatada);
     }
 }
