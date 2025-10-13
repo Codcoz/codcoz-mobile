@@ -270,8 +270,28 @@ public class InicioFragment extends Fragment {
     }
 
     private void botoes() {
+        Intent intent = new Intent(getContext(), ProdutoActivity.class);
+
         binding.produtos.setOnClickListener(v -> {
-            Intent intent = new Intent(getContext(), ProdutoActivity.class);
+            Bundle envelope = new Bundle();
+            envelope.putString("tituloHeader", "Produtos em estoque");
+            intent.putExtras(envelope);
+            startActivity(intent);
+        });
+
+        binding.produtosBaixoEstoque.setOnClickListener(v -> {
+            Bundle envelope = new Bundle();
+            envelope.putString("tituloHeader", "Estoque baixo");
+            envelope.putString("filtro", "35");
+            intent.putExtras(envelope);
+            startActivity(intent);
+        });
+
+        binding.produtosProximoValidade.setOnClickListener(v -> {
+            Bundle envelope = new Bundle();
+            envelope.putString("tituloHeader", "Próximos à validade");
+            envelope.putString("filtro", "2025-10-12");
+            intent.putExtras(envelope);
             startActivity(intent);
         });
     }
