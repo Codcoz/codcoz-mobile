@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
+    android:layout_margin="10dp"
     app:cardCornerRadius="16dp">
 
     <LinearLayout
@@ -14,24 +14,25 @@
         android:padding="16dp">
 
         <LinearLayout
-            android:layout_width="55dp"
-            android:layout_height="55dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_tag_status"
             android:backgroundTint="@color/custom_orange_opacity_44"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="35dp"
-                android:layout_height="wrap_content"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_gravity="center"
-                app:srcCompat="@drawable/ic_barra" />
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/ic_check" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="24dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -39,9 +40,9 @@
                 android:id="@+id/tv_title_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Baixa de produto"
+                android:text="Auditoria"
                 android:textColor="#0B2239"
-                android:textSize="14sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -50,17 +51,29 @@
                 android:layout_height="wrap_content"
                 android:text="Arroz camil - 2 unidades"
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="12sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/tv_time_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="15/10/2024 | 14:32"
+                android:text="cod. 123456"
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="12sp" />
+                android:textSize="20sp" />
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/colorSecondary"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Registrar"
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

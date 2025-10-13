@@ -1,81 +1,111 @@
 package com.sustria.codcoz.utils;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+
 import com.sustria.codcoz.api.model.EstoquistaResponse;
 
-/**
- * Singleton para gerenciar dados do usuário em cache
- * Evita requisições desnecessárias à API
- */
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class UserDataManager {
-    
+
+    private static final String PREF_NAME = "user_data";
+    private static final String KEY_EMAIL = "email";
+    private static final String KEY_NOME = "nome";
+    private static final String KEY_SOBRENOME = "sobrenome";
+    private static final String KEY_DATA_CONTRATACAO = "data_contratacao";
+
     private static UserDataManager instance;
     private EstoquistaResponse userData;
     private boolean isDataLoaded = false;
-    
+
     private UserDataManager() {}
-    
+
     public static synchronized UserDataManager getInstance() {
         if (instance == null) {
             instance = new UserDataManager();
         }
         return instance;
     }
-    
-    /**
-     * Define os dados do usuário no cache
-     */
-    public void setUserData(EstoquistaResponse userData) {
+
+    public void setUserData(EstoquistaResponse userData, Context context) {
         this.userData = userData;
         this.isDataLoaded = true;
+
+        // Salva em cache persistente (SharedPreferences)
+        if (context != null) {
+            SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putString(KEY_EMAIL, userData.getEmail());
+            editor.putString(KEY_NOME, userData.getNome());
+            editor.putString(KEY_SOBRENOME, userData.getSobrenome());
+            editor.putString(KEY_DATA_CONTRATACAO, userData.getDataContratacao());
+            editor.apply();
+        }
     }
-    
-    /**
-     * Obtém os dados do usuário do cache
-     */
+
+    public void loadDataFromPreferences(Context context, Runnable onLoaded) {
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        String email = prefs.getString(KEY_EMAIL, null);
+
+        if (email != null) {
+            EstoquistaResponse cachedUser = new EstoquistaResponse();
+            cachedUser.setEmail(email);
+            cachedUser.setNome(prefs.getString(KEY_NOME, ""));
+            cachedUser.setSobrenome(prefs.getString(KEY_SOBRENOME, ""));
+            cachedUser.setDataContratacao(prefs.getString(KEY_DATA_CONTRATACAO, ""));
+            this.userData = cachedUser;
+            this.isDataLoaded = true;
+        }
+
+        if (onLoaded != null) {
+            onLoaded.run();
+        }
+    }
+
     public EstoquistaResponse getUserData() {
         return userData;
     }
-    
-    /**
-     * Verifica se os dados já foram carregados
-     */
+
     public boolean isDataLoaded() {
         return isDataLoaded;
     }
-    
-    /**
-     * Limpa o cache (útil para logout)
-     */
-    public void clearCache() {
+
+    public void clearCache(Context context) {
         this.userData = null;
         this.isDataLoaded = false;
+        SharedPreferences prefs = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+        prefs.edit().clear().apply();
     }
-    
-    /**
-     * Obtém o nome completo do usuário
-     */
+
     public String getNomeCompleto() {
         if (userData != null) {
             return userData.getNome() + " " + userData.getSobrenome();
         }
         return "Usuário";
     }
-    
-    /**
-     * Obtém a data de contratação formatada
-     */
+
+    public String getEmail() {
+        if (userData != null && userData.getEmail() != null && !userData.getEmail().isEmpty()) {
+            return userData.getEmail();
+        }
+        return null;
+    }
+
     public String getDataContratacaoFormatada() {
         if (userData != null && userData.getDataContratacao() != null) {
             try {
-                java.text.SimpleDateFormat inputFormat = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault());
-                java.text.SimpleDateFormat outputFormat = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
-                java.util.Date date = inputFormat.parse(userData.getDataContratacao());
+                SimpleDateFormat inputFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+                SimpleDateFormat outputFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                Date date = inputFormat.parse(userData.getDataContratacao());
                 return outputFormat.format(date);
-            } catch (java.text.ParseException e) {
+            } catch (ParseException e) {
                 return userData.getDataContratacao();
             }
         }
         return "--/--/----";
     }
 }
-

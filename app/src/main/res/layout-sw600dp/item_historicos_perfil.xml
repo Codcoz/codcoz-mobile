@@ -16,13 +16,15 @@
         <LinearLayout
             android:layout_width="75dp"
             android:layout_height="75dp"
+            android:layout_gravity="center"
             android:background="@drawable/bg_tag_status"
             android:backgroundTint="@color/custom_orange_opacity_44"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="35dp"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_barra" />
         </LinearLayout>

@@ -18,7 +18,7 @@ import com.sustria.codcoz.actions.DetalhesReceitaActivity;
 import com.sustria.codcoz.databinding.FragmentCardapioBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.model.Receita;
-import com.sustria.codcoz.ui.cardapio.actions.CardapioSemanal;
+import com.sustria.codcoz.actions.CardapioSemanal;
 
 import java.util.ArrayList;
 import java.util.List;

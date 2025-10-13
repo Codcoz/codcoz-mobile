@@ -119,7 +119,7 @@ public class CadastroActivity extends AppCompatActivity {
         db.collection("usuarios").document(uid)
                 .set(usuario)
                 .addOnSuccessListener(aVoid -> {
-                    UserDataManager.getInstance().setUserData(estoquista);
+                    UserDataManager.getInstance().setUserData(estoquista, CadastroActivity.this);
                     Toast.makeText(CadastroActivity.this, "Conta criada com sucesso!", Toast.LENGTH_SHORT).show();
 
                     Intent intent = new Intent(CadastroActivity.this, MainActivity.class);
