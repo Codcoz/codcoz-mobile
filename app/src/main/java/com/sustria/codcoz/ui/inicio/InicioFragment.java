@@ -30,6 +30,7 @@ import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.PerfilActivity;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
+import com.sustria.codcoz.ui.inicio.produtos.ProdutoActivity;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -55,6 +56,8 @@ public class InicioFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        botoes();
 
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
@@ -264,6 +267,13 @@ public class InicioFragment extends Fragment {
 
         calendarView.setup(startMonth, endMonth, firstDayOfWeek);
         calendarView.scrollToMonth(currentMonth);
+    }
+
+    private void botoes() {
+        binding.produtos.setOnClickListener(v -> {
+            Intent intent = new Intent(getContext(), ProdutoActivity.class);
+            startActivity(intent);
+        });
     }
 
     @Override
