@@ -82,7 +82,15 @@ public class PerfilViewModel extends ViewModel {
                 if (response.isSuccessful() && response.body() != null) {
                     tarefas.setValue(response.body());
                 } else {
-                    errorMessage.setValue("Erro ao carregar tarefas: " + response.message());
+                    String errorMsg = "Erro ao carregar tarefas: " + response.code() + " - " + response.message();
+                    if (response.errorBody() != null) {
+                        try {
+                            errorMsg += " - " + response.errorBody().string();
+                        } catch (Exception e) {
+                            errorMsg += " - Erro ao ler corpo da resposta";
+                        }
+                    }
+                    errorMessage.setValue(errorMsg);
                     tarefas.setValue(new ArrayList<>());
                 }
             }
@@ -90,18 +98,17 @@ public class PerfilViewModel extends ViewModel {
             @Override
             public void onFailure(Call<List<TarefaResponse>> call, Throwable t) {
                 isLoading.setValue(false);
-                errorMessage.setValue("Erro de conexão: " + t.getMessage());
+                errorMessage.setValue("Erro de conexão: " + t.getMessage() + " - " + t.getClass().getSimpleName());
                 tarefas.setValue(new ArrayList<>());
             }
         });
     }
-
 
     public void loadAtividades(int dias) {
         loadTarefasPorTipo("Atividade", dias);
     }
 
     public void loadAuditorias(int dias) {
-        loadTarefasPorTipo("Auditoria", dias);
+        loadTarefasPorTipo("Conferência de Estoque", dias);
     }
 }

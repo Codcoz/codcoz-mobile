@@ -45,7 +45,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tv_desc_card"
+                android:id="@+id/tv_name_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Arroz camil - 2 unidades"
@@ -53,7 +53,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/tv_time_card"
+                android:id="@+id/tv_id_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"

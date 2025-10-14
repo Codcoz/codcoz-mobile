@@ -15,7 +15,7 @@ public interface TarefaApi {
     @GET("tarefa/buscar-data/{email}")
     Call<List<TarefaResponse>> buscarPorData(
             @Path(value = "email", encoded = true) String email,
-            @Query("data") String data // 🔹 String, não LocalDate
+            @Query("data") String data
     );
 
     @GET("tarefa/buscar-periodo/{email}")

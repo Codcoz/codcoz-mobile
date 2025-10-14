@@ -21,8 +21,6 @@ import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
-import com.sustria.codcoz.api.adapter.TarefaAdapter;
-import com.sustria.codcoz.api.model.TarefaResponse;
 import com.kizitonwose.calendar.core.CalendarDay;
 import com.kizitonwose.calendar.core.CalendarMonth;
 import com.kizitonwose.calendar.core.DayPosition;
@@ -32,6 +30,8 @@ import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.PerfilActivity;
+import com.sustria.codcoz.api.adapter.TarefaAdapter;
+import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 import com.sustria.codcoz.utils.UserDataManager;
 
@@ -57,13 +57,12 @@ public class InicioFragment extends Fragment {
     private Map<LocalDate, List<TarefaResponse>> tarefasPorData = new HashMap<>();
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
-        
+
         // Carregar dados do usuário do cache
         carregarDadosUsuario();
 
@@ -75,10 +74,7 @@ public class InicioFragment extends Fragment {
             entries.add(new PieEntry(percentual, ""));
             entries.add(new PieEntry(100f - percentual, ""));
             PieDataSet dataSet = new PieDataSet(entries, "");
-            dataSet.setColors(
-                    ContextCompat.getColor(requireContext(), R.color.custom_green_success),
-                    ContextCompat.getColor(requireContext(), R.color.colorOnSurfaceVariant)
-            );
+            dataSet.setColors(ContextCompat.getColor(requireContext(), R.color.custom_green_success), ContextCompat.getColor(requireContext(), R.color.colorOnSurfaceVariant));
             dataSet.setDrawValues(false);
             PieData data = new PieData(dataSet);
             pieChart.setData(data);
@@ -114,9 +110,9 @@ public class InicioFragment extends Fragment {
 
         // Configurar RecyclerView de tarefas
         setupTarefasRecyclerView();
-        
+
         // Observar dados das tarefas
-        observeTarefas();
+        observarTarefas();
 
         return root;
     }
@@ -174,9 +170,7 @@ public class InicioFragment extends Fragment {
 
         calendarView.setMonthScrollListener(calendarMonth -> {
             YearMonth yearMonth = calendarMonth.getYearMonth();
-            String monthYear = yearMonth.getMonth()
-                    .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"))
-                    + " " + yearMonth.getYear();
+            String monthYear = yearMonth.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")) + " " + yearMonth.getYear();
             String monthYearFomated = "";
             monthYearFomated = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1);
             txtMonthYear.setText(monthYearFomated);
@@ -184,12 +178,14 @@ public class InicioFragment extends Fragment {
         });
 
         btnAnterior.setOnClickListener(v -> {
-            YearMonth prevMonth = calendarView.findFirstVisibleMonth().getYearMonth().minusMonths(1);
+            YearMonth prevMonth = calendarView.findFirstVisibleMonth().getYearMonth()
+                    .minusMonths(1);
             calendarView.smoothScrollToMonth(prevMonth);
         });
 
         btnProximo.setOnClickListener(v -> {
-            YearMonth nextMonth = calendarView.findFirstVisibleMonth().getYearMonth().plusMonths(1);
+            YearMonth nextMonth = calendarView.findFirstVisibleMonth().getYearMonth()
+                    .plusMonths(1);
             calendarView.smoothScrollToMonth(nextMonth);
         });
 
@@ -204,11 +200,8 @@ public class InicioFragment extends Fragment {
             public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay data) {
                 container.dia = data;
 
-                LocalDate date = LocalDate.of(
-                        data.getDate().getYear(),
-                        data.getDate().getMonth(),
-                        data.getDate().getDayOfMonth()
-                );
+                LocalDate date = LocalDate.of(data.getDate().getYear(), data.getDate().getMonth(),
+                        data.getDate().getDayOfMonth());
                 int dia = date.getDayOfMonth();
 
                 container.textView.setText(String.valueOf(dia));
@@ -242,10 +235,10 @@ public class InicioFragment extends Fragment {
                         mostrarTarefasDoDia(dataTarefa, tarefasDoDia);
                     } else {
                         new AlertDialog.Builder(requireContext())
-                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
+                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter
+                                        .ofPattern("dd/MM/yyyy"))))
                                 .setMessage("Nenhuma tarefa para este dia.")
-                                .setPositiveButton("OK", null)
-                                .show();
+                                .setPositiveButton("OK", null).show();
                     }
                 });
             }
@@ -290,7 +283,7 @@ public class InicioFragment extends Fragment {
 
     private void carregarDadosUsuario() {
         UserDataManager userDataManager = UserDataManager.getInstance();
-        
+
         if (userDataManager.isDataLoaded()) {
             // Dados já estão no cache, usar diretamente
             atualizarHeaderUsuario();
@@ -310,10 +303,14 @@ public class InicioFragment extends Fragment {
 
     private void setupTarefasRecyclerView() {
         tarefaAdapter = new TarefaAdapter();
-        binding.tarefas.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.tarefas.setAdapter(tarefaAdapter);
-        
-        // Configurar listener para cliques nas tarefas
+        if (binding.tarefas != null) {
+            binding.tarefas.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        if (binding.tarefas != null) {
+            binding.tarefas.setAdapter(tarefaAdapter);
+        }
+
+        // Listeners para cliques nas tarefas
         tarefaAdapter.setOnTarefaClickListener(new TarefaAdapter.OnTarefaClickListener() {
             @Override
             public void onTarefaClick(TarefaResponse tarefa) {
@@ -325,44 +322,38 @@ public class InicioFragment extends Fragment {
             public void onRegistrarClick(TarefaResponse tarefa) {
                 // Finalizar tarefa
                 if (tarefa.getId() != null) {
-                    inicioViewModel.finalizarTarefa(tarefa.getId());
+                    // todo: adicionar layout para levar a finalização de tarefa
+                    // inicioViewModel.finalizarTarefa(tarefa.getId());
                 }
             }
         });
     }
 
-    private void observeTarefas() {
-        // Observar lista de tarefas
+    private void observarTarefas() {
         inicioViewModel.getTarefas().observe(getViewLifecycleOwner(), tarefas -> {
             if (tarefas != null) {
                 tarefaAdapter.setTarefas(tarefas);
-                // Organizar tarefas por data para o calendário
                 organizarTarefasPorData(tarefas);
             }
         });
 
-        // Observar estado de carregamento
+        // Observar o estado de carregamento
         inicioViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-            // Aqui você pode mostrar/ocultar um indicador de carregamento se necessário
-            // Por exemplo: binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+//             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
 
-        // Observar mensagens de erro
+        // Tratar dps as mensagens de erro
         inicioViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
-                // Mostrar erro para o usuário
-                new AlertDialog.Builder(requireContext())
-                        .setTitle("Erro")
-                        .setMessage(errorMessage)
-                        .setPositiveButton("OK", null)
-                        .show();
+                new AlertDialog.Builder(requireContext()).setTitle("Erro").setMessage(errorMessage)
+                        .setPositiveButton("OK", null).show();
             }
         });
     }
 
     private void organizarTarefasPorData(List<TarefaResponse> tarefas) {
         tarefasPorData.clear();
-        
+
         for (TarefaResponse tarefa : tarefas) {
             if (tarefa.getDataLimite() != null) {
                 LocalDate dataLimite = tarefa.getDataLimite();
@@ -376,55 +367,40 @@ public class InicioFragment extends Fragment {
 
     private void mostrarTarefasDoDia(LocalDate data, List<TarefaResponse> tarefasDoDia) {
         StringBuilder mensagem = new StringBuilder();
-        
+
         for (int i = 0; i < tarefasDoDia.size(); i++) {
             TarefaResponse tarefa = tarefasDoDia.get(i);
-            mensagem.append("• ").append(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa");
-            
+            mensagem.append("• ").append(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() :
+                    "Tarefa");
+
             if (tarefa.getIngrediente() != null) {
                 mensagem.append(" - ").append(tarefa.getIngrediente());
             }
-            
+
             if (tarefa.getEmpresa() != null) {
                 mensagem.append(" (").append(tarefa.getEmpresa()).append(")");
             }
-            
+
             if (i < tarefasDoDia.size() - 1) {
                 mensagem.append("\n");
             }
         }
 
-        new AlertDialog.Builder(requireContext())
-                .setTitle(data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy")))
-                .setMessage(mensagem.toString())
-                .setPositiveButton("OK", null)
-                .show();
+        new AlertDialog.Builder(requireContext()).setTitle(data.format(DateTimeFormatter.ofPattern
+                ("dd/MM/yyyy"))).setMessage(mensagem.toString()).setPositiveButton("OK", null).show();
     }
 
     private void showTarefaDetails(TarefaResponse tarefa) {
         StringBuilder details = new StringBuilder();
-        details.append("Tipo: ").append(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "N/A").append("\n");
-        details.append("Ingrediente: ").append(tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "N/A").append("\n");
-        details.append("Empresa: ").append(tarefa.getEmpresa() != null ? tarefa.getEmpresa() : "N/A").append("\n");
+        details.append("Produto: ").append(tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "N/A").append("\n");
         details.append("Relator: ").append(tarefa.getRelator() != null ? tarefa.getRelator() : "N/A").append("\n");
-        details.append("Responsável: ").append(tarefa.getResponsavel() != null ? tarefa.getResponsavel() : "N/A").append("\n");
-        details.append("Situação: ").append(tarefa.getSituacao() != null ? tarefa.getSituacao() : "N/A").append("\n");
-        
-        if (tarefa.getDataCriacao() != null) {
-            details.append("Data Criação: ").append(tarefa.getDataCriacao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
-        }
         if (tarefa.getDataLimite() != null) {
             details.append("Data Limite: ").append(tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
         }
-        if (tarefa.getDataConclusao() != null) {
-            details.append("Data Conclusão: ").append(tarefa.getDataConclusao().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
-        }
 
-        new AlertDialog.Builder(requireContext())
-                .setTitle("Detalhes da Tarefa")
+        new AlertDialog.Builder(requireContext()).setTitle(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa")
                 .setMessage(details.toString())
-                .setPositiveButton("OK", null)
-                .show();
+                .setPositiveButton("OK", null).show();
     }
 
     @Override

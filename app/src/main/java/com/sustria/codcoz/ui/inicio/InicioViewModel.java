@@ -38,15 +38,15 @@ public class InicioViewModel extends ViewModel {
         isLoading = new MutableLiveData<>();
         errorMessage = new MutableLiveData<>();
 
-        // Inicializar API
+        // API
         tarefaApi = RetrofitClient.getInstance().create(TarefaApi.class);
 
-        // Inicializar com dados padrão
+        // Inicializar com os dados padrão
         loadDefaultData();
     }
 
     private void loadDefaultData() {
-        // Dados simulados do estoque
+        // Dados simulados do estoque por enquanto
         estoquePercentual.setValue(78);
         estoqueStatus.setValue("Ótimo!");
         estoquePercentualAnterior.setValue(62);
@@ -95,53 +95,13 @@ public class InicioViewModel extends ViewModel {
         UserDataManager userDataManager = UserDataManager.getInstance();
         String email = userDataManager.getEmail();
 
-        if (email == null || email.isEmpty()) {
-            errorMessage.setValue("Email do usuário não encontrado");
-            return;
-        }
-
         isLoading.setValue(true);
         errorMessage.setValue(null);
 
-        // Carregar tarefas do dia atual
+        // Carregar tarefas do período de 6 meses
         LocalDate hoje = LocalDate.now();
-        String dataFormatada = hoje.toString();
-        Call<List<TarefaResponse>> call = tarefaApi.buscarPorData(email, dataFormatada);
-
-        call.enqueue(new Callback<>() {
-            @Override
-            public void onResponse(Call<List<TarefaResponse>> call, Response<List<TarefaResponse>> response) {
-                isLoading.setValue(false);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    tarefas.setValue(response.body());
-                } else {
-                    errorMessage.setValue("Erro ao carregar tarefas: " + response.message());
-                    tarefas.setValue(new ArrayList<>());
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<TarefaResponse>> call, Throwable t) {
-                isLoading.setValue(false);
-                errorMessage.setValue("Erro de conexão: " + t.getMessage());
-                tarefas.setValue(new ArrayList<>());
-            }
-        });
-    }
-
-    // Metodo para carregar tarefas por período
-    public void loadTarefasPorPeriodo(LocalDate dataInicio, LocalDate dataFim) {
-        UserDataManager userDataManager = UserDataManager.getInstance();
-        String email = userDataManager.getEmail();
-
-        if (email == null || email.isEmpty()) {
-            errorMessage.setValue("Email do usuário não encontrado");
-            return;
-        }
-
-        isLoading.setValue(true);
-        errorMessage.setValue(null);
+        LocalDate dataInicio = hoje.minusMonths(3);
+        LocalDate dataFim = hoje.plusMonths(3);
 
         Call<List<TarefaResponse>> call = tarefaApi.buscarPorPeriodo(email, dataInicio.toString(), dataFim.toString());
 
@@ -196,11 +156,5 @@ public class InicioViewModel extends ViewModel {
                 errorMessage.setValue("Erro de conexão: " + t.getMessage());
             }
         });
-    }
-
-    // Metodo para carregar dados do banco de dados
-    public void loadDataFromDatabase() {
-        loadDefaultData();
-        loadTarefas(); // Carregar tarefas da API
     }
 }
