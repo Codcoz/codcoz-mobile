@@ -29,7 +29,11 @@ import com.kizitonwose.calendar.view.MonthDayBinder;
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.actions.AtividadeEscolhaEntradaBottomSheetDialogFragment;
+import com.sustria.codcoz.actions.AuditoriaQuantidadeBottomSheetDialogFragment;
+import com.sustria.codcoz.actions.ConfirmacaoBottomSheetDialogFragment;
 import com.sustria.codcoz.actions.PerfilActivity;
+import com.sustria.codcoz.actions.TarefaDetalheBottomSheetDialogFragment;
 import com.sustria.codcoz.api.adapter.TarefaAdapter;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
@@ -54,7 +58,7 @@ public class InicioFragment extends Fragment {
     private FragmentInicioBinding binding;
     private InicioViewModel inicioViewModel;
     private TarefaAdapter tarefaAdapter;
-    private Map<LocalDate, List<TarefaResponse>> tarefasPorData = new HashMap<>();
+    private final Map<LocalDate, List<TarefaResponse>> tarefasPorData = new HashMap<>();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -64,7 +68,7 @@ public class InicioFragment extends Fragment {
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
         // Carregar dados do usuário do cache
-        carregarDadosUsuario();
+        loadUserData();
 
         // Observar dados do estoque
         inicioViewModel.getEstoquePercentual().observe(getViewLifecycleOwner(), percentual -> {
@@ -94,25 +98,17 @@ public class InicioFragment extends Fragment {
             }
         });
 
-        binding.headerHome.headerPerfil.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), PerfilActivity.class));
-        });
+        binding.headerHome.headerPerfil.setOnClickListener(v -> startActivity(new Intent(getContext(), PerfilActivity.class)));
 
-        inicioViewModel.getEstoqueStatus().observe(getViewLifecycleOwner(), status -> {
-            binding.tvStatusEstoque.setText(status);
-        });
-        inicioViewModel.getEstoquePercentualAnterior().observe(getViewLifecycleOwner(), percentualAnterior -> {
-            binding.tvDiaAnteriorPercenual.setText("Percentual: " + percentualAnterior + "%");
-        });
-        inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(), statusAnterior -> {
-            binding.tvStatusAnterior.setText("Status: " + statusAnterior);
-        });
+        inicioViewModel.getEstoqueStatus().observe(getViewLifecycleOwner(), status -> binding.tvStatusEstoque.setText(status));
+        inicioViewModel.getEstoquePercentualAnterior().observe(getViewLifecycleOwner(), percentualAnterior -> binding.tvDiaAnteriorPercenual.setText("Percentual: " + percentualAnterior + "%"));
+        inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(), statusAnterior -> binding.tvStatusAnterior.setText("Status: " + statusAnterior));
 
         // Configurar RecyclerView de tarefas
-        setupTarefasRecyclerView();
+        setupRecyclerViewTask();
 
         // Observar dados das tarefas
-        observarTarefas();
+        watchTasks();
 
         return root;
     }
@@ -171,7 +167,7 @@ public class InicioFragment extends Fragment {
         calendarView.setMonthScrollListener(calendarMonth -> {
             YearMonth yearMonth = calendarMonth.getYearMonth();
             String monthYear = yearMonth.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")) + " " + yearMonth.getYear();
-            String monthYearFomated = "";
+            String monthYearFomated;
             monthYearFomated = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1);
             txtMonthYear.setText(monthYearFomated);
             return null;
@@ -232,13 +228,13 @@ public class InicioFragment extends Fragment {
 
                     if (tarefasPorData.containsKey(dataTarefa)) {
                         List<TarefaResponse> tarefasDoDia = tarefasPorData.get(dataTarefa);
-                        mostrarTarefasDoDia(dataTarefa, tarefasDoDia);
+                        if (tarefasDoDia != null && tarefasDoDia.size() == 1) {
+                            openDialogTask(tarefasDoDia.get(0));
+                        } else if (tarefasDoDia != null && !tarefasDoDia.isEmpty()) {
+                            showDayTasks(dataTarefa, tarefasDoDia);
+                        }
                     } else {
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter
-                                        .ofPattern("dd/MM/yyyy"))))
-                                .setMessage("Nenhuma tarefa para este dia.")
-                                .setPositiveButton("OK", null).show();
+                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Nenhuma tarefa para este dia.");
                     }
                 });
             }
@@ -274,19 +270,17 @@ public class InicioFragment extends Fragment {
         if (userDataManager.isDataLoaded() && userDataManager.getEmail() != null) {
             inicioViewModel.loadTarefas();
         } else {
-            userDataManager.loadDataFromPreferences(requireContext(), () -> {
-                inicioViewModel.loadTarefas();
-            });
+            userDataManager.loadDataFromPreferences(requireContext(), () -> inicioViewModel.loadTarefas());
         }
 
     }
 
-    private void carregarDadosUsuario() {
+    private void loadUserData() {
         UserDataManager userDataManager = UserDataManager.getInstance();
 
         if (userDataManager.isDataLoaded()) {
             // Dados já estão no cache, usar diretamente
-            atualizarHeaderUsuario();
+            updateHeaderWithUserInfo();
         } else {
             // Dados não estão no cache, usar dados padrão
             binding.headerHome.headerNome.setText("Olá, Usuário!");
@@ -294,14 +288,14 @@ public class InicioFragment extends Fragment {
         }
     }
 
-    private void atualizarHeaderUsuario() {
+    private void updateHeaderWithUserInfo() {
         UserDataManager userDataManager = UserDataManager.getInstance();
         String nomeCompleto = userDataManager.getNomeCompleto();
         binding.headerHome.headerNome.setText("Olá, " + nomeCompleto + "!");
         binding.headerHome.headerFuncao.setText("Estoquista");
     }
 
-    private void setupTarefasRecyclerView() {
+    private void setupRecyclerViewTask() {
         tarefaAdapter = new TarefaAdapter();
         if (binding.tarefas != null) {
             binding.tarefas.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -314,26 +308,28 @@ public class InicioFragment extends Fragment {
         tarefaAdapter.setOnTarefaClickListener(new TarefaAdapter.OnTarefaClickListener() {
             @Override
             public void onTarefaClick(TarefaResponse tarefa) {
-                // Mostrar detalhes da tarefa
-                showTarefaDetails(tarefa);
+                // Mostrar detalhes da tarefa em bottom sheet estilizado
+                String tipo = tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa";
+                String produto = tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "N/A";
+                String relator = tarefa.getRelator() != null ? tarefa.getRelator() : "N/A";
+                String data = tarefa.getDataLimite() != null ? tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A";
+                TarefaDetalheBottomSheetDialogFragment
+                        .newInstance(tipo, produto, relator, data)
+                        .show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
             }
 
             @Override
             public void onRegistrarClick(TarefaResponse tarefa) {
-                // Finalizar tarefa
-                if (tarefa.getId() != null) {
-                    // todo: adicionar layout para levar a finalização de tarefa
-                    // inicioViewModel.finalizarTarefa(tarefa.getId());
-                }
+                openDialogTask(tarefa);
             }
         });
     }
 
-    private void observarTarefas() {
+    private void watchTasks() {
         inicioViewModel.getTarefas().observe(getViewLifecycleOwner(), tarefas -> {
             if (tarefas != null) {
                 tarefaAdapter.setTarefas(tarefas);
-                organizarTarefasPorData(tarefas);
+                stageTasksByDay(tarefas);
             }
         });
 
@@ -342,16 +338,15 @@ public class InicioFragment extends Fragment {
 //             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
 
-        // Tratar dps as mensagens de erro
+        // Tratar mensagens de erro
         inicioViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
-                new AlertDialog.Builder(requireContext()).setTitle("Erro").setMessage(errorMessage)
-                        .setPositiveButton("OK", null).show();
+                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), errorMessage);
             }
         });
     }
 
-    private void organizarTarefasPorData(List<TarefaResponse> tarefas) {
+    private void stageTasksByDay(List<TarefaResponse> tarefas) {
         tarefasPorData.clear();
 
         for (TarefaResponse tarefa : tarefas) {
@@ -365,7 +360,7 @@ public class InicioFragment extends Fragment {
         }
     }
 
-    private void mostrarTarefasDoDia(LocalDate data, List<TarefaResponse> tarefasDoDia) {
+    private void showDayTasks(LocalDate data, List<TarefaResponse> tarefasDoDia) {
         StringBuilder mensagem = new StringBuilder();
 
         for (int i = 0; i < tarefasDoDia.size(); i++) {
@@ -390,17 +385,28 @@ public class InicioFragment extends Fragment {
                 ("dd/MM/yyyy"))).setMessage(mensagem.toString()).setPositiveButton("OK", null).show();
     }
 
-    private void showTarefaDetails(TarefaResponse tarefa) {
-        StringBuilder details = new StringBuilder();
-        details.append("Produto: ").append(tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "N/A").append("\n");
-        details.append("Relator: ").append(tarefa.getRelator() != null ? tarefa.getRelator() : "N/A").append("\n");
-        if (tarefa.getDataLimite() != null) {
-            details.append("Data Limite: ").append(tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))).append("\n");
+    private void openDialogTask(TarefaResponse tarefa) {
+        String tipo = tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "";
+        String produto = tarefa.getIngrediente() != null ? tarefa.getIngrediente() : null;
+        if (isAuditoria(tipo)) {
+            AuditoriaQuantidadeBottomSheetDialogFragment.newInstance("Definir quantidade", produto)
+                    .show(getParentFragmentManager(), "AuditoriaQuantidadeBottomSheetDialog");
+        } else if (isAtividade(tipo)) {
+            new AtividadeEscolhaEntradaBottomSheetDialogFragment()
+                    .show(getParentFragmentManager(), "AtividadeEscolhaEntradaBottomSheetDialog");
+        } else {
+            ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Tipo de tarefa não reconhecido");
         }
+    }
 
-        new AlertDialog.Builder(requireContext()).setTitle(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa")
-                .setMessage(details.toString())
-                .setPositiveButton("OK", null).show();
+    private boolean isAuditoria(String tipo) {
+        String t = tipo.toLowerCase(Locale.ROOT);
+        return t.contains("auditor") || t.contains("confer") || t.contains("estoque");
+    }
+
+    private boolean isAtividade(String tipo) {
+        String t = tipo.toLowerCase(Locale.ROOT);
+        return t.contains("ativ");
     }
 
     @Override

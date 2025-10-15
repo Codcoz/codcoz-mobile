@@ -1,5 +1,6 @@
 package com.sustria.codcoz.ui.inicio;
 
+import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -27,7 +28,7 @@ public class InicioViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
 
-    private TarefaApi tarefaApi;
+    private final TarefaApi tarefaApi;
 
     public InicioViewModel() {
         estoquePercentual = new MutableLiveData<>();
@@ -107,7 +108,7 @@ public class InicioViewModel extends ViewModel {
 
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<TarefaResponse>> call, Response<List<TarefaResponse>> response) {
+            public void onResponse(@NonNull Call<List<TarefaResponse>> call, @NonNull Response<List<TarefaResponse>> response) {
                 isLoading.setValue(false);
 
                 if (response.isSuccessful() && response.body() != null) {
@@ -119,7 +120,7 @@ public class InicioViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<List<TarefaResponse>> call, Throwable t) {
+            public void onFailure(@NonNull Call<List<TarefaResponse>> call, @NonNull Throwable t) {
                 isLoading.setValue(false);
                 errorMessage.setValue("Erro de conexão: " + t.getMessage());
                 tarefas.setValue(new ArrayList<>());
@@ -139,7 +140,7 @@ public class InicioViewModel extends ViewModel {
 
         call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<TarefaResponse> call, Response<TarefaResponse> response) {
+            public void onResponse(@NonNull Call<TarefaResponse> call, @NonNull Response<TarefaResponse> response) {
                 isLoading.setValue(false);
 
                 if (response.isSuccessful()) {
@@ -151,7 +152,7 @@ public class InicioViewModel extends ViewModel {
             }
 
             @Override
-            public void onFailure(Call<TarefaResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<TarefaResponse> call, @NonNull Throwable t) {
                 isLoading.setValue(false);
                 errorMessage.setValue("Erro de conexão: " + t.getMessage());
             }

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="330dp"
+    android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -25,7 +26,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:fontFamily="@font/nunito_bold"
-            android:text="Baixa realizada com sucesso!"
+            android:text="Realizado com sucesso!"
             android:textColor="@color/custom_green_success"
             android:textSize="20sp" />
 

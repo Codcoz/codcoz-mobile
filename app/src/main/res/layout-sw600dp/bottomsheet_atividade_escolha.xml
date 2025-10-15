@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="500dp"
+    android:background="@drawable/bg_bottomsheet"
+    android:orientation="vertical"
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Como deseja registrar?"
+        android:textColor="@color/colorPrimary"
+        android:textSize="26sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/btnScanner"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/bg_tab_selected"
+        android:fontFamily="@font/nunito_bold"
+        android:gravity="center"
+        android:text="Entrada por Scanner"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/btnManual"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/bg_tab_unselected"
+        android:fontFamily="@font/nunito_bold"
+        android:gravity="center"
+        android:text="Entrada Manual"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textSize="28sp" />
+
+    <TextView
+        android:id="@+id/btnCancelar"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="32dp"
+        android:background="@drawable/bg_tab_unselected"
+        android:fontFamily="@font/nunito_bold"
+        android:gravity="center"
+        android:text="Cancelar"
+        android:textAllCaps="false"
+        android:textColor="@color/colorPrimary"
+        android:textSize="28sp" />
+
+</LinearLayout>
+
+
