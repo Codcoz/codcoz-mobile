@@ -1,6 +1,8 @@
 package com.sustria.codcoz.ui.inicio.produtos;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +19,15 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.ActivityProdutosBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.model.Produto;
+import com.sustria.codcoz.model.RegistroHistorico;
+import com.sustria.codcoz.ui.historico.HistoricoFragment;
 
 import java.text.ParseException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ProdutosActivity extends AppCompatActivity {
@@ -31,6 +37,7 @@ public class ProdutosActivity extends AppCompatActivity {
     private ProdutoAdapter produtoAdapter;
     private Boolean telaProximosValidade = false;
     private Boolean telaEstoqueBaixo = false;
+    private List<Produto> produtos = new ArrayList<>();
 
 
     @Override
@@ -41,13 +48,16 @@ public class ProdutosActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setupHeader();
+        seedDadosMock();
         try {
             setupRecyclerView();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
+        setupBusca();
     }
 
+    // Colocar o título do header
     private void setupHeader() {
         Bundle envelope = getIntent().getExtras();
         if (envelope != null) {
@@ -61,14 +71,21 @@ public class ProdutosActivity extends AppCompatActivity {
         binding.headerProdutos.headerActivityBackTitle.setText(titulo);
         binding.headerProdutos.headerActivityBackArrow.setOnClickListener(v -> finish());
     }
-    // TODO: fazer a parte de pesquisa
 
+    // Colocar os dados mock
+    private void seedDadosMock() {
+        produtos.clear();
+        // Usar dados mockados do MockDataProvider
+        produtos.addAll(MockDataProvider.getMockProduto());
+    }
+
+    // Colocando os produtos na recycler view
     private void setupRecyclerView() throws ParseException {
         produtoAdapter = new ProdutoAdapter();
         binding.produtos.setLayoutManager(new LinearLayoutManager(this));
         binding.produtos.setAdapter(produtoAdapter);
 
-        List<Produto> produtos = MockDataProvider.getMockProduto();
+        // verificando se tem algum filtro
         Bundle envelope = getIntent().getExtras();
         if (envelope != null) {
             String filtro = envelope.getString("filtro");
@@ -79,8 +96,8 @@ public class ProdutosActivity extends AppCompatActivity {
                         produtosEstoqueBaixo.add(p);
                     }
                 }
-
-                produtoAdapter.setProdutos(produtosEstoqueBaixo);
+                produtos = produtosEstoqueBaixo;
+                produtoAdapter.setProdutos(produtos);
             } else if (telaProximosValidade) {
                 List<Produto> produtosProximosAValidade = new ArrayList<>();
                 for (Produto p : produtos) {
@@ -91,20 +108,62 @@ public class ProdutosActivity extends AppCompatActivity {
                         produtosProximosAValidade.add(p);
                     }
                 }
-                produtoAdapter.setProdutos(produtosProximosAValidade);
+                produtos = produtosProximosAValidade;
+                produtoAdapter.setProdutos(produtos);
 
             } else {
                 produtoAdapter.setProdutos(produtos);
             }
         }
-        
     }
 
+    // parte de busca
+    private void setupBusca() {
+        binding.editTextBusca.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                aplicarBusca();
+            }
+        });
+    }
+
+    private void aplicarBusca() {
+        String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim().toLowerCase();
+        List<Produto> filtrados = new ArrayList<>();
+
+        if (termo.isEmpty()) {
+            produtoAdapter.setProdutos(produtos);
+            return;
+        }
+
+        for (Produto p : produtos) {
+            if (p.getNome().toLowerCase().contains(termo)) {
+                filtrados.add(p);
+            }
+        }
+        produtoAdapter.setProdutos(filtrados);
+    }
+
+    // adapter
     private class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoViewHolder> {
         private List<Produto> produtos = new ArrayList<>();
 
         public void setProdutos(List<Produto> produtos) {
             this.produtos = produtos;
+            notifyDataSetChanged();
+        }
+
+        void submit(List<Produto> novos) {
+            produtos.clear();
+            produtos.addAll(novos);
             notifyDataSetChanged();
         }
 
@@ -159,7 +218,7 @@ public class ProdutosActivity extends AppCompatActivity {
                 codigoEan.setText(produto.getCodigoEan());
                 quantidade.setText(String.valueOf(produto.getQuantidade()));
                 marca.setText(produto.getMarca());
-                validade.setText(String.valueOf(produto.getValidade()));
+                validade.setText(String.valueOf(produto.getValidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
                 descricao.setText(produto.getDescricao());
 
                 Button sair = view.findViewById(R.id.btnSair);
