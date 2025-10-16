@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.BottomsheetProdutoConfirmadoBinding;
 import com.sustria.codcoz.databinding.BottomsheetProdutoErroBinding;
 
@@ -38,22 +40,27 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // Muda a cor da barra de navegação para a cor de fundo
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setNavigationBarColor(
+                    ContextCompat.getColor(requireContext(), R.color.colorSurface)
+            );
+        }
+    }
+
+    @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         if (isErro && bindingErro != null) {
-            if (mensagemErro != null && bindingErro.txtMensagemErro != null) {
+            if (mensagemErro != null) {
                 bindingErro.txtMensagemErro.setText(mensagemErro);
             }
-            bindingErro.btnFechar.setOnClickListener(v -> {
-                dismiss();
-                requireActivity().finish();
-            });
+            bindingErro.btnFechar.setOnClickListener(v -> dismiss());
         } else if (bindingSucesso != null) {
-            bindingSucesso.btnFechar.setOnClickListener(v -> {
-                dismiss();
-                requireActivity().finish();
-            });
+            bindingSucesso.btnFechar.setOnClickListener(v -> dismiss());
         }
     }
 

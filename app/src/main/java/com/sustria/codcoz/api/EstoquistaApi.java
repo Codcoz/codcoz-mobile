@@ -10,5 +10,5 @@ import retrofit2.http.Query;
 public interface EstoquistaApi {
 
     @GET("estoquista/buscar/{email}")
-    Call<EstoquistaResponse> buscarPorEmail(@Path("email") String email);
+    Call<EstoquistaResponse> buscarPorEmail(@Path(value = "email", encoded = true) String email);
 }

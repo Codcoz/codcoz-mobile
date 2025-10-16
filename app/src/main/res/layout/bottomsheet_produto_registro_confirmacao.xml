@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="330dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
     android:padding="16dp">
@@ -12,157 +12,116 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <ImageView
-            android:id="@+id/btnClosePopup"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:padding="2dp"
-            android:src="@drawable/ic_voltar" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
             android:fontFamily="@font/nunito_bold"
-            android:text="Produto: "
+            android:text="Confirmar registro"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/nomeProduto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:textColor="@color/colorPrimary"
-            android:textSize="18sp" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="center"
-            android:text="Código do produto: "
-            android:textColor="@color/colorOnSurfaceVariant"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/codigoProduto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="12345678910"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="center"
-            android:text="Fornecedor: "
-            android:textColor="@color/colorOnSurfaceVariant"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/fornecedorProduto"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Camil"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/opHoje"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="center"
-            android:text="Peso unit: "
-            android:textColor="@color/colorOnSurfaceVariant"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/pesoUnit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:gravity="center"
-            android:text="2kg"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="24dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="center"
-            android:text="Quant. total: "
-            android:textColor="@color/colorOnSurfaceVariant"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/qntTotal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:gravity="center"
-            android:text="20kg"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/btnConfirmar"
-        android:layout_width="245dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center"
         android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/custom_green_success"
-        android:text="Continuar"
-        android:textAllCaps="false"
-        android:textColor="@color/colorOnPrimary"
-        android:textSize="20sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Produto:"
+            android:textColor="@color/colorOnSurfaceVariant"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txtNomeProduto"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Estoque antigo:"
+            android:textColor="@color/colorOnSurfaceVariant"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txtEstoqueAntigo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/nunito_bold"
+            android:text="Estoque atualizado:"
+            android:textColor="@color/colorOnSurfaceVariant"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/txtEstoqueAtualizado"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:gravity="end"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/btnCancelar"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_tab_unselected"
+            android:fontFamily="@font/nunito_bold"
+            android:gravity="center"
+            android:text="Cancelar"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/btnConfirmar"
+            android:layout_width="112dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/bg_tab_selected"
+            android:backgroundTint="@color/custom_green_success"
+            android:fontFamily="@font/nunito_bold"
+            android:gravity="center"
+            android:text="Confirmar"
+            android:textColor="@color/colorBackground"
+            android:textSize="14sp" />
+    </LinearLayout>
 
 </LinearLayout>
 

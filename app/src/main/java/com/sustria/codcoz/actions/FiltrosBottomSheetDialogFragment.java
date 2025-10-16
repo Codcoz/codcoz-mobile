@@ -1,4 +1,4 @@
-package com.sustria.codcoz.ui.historico;
+package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -47,6 +48,17 @@ public class FiltrosBottomSheetDialogFragment extends BottomSheetDialogFragment 
                              @Nullable Bundle savedInstanceState) {
         binding = BottomsheetFiltrosBinding.inflate(inflater, container, false);
         return binding.getRoot();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Muda a cor da barra de navegação para a cor de fundo
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setNavigationBarColor(
+                    ContextCompat.getColor(requireContext(), R.color.colorSurface)
+            );
+        }
     }
 
     @Override

@@ -183,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void proceedToMainWithUser(EstoquistaResponse user) {
-        UserDataManager.getInstance().setUserData(user);
+        UserDataManager.getInstance().setUserData(user, LoginActivity.this);
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
 
         // Garante que o usuário não possa voltar para a tela de login

@@ -1,4 +1,4 @@
-package com.sustria.codcoz.ui.cardapio.actions;
+package com.sustria.codcoz.api.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -6,8 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.TextView;
-
-import androidx.annotation.ColorInt;
 
 import com.sustria.codcoz.R;
 
