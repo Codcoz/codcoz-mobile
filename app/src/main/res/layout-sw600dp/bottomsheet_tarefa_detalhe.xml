@@ -46,7 +46,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="64dp"
         android:gravity="end"
         android:orientation="horizontal">
 
@@ -70,7 +70,7 @@
             android:background="@drawable/bg_tab_selected"
             android:fontFamily="@font/nunito_bold"
             android:gravity="center"
-            android:text="Registar"
+            android:text="Registrar"
             android:textColor="@color/colorPrimary"
             android:textSize="24sp" />
     </LinearLayout>

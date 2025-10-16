@@ -58,10 +58,35 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
         edt.setFilters(new InputFilter[]{new InputFilter.LengthFilter(8)});
 
         binding.btnCancelar.setOnClickListener(v -> dismiss());
+        getParentFragmentManager().setFragmentResultListener(
+                ConfirmarRegistroBottomSheetDialogFragment.REQUEST_KEY,
+                this,
+                (requestKey, result) -> {
+                    boolean confirmed = result.getBoolean(ConfirmarRegistroBottomSheetDialogFragment.RESULT_CONFIRMED, false);
+                    if (!confirmed) return;
+                    dismiss();
+                    ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                }
+        );
+
         binding.btnConfirmar.setOnClickListener(v -> {
-            // Aqui vamos enviar a quantidade para a API. Por ora, apenas exibe sucesso.
-            dismiss();
-            ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+            // Após informar a quantidade, abre o bottomsheet de confirmação
+            String nome = produto != null ? produto : titulo;
+            Integer estoqueAntigo = null;
+            Integer estoqueAtualizado = null;
+            try {
+                String qtdStr = edt.getText() != null ? edt.getText().toString().trim() : null;
+                if (qtdStr != null && !qtdStr.isEmpty()) {
+                    estoqueAtualizado = Integer.parseInt(qtdStr);
+                }
+            } catch (Exception ignored) { }
+
+            ConfirmarRegistroBottomSheetDialogFragment.show(
+                    getParentFragmentManager(),
+                    nome,
+                    estoqueAntigo,
+                    estoqueAtualizado
+            );
         });
     }
 

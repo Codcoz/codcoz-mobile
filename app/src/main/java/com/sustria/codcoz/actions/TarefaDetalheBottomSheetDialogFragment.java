@@ -55,9 +55,23 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         if (data != null) binding.txtData.setText(data);
 
         binding.btnFechar.setOnClickListener(v -> dismiss());
+
+        // Após confirmar, exibe sucesso
+        getParentFragmentManager().setFragmentResultListener(
+                ConfirmarRegistroBottomSheetDialogFragment.REQUEST_KEY,
+                this,
+                (requestKey, result) -> {
+                    boolean confirmed = result.getBoolean(ConfirmarRegistroBottomSheetDialogFragment.RESULT_CONFIRMED, false);
+                    if (!confirmed) return;
+                    dismiss();
+                    ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                }
+        );
+
         binding.btnRegistrar.setOnClickListener(v -> {
+            // Fluxozin
             if (tipo == null) {
-                dismiss();
+                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Tipo de tarefa não reconhecido");
                 return;
             }
             String t = tipo.toLowerCase();

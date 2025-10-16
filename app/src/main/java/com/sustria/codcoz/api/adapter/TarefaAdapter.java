@@ -21,7 +21,6 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
     private OnTarefaClickListener listener;
 
     public interface OnTarefaClickListener {
-        void onTarefaClick(TarefaResponse tarefa);
 
         void onRegistrarClick(TarefaResponse tarefa);
     }
@@ -54,13 +53,6 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         String codigo = tarefa.getPedido() != null ? tarefa.getPedido() :
                 (tarefa.getId() != null ? "ID: " + tarefa.getId() : "");
         holder.tvId.setText(codigo);
-
-        // Configurar cliques
-        holder.itemView.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onTarefaClick(tarefa);
-            }
-        });
 
         holder.button.setOnClickListener(v -> {
             if (listener != null) {

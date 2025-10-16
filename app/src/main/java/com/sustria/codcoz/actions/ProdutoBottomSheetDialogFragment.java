@@ -68,24 +68,48 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         }
 
         binding.btnClosePopup.setOnClickListener(v -> dismiss());
+
+        // Ouve o resultado de confirmação do bottomsheet de confirmação
+        getParentFragmentManager().setFragmentResultListener(
+                ConfirmarRegistroBottomSheetDialogFragment.REQUEST_KEY,
+                this,
+                (requestKey, result) -> {
+                    boolean confirmed = result.getBoolean(ConfirmarRegistroBottomSheetDialogFragment.RESULT_CONFIRMED, false);
+                    if (!confirmed || produto == null) return;
+                    try {
+                        if ("baixa".equalsIgnoreCase(tipoMov)) {
+//                            produtoRepository.realizarBaixa(produto);
+                        } else if ("entrada".equalsIgnoreCase(tipoMov)) {
+//                            produtoRepository.realizarEntrada(produto);
+                        }
+                        dismiss();
+                        ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                    } catch (Exception e) {
+                        dismiss();
+                        String mensagem = e.getMessage() != null ? e.getMessage() : "Falha ao processar a operação";
+                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), mensagem);
+                    }
+                }
+        );
+
         binding.btnConfirmar.setOnClickListener(v -> {
             if (produto == null) {
                 dismiss();
                 return;
             }
+            Integer estoqueAntigo = null;
+            Integer estoqueAtualizado = null;
             try {
-                if ("baixa".equalsIgnoreCase(tipoMov)) {
-//                    produtoRepository.realizarBaixa(produto);
-                } else if ("entrada".equalsIgnoreCase(tipoMov)) {
-//                    produtoRepository.realizarEntrada(produto);
-                }
-                dismiss();
-                ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
-            } catch (Exception e) {
-                dismiss();
-                String mensagem = e.getMessage() != null ? e.getMessage() : "Falha ao processar a operação";
-                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), mensagem);
-            }
+                estoqueAntigo = produto.getQuantidade();
+                estoqueAtualizado = produto.getQuantidade();
+            } catch (Exception ignored) {}
+
+            ConfirmarRegistroBottomSheetDialogFragment.show(
+                    getParentFragmentManager(),
+                    produto.getNome(),
+                    estoqueAntigo,
+                    estoqueAtualizado
+            );
         });
     }
 

@@ -159,7 +159,7 @@
         android:layout_marginBottom="32dp"
         android:backgroundTint="@color/custom_green_success"
         android:fontFamily="@font/nunito_bold"
-        android:text="Confirmar"
+        android:text="Continuar"
         android:textAllCaps="false"
         android:textColor="@color/colorOnPrimary"
         android:textSize="28sp" />
