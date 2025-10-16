@@ -2,6 +2,8 @@ package com.sustria.codcoz.ui.cardapio;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.DetalhesReceitaActivity;
 import com.sustria.codcoz.databinding.FragmentCardapioBinding;
 import com.sustria.codcoz.model.MockDataProvider;
+import com.sustria.codcoz.model.Produto;
 import com.sustria.codcoz.model.Receita;
 import com.sustria.codcoz.ui.cardapio.actions.CardapioSemanal;
 
@@ -27,6 +30,7 @@ public class CardapioFragment extends Fragment {
 
     private FragmentCardapioBinding binding;
     private ReceitaAdapter receitaAdapter;
+    private List<Receita> receitas = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +44,7 @@ public class CardapioFragment extends Fragment {
         setupHeader();
         setupRecyclerView();
         botao();
+        setupBusca();
 
         return root;
     }
@@ -62,8 +67,42 @@ public class CardapioFragment extends Fragment {
         binding.itemAtivRecentes.setAdapter(receitaAdapter);
 
         // Carregar dados mockados
-        List<Receita> receitas = MockDataProvider.getMockReceitas();
+        receitas = MockDataProvider.getMockReceitas();
         receitaAdapter.setReceitas(receitas);
+    }
+
+    private void setupBusca() {
+        binding.editTextBusca.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                aplicarBusca();
+            }
+        });
+    }
+
+    private void aplicarBusca() {
+        String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim().toLowerCase();
+        List<Receita> filtrados = new ArrayList<>();
+
+        if (termo.isEmpty()) {
+            receitaAdapter.setReceitas(receitas);
+            return;
+        }
+
+        for (Receita r : receitas) {
+            if (r.getNome().toLowerCase().contains(termo)) {
+                filtrados.add(r);
+            }
+        }
+        receitaAdapter.setReceitas(filtrados);
     }
 
     private void botao() {
