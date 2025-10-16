@@ -56,7 +56,7 @@
                         android:id="@+id/tv_nome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Filipi Inácio"
+                        android:text=""
                         android:textColor="@color/colorPrimary"
                         android:textSize="28sp"
                         android:textStyle="bold" />
@@ -65,7 +65,7 @@
                         android:id="@+id/tv_funcao"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Instituto J&amp;F"
+                        android:text=""
                         android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="22sp" />
 
@@ -73,7 +73,7 @@
                         android:id="@+id/tv_desde"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Estoquista desde 14/01/2024"
+                        android:text="Estoquista desde 00/00/0000"
                         android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="20sp" />
                 </LinearLayout>

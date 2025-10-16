@@ -1,4 +1,4 @@
-package com.sustria.codcoz.ui.cardapio.actions;
+package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
 import android.widget.ExpandableListAdapter;
@@ -75,7 +75,7 @@ public class CardapioSemanal extends AppCompatActivity {
             itemRefeicao.put(dia.getDia(), refeicoesTexto);
         }
 
-        adapter = new com.sustria.codcoz.ui.cardapio.actions.ExpandableListAdapter(this, diaSemana, itemRefeicao);
+        adapter = new com.sustria.codcoz.api.adapter.ExpandableListAdapter(this, diaSemana, itemRefeicao);
         binding.expandableListView.setAdapter(adapter);
     }
 }

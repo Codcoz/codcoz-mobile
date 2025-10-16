@@ -1,6 +1,5 @@
 package com.sustria.codcoz.ui.inicio;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -15,6 +14,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
@@ -28,9 +28,14 @@ import com.kizitonwose.calendar.view.MonthDayBinder;
 import com.kizitonwose.calendar.view.MonthHeaderFooterBinder;
 import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.actions.ConfirmacaoBottomSheetDialogFragment;
 import com.sustria.codcoz.actions.PerfilActivity;
+import com.sustria.codcoz.actions.TarefaDetalheBottomSheetDialogFragment;
+import com.sustria.codcoz.api.adapter.TarefaAdapter;
+import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 import com.sustria.codcoz.ui.inicio.produtos.ProdutosActivity;
+import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -50,16 +55,20 @@ public class InicioFragment extends Fragment {
 
     private FragmentInicioBinding binding;
     private InicioViewModel inicioViewModel;
+    private TarefaAdapter tarefaAdapter;
+    private final Map<LocalDate, List<TarefaResponse>> tarefasPorData = new HashMap<>();
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         botoes();
 
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
+
+        // Carregar dados do usuário do cache
+        loadUserData();
 
         // Observar dados do estoque
         inicioViewModel.getEstoquePercentual().observe(getViewLifecycleOwner(), percentual -> {
@@ -69,10 +78,8 @@ public class InicioFragment extends Fragment {
             entries.add(new PieEntry(percentual, ""));
             entries.add(new PieEntry(100f - percentual, ""));
             PieDataSet dataSet = new PieDataSet(entries, "");
-            dataSet.setColors(
-                    ContextCompat.getColor(requireContext(), R.color.custom_green_success),
-                    ContextCompat.getColor(requireContext(), R.color.colorOnSurfaceVariant)
-            );
+            dataSet.setColors(ContextCompat.getColor(requireContext(), R.color.custom_green_success),
+                    ContextCompat.getColor(requireContext(), R.color.colorOnSurfaceVariant));
             dataSet.setDrawValues(false);
             PieData data = new PieData(dataSet);
             pieChart.setData(data);
@@ -92,21 +99,21 @@ public class InicioFragment extends Fragment {
             }
         });
 
-        binding.headerHome.headerPerfil.setOnClickListener(v -> {
-            startActivity(new Intent(getContext(), PerfilActivity.class));
-        });
+        binding.headerHome.headerPerfil.setOnClickListener(v -> startActivity(new Intent(getContext(), PerfilActivity.class)));
 
-        inicioViewModel.getEstoqueStatus().observe(getViewLifecycleOwner(), status -> {
-            binding.tvStatusEstoque.setText(status);
-        });
-        inicioViewModel.getEstoquePercentualAnterior().observe(getViewLifecycleOwner(), percentualAnterior -> {
-            binding.tvDiaAnteriorPercenual.setText("Percentual: " + percentualAnterior + "%");
-        });
-        inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(), statusAnterior -> {
-            binding.tvStatusAnterior.setText("Status: " + statusAnterior);
-        });
+        inicioViewModel.getEstoqueStatus().observe(getViewLifecycleOwner(),
+                status -> binding.tvStatusEstoque.setText(status));
+        inicioViewModel.getEstoquePercentualAnterior().observe(getViewLifecycleOwner(),
+                percentualAnterior -> binding.tvDiaAnteriorPercenual.
+                        setText("Percentual: " + percentualAnterior + "%"));
+        inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(),
+                statusAnterior -> binding.tvStatusAnterior.setText("Status: " + statusAnterior));
 
-        // Futuramente: observar atividadesRecentes para atualizar lista
+        // Configurar RecyclerView de tarefas
+        setupRecyclerViewTask();
+
+        // Observar dados das tarefas
+        watchTasks();
 
         return root;
     }
@@ -150,8 +157,6 @@ public class InicioFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        Map<LocalDate, String> diaTarefa = new HashMap<>();
-        diaTarefa.put(LocalDate.of(2025, 9, 23), "Realizar auditoria");
 
         CalendarView calendarView = binding.calendarView;
 
@@ -166,20 +171,22 @@ public class InicioFragment extends Fragment {
 
         calendarView.setMonthScrollListener(calendarMonth -> {
             YearMonth yearMonth = calendarMonth.getYearMonth();
-            String monthYear = yearMonth.getMonth()
-                    .getDisplayName(TextStyle.FULL, new Locale("pt", "BR"))
-                    + " " + yearMonth.getYear();
-            txtMonthYear.setText(monthYear);
+            String monthYear = yearMonth.getMonth().getDisplayName(TextStyle.FULL, new Locale("pt", "BR")) + " " + yearMonth.getYear();
+            String monthYearFomated;
+            monthYearFomated = monthYear.substring(0, 1).toUpperCase() + monthYear.substring(1);
+            txtMonthYear.setText(monthYearFomated);
             return null;
         });
 
         btnAnterior.setOnClickListener(v -> {
-            YearMonth prevMonth = calendarView.findFirstVisibleMonth().getYearMonth().minusMonths(1);
+            YearMonth prevMonth = calendarView.findFirstVisibleMonth().getYearMonth()
+                    .minusMonths(1);
             calendarView.smoothScrollToMonth(prevMonth);
         });
 
         btnProximo.setOnClickListener(v -> {
-            YearMonth nextMonth = calendarView.findFirstVisibleMonth().getYearMonth().plusMonths(1);
+            YearMonth nextMonth = calendarView.findFirstVisibleMonth().getYearMonth()
+                    .plusMonths(1);
             calendarView.smoothScrollToMonth(nextMonth);
         });
 
@@ -194,11 +201,8 @@ public class InicioFragment extends Fragment {
             public void bind(@NonNull DayViewContainer container, @NonNull CalendarDay data) {
                 container.dia = data;
 
-                LocalDate date = LocalDate.of(
-                        data.getDate().getYear(),
-                        data.getDate().getMonth(),
-                        data.getDate().getDayOfMonth()
-                );
+                LocalDate date = LocalDate.of(data.getDate().getYear(), data.getDate().getMonth(),
+                        data.getDate().getDayOfMonth());
                 int dia = date.getDayOfMonth();
 
                 container.textView.setText(String.valueOf(dia));
@@ -217,27 +221,29 @@ public class InicioFragment extends Fragment {
                     container.textView.setBackgroundResource(R.drawable.bolinha_normal);
                 }
 
-                if (diaTarefa.containsKey(date)) {
+                // Verificar se há tarefas para esta data
+                if (tarefasPorData.containsKey(date)) {
                     container.bolinha.setVisibility(View.VISIBLE);
+                } else {
+                    container.bolinha.setVisibility(View.GONE);
                 }
 
                 container.getView().setOnClickListener(v -> {
                     LocalDate dataTarefa = container.dia.getDate();
 
-                    if (diaTarefa.containsKey(dataTarefa)) {
-                        String tarefa = diaTarefa.get(dataTarefa);
-
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
-                                .setMessage(tarefa)
-                                .setPositiveButton("OK", null)
-                                .show();
+                    if (tarefasPorData.containsKey(dataTarefa)) {
+                        List<TarefaResponse> tarefasDoDia = tarefasPorData.get(dataTarefa);
+                        if (tarefasDoDia != null && tarefasDoDia.size() == 1) {
+                            TarefaDetalheBottomSheetDialogFragment.newInstance(
+                                            tarefasDoDia.get(0).getTipoTarefa(),
+                                            tarefasDoDia.get(0).getIngrediente(),
+                                            tarefasDoDia.get(0).getRelator(),
+                                            tarefasDoDia.get(0).getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                                    )
+                                    .show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
+                        }
                     } else {
-                        new AlertDialog.Builder(requireContext())
-                                .setTitle(String.valueOf(dataTarefa.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))))
-                                .setMessage("Nenhuma tarefa para este dia.")
-                                .setPositiveButton("OK", null)
-                                .show();
+                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Nenhuma tarefa para este dia.");
                     }
                 });
             }
@@ -267,6 +273,102 @@ public class InicioFragment extends Fragment {
 
         calendarView.setup(startMonth, endMonth, firstDayOfWeek);
         calendarView.scrollToMonth(currentMonth);
+
+        UserDataManager userDataManager = UserDataManager.getInstance();
+
+        if (userDataManager.isDataLoaded() && userDataManager.getEmail() != null) {
+            inicioViewModel.loadTarefas();
+        } else {
+            userDataManager.loadDataFromPreferences(requireContext(), () -> inicioViewModel.loadTarefas());
+        }
+
+    }
+
+    private void loadUserData() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+
+        if (userDataManager.isDataLoaded()) {
+            // Dados já estão no cache, usar diretamente
+            updateHeaderWithUserInfo();
+        } else {
+            // Dados não estão no cache, usar dados padrão
+            binding.headerHome.headerNome.setText("Olá, Usuário!");
+            binding.headerHome.headerFuncao.setText("Estoquista");
+        }
+    }
+
+    private void updateHeaderWithUserInfo() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+        String nomeCompleto = userDataManager.getNomeCompleto();
+        binding.headerHome.headerNome.setText("Olá, " + nomeCompleto + "!");
+        binding.headerHome.headerFuncao.setText("Estoquista");
+    }
+
+    private void setupRecyclerViewTask() {
+        tarefaAdapter = new TarefaAdapter();
+        if (binding.tarefas != null) {
+            binding.tarefas.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        if (binding.tarefas != null) {
+            binding.tarefas.setAdapter(tarefaAdapter);
+        }
+
+        // Listeners para cliques nas tarefas
+        tarefaAdapter.setOnTarefaClickListener(this::openDialogTask);
+    }
+
+    private void watchTasks() {
+        inicioViewModel.getTarefas().observe(getViewLifecycleOwner(), tarefas -> {
+            if (tarefas != null) {
+                tarefaAdapter.setTarefas(tarefas);
+                stageTasksByDay(tarefas);
+            }
+        });
+
+        // Observar o estado de carregamento
+        inicioViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+//             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+        });
+
+        // Tratar mensagens de erro
+        inicioViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null && !errorMessage.isEmpty()) {
+                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), errorMessage);
+            }
+        });
+    }
+
+    private void stageTasksByDay(List<TarefaResponse> tarefas) {
+        tarefasPorData.clear();
+
+        for (TarefaResponse tarefa : tarefas) {
+            if (tarefa.getDataLimite() != null) {
+                LocalDate dataLimite = tarefa.getDataLimite();
+                if (!tarefasPorData.containsKey(dataLimite)) {
+                    tarefasPorData.put(dataLimite, new ArrayList<>());
+                }
+                tarefasPorData.get(dataLimite).add(tarefa);
+            }
+        }
+    }
+
+    private void openDialogTask(TarefaResponse tarefa) {
+        TarefaDetalheBottomSheetDialogFragment.newInstance(
+                tarefa.getTipoTarefa(),
+                tarefa.getIngrediente(),
+                tarefa.getRelator(),
+                tarefa.getDataLimite() != null ? tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : null
+        ).show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
+    }
+
+    private boolean isAuditoria(String tipo) {
+        String t = tipo.toLowerCase(Locale.ROOT);
+        return t.contains("auditor") || t.contains("confer") || t.contains("estoque");
+    }
+
+    private boolean isAtividade(String tipo) {
+        String t = tipo.toLowerCase(Locale.ROOT);
+        return t.contains("ativ");
     }
 
     private void botoes() {

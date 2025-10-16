@@ -1,71 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    app:cardCornerRadius="15dp"
-    android:clipToPadding="false">
+    app:cardCornerRadius="16dp">
 
     <LinearLayout
-        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_card_border"
+        android:background="@drawable/bg_stroke"
         android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:padding="12dp">
+        android:padding="16dp">
 
-        <ImageView
-            android:id="@+id/ic_tarefa"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="12dp"
-            android:src="@drawable/ic_tarefa" />
+        <LinearLayout
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_tag_status"
+            android:backgroundTint="@color/custom_orange_opacity_44"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="35dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/ic_check" />
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/nome"
+                android:id="@+id/tv_title_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/nunito_semibold"
-                android:text="Verificar estoque"
-                android:textSize="16sp"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginBottom="4dp" />
+                android:text="Auditoria"
+                android:textColor="#0B2239"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/nome2"
+                android:id="@+id/tv_name_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Leite condensado Italac"
-                android:textSize="13sp"
-                android:textColor="#999999"
-                android:layout_marginBottom="2dp" />
+                android:text="Arroz camil - 2 unidades"
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/nome3"
+                android:id="@+id/tv_id_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="cod. 12345678910"
-                android:textSize="12sp"
-                android:textColor="#999999" />
+                android:layout_marginTop="2dp"
+                android:text="cod. 123456"
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="12sp" />
         </LinearLayout>
 
         <Button
-            android:id="@+id/registrarTarefa"
+            android:id="@+id/button"
             android:layout_width="wrap_content"
-            android:layout_height="38dp"
-            android:layout_marginStart="12dp"
-            android:backgroundTint="#FFCC00"
-            android:fontFamily="@font/nunito_semibold"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:backgroundTint="@color/colorSecondary"
+            android:fontFamily="@font/nunito_bold"
             android:text="Registrar"
-            android:textColor="#0f1829" />
+            android:textAllCaps="false"
+            android:textColor="@color/colorPrimary"
+            android:textSize="12sp" />
+
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -71,6 +71,8 @@ dependencies {
     // Biblioteca para API
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
     
     // Biblioteca para scanner de código de barras
     implementation("com.journeyapps:zxing-android-embedded:4.3.0")

@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="330dp"
+    android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
     android:padding="16dp">
 
@@ -157,7 +158,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/custom_green_success"
-        android:text="Confirmar"
+        android:text="Continuar"
         android:textAllCaps="false"
         android:textColor="@color/colorOnPrimary"
         android:textSize="20sp"

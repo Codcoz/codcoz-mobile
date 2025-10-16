@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.sustria.codcoz.actions.FiltrosBottomSheetDialogFragment;
 import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.model.RegistroHistorico;

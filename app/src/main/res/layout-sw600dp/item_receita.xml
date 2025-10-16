@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    app:cardCornerRadius="15dp">
+    app:cardCornerRadius="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,6 +35,7 @@
                 android:id="@+id/tv_unidades"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:background="@drawable/bg_tag_status"
                 android:backgroundTint="@color/custom_blue_link_opacity_44"
                 android:fontFamily="@font/nunito_semibold"
@@ -44,7 +45,7 @@
                 android:paddingBottom="4dp"
                 android:text="122 porções possíveis"
                 android:textColor="@color/custom_blue_link"
-                android:textSize="18sp" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 

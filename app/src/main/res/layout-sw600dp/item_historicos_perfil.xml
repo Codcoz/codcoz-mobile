@@ -16,13 +16,15 @@
         <LinearLayout
             android:layout_width="75dp"
             android:layout_height="75dp"
+            android:layout_gravity="center"
             android:background="@drawable/bg_tag_status"
             android:backgroundTint="@color/custom_orange_opacity_44"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="35dp"
+                android:layout_width="45dp"
                 android:layout_height="wrap_content"
+                android:scaleType="centerCrop"
                 android:layout_gravity="center"
                 app:srcCompat="@drawable/ic_barra" />
         </LinearLayout>
@@ -44,7 +46,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tv_desc_card"
+                android:id="@+id/tv_name_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Arroz camil - 2 unidades"
@@ -52,7 +54,7 @@
                 android:textSize="18sp" />
 
             <TextView
-                android:id="@+id/tv_time_card"
+                android:id="@+id/tv_id_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"

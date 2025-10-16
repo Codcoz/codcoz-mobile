@@ -27,7 +27,7 @@
         <activity android:name=".auth.CadastroActivity" />
         <activity android:name=".actions.PerfilActivity" />
         <activity android:name=".actions.DetalhesReceitaActivity" />
-        <activity android:name=".ui.cardapio.actions.CardapioSemanal" />
+        <activity android:name=".actions.CardapioSemanal" />
         <activity
             android:name=".auth.SplashScreenActivity"
             android:exported="true">

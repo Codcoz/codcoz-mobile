@@ -250,6 +250,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cards_resumo" />
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="372dp"
@@ -274,6 +275,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
                         android:src="@drawable/anterior" />
 
                     <TextView
@@ -288,7 +290,9 @@
                         android:id="@+id/btnNextMonth"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+
                         android:background="?attr/selectableItemBackgroundBorderless"
+                        android:padding="10dp"
                         android:src="@drawable/proximo" />
                 </LinearLayout>
 
@@ -308,6 +312,29 @@
                     app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento" />
 
             </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp"
+                android:text="Tarefas a serem realizadas"
+                android:textSize="21sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/tarefas"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView"
+                tools:listitem="@layout/item_tarefa" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
