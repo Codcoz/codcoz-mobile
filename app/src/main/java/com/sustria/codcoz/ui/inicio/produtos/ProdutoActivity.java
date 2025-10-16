@@ -1,8 +1,6 @@
 package com.sustria.codcoz.ui.inicio.produtos;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,26 +17,21 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.ActivityProdutosBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.model.Produto;
-import com.sustria.codcoz.model.RegistroHistorico;
-import com.sustria.codcoz.ui.historico.HistoricoFragment;
 
 import java.text.ParseException;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-public class ProdutosActivity extends AppCompatActivity {
+public class ProdutoActivity extends AppCompatActivity {
 
     private ActivityProdutosBinding binding;
     private String titulo;
     private ProdutoAdapter produtoAdapter;
     private Boolean telaProximosValidade = false;
     private Boolean telaEstoqueBaixo = false;
-    private List<Produto> produtos = new ArrayList<>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,16 +41,13 @@ public class ProdutosActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setupHeader();
-        seedDadosMock();
         try {
             setupRecyclerView();
         } catch (ParseException e) {
             throw new RuntimeException(e);
         }
-        setupBusca();
     }
 
-    // Colocar o título do header
     private void setupHeader() {
         Bundle envelope = getIntent().getExtras();
         if (envelope != null) {
@@ -71,21 +61,14 @@ public class ProdutosActivity extends AppCompatActivity {
         binding.headerProdutos.headerActivityBackTitle.setText(titulo);
         binding.headerProdutos.headerActivityBackArrow.setOnClickListener(v -> finish());
     }
+    // TODO: fazer a parte de pesquisa
 
-    // Colocar os dados mock
-    private void seedDadosMock() {
-        produtos.clear();
-        // Usar dados mockados do MockDataProvider
-        produtos.addAll(MockDataProvider.getMockProduto());
-    }
-
-    // Colocando os produtos na recycler view
     private void setupRecyclerView() throws ParseException {
         produtoAdapter = new ProdutoAdapter();
         binding.produtos.setLayoutManager(new LinearLayoutManager(this));
         binding.produtos.setAdapter(produtoAdapter);
 
-        // verificando se tem algum filtro
+        List<Produto> produtos = MockDataProvider.getMockProduto();
         Bundle envelope = getIntent().getExtras();
         if (envelope != null) {
             String filtro = envelope.getString("filtro");
@@ -96,74 +79,38 @@ public class ProdutosActivity extends AppCompatActivity {
                         produtosEstoqueBaixo.add(p);
                     }
                 }
-                produtos = produtosEstoqueBaixo;
-                produtoAdapter.setProdutos(produtos);
+
+                produtoAdapter.setProdutos(produtosEstoqueBaixo);
             } else if (telaProximosValidade) {
                 List<Produto> produtosProximosAValidade = new ArrayList<>();
+                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+                Date dataFiltro = sdf.parse(filtro);
                 for (Produto p : produtos) {
+                    Date validade = p.getValidade();
 
-                    long dias = ChronoUnit.DAYS.between(LocalDate.now(), p.getValidade());
+                    long diffMillis = validade.getTime() - dataFiltro.getTime();
 
-                    if (dias <= 14 && dias >= 0) {
+                    long diffDias = TimeUnit.MILLISECONDS.toDays(diffMillis);
+                    long diffSemanas = diffDias / 7;
+
+                    if (diffSemanas <= 2 && diffSemanas >= 0) {
                         produtosProximosAValidade.add(p);
                     }
                 }
-                produtos = produtosProximosAValidade;
-                produtoAdapter.setProdutos(produtos);
+                produtoAdapter.setProdutos(produtosProximosAValidade);
 
             } else {
                 produtoAdapter.setProdutos(produtos);
             }
         }
+        
     }
 
-    // parte de busca
-    private void setupBusca() {
-        binding.editTextBusca.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                aplicarBusca();
-            }
-        });
-    }
-
-    private void aplicarBusca() {
-        String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim().toLowerCase();
-        List<Produto> filtrados = new ArrayList<>();
-
-        if (termo.isEmpty()) {
-            produtoAdapter.setProdutos(produtos);
-            return;
-        }
-
-        for (Produto p : produtos) {
-            if (p.getNome().toLowerCase().contains(termo)) {
-                filtrados.add(p);
-            }
-        }
-        produtoAdapter.setProdutos(filtrados);
-    }
-
-    // adapter
     private class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoViewHolder> {
         private List<Produto> produtos = new ArrayList<>();
 
         public void setProdutos(List<Produto> produtos) {
             this.produtos = produtos;
-            notifyDataSetChanged();
-        }
-
-        void submit(List<Produto> novos) {
-            produtos.clear();
-            produtos.addAll(novos);
             notifyDataSetChanged();
         }
 
@@ -181,22 +128,20 @@ public class ProdutosActivity extends AppCompatActivity {
             holder.tvUnidades.setText(produto.getQuantidade() + " unidades em estoque");
 
             if (telaEstoqueBaixo) {
-                holder.tvUnidades.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(R.color.custom_red_link_opacity_44));
+                holder.tvUnidades.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.custom_red_link_opacity_44));
                 holder.tvUnidades.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.custom_red_link));
             } else if (telaProximosValidade) {
-                long dias = ChronoUnit.DAYS.between(LocalDate.now(), produto.getValidade());
-                holder.tvUnidades.setBackgroundTintList(holder.itemView.getContext().getResources().getColorStateList(R.color.custom_yellow_link_opacity_44));
+                holder.tvUnidades.setBackgroundColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.custom_yellow_link_opacity_44));
                 holder.tvUnidades.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.custom_orange_link));
-                holder.tvUnidades.setText("Vence em " + dias + " dias"); // TODO: mudar aqui para a quantidade certa de dias
+                holder.tvUnidades.setText("Vence em tantos dias"); // TODO: mudar aqui para a quantidade certa de dias
             }
 
             // Configurar clique no item
             holder.itemView.setOnClickListener(v -> {
-                AlertDialog.Builder produtoDetalhe = new AlertDialog.Builder(ProdutosActivity.this);
+                AlertDialog.Builder produtoDetalhe = new AlertDialog.Builder(ProdutoActivity.this);
                 LayoutInflater li = LayoutInflater.from(produtoDetalhe.getContext());
                 View view = li.inflate(R.layout.produto_popup, null);
                 produtoDetalhe.setView(view);
-
 
                 AlertDialog dialog = produtoDetalhe.create();
 
@@ -206,20 +151,6 @@ public class ProdutosActivity extends AppCompatActivity {
                     dialog.getWindow().setDimAmount(0.5f);
                     dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
                 }
-
-                TextView nome = view.findViewById(R.id.nome_produto);
-                TextView codigoEan = view.findViewById(R.id.tv_codigoEan);
-                TextView quantidade = view.findViewById(R.id.tv_quantidade);
-                TextView marca = view.findViewById(R.id.tv_marca);
-                TextView validade = view.findViewById(R.id.tv_validade);
-                TextView descricao = view.findViewById(R.id.tv_descricao);
-
-                nome.setText(produto.getNome());
-                codigoEan.setText(produto.getCodigoEan());
-                quantidade.setText(String.valueOf(produto.getQuantidade()));
-                marca.setText(produto.getMarca());
-                validade.setText(String.valueOf(produto.getValidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
-                descricao.setText(produto.getDescricao());
 
                 Button sair = view.findViewById(R.id.btnSair);
                 sair.setOnClickListener(v2 -> {

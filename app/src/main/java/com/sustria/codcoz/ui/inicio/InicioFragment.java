@@ -34,6 +34,7 @@ import com.sustria.codcoz.actions.TarefaDetalheBottomSheetDialogFragment;
 import com.sustria.codcoz.api.adapter.TarefaAdapter;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
+import com.sustria.codcoz.ui.inicio.produtos.ProdutosActivity;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.DayOfWeek;
@@ -61,6 +62,8 @@ public class InicioFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentInicioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        botoes();
 
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
@@ -366,6 +369,33 @@ public class InicioFragment extends Fragment {
     private boolean isAtividade(String tipo) {
         String t = tipo.toLowerCase(Locale.ROOT);
         return t.contains("ativ");
+    }
+
+    private void botoes() {
+        Intent intent = new Intent(getContext(), ProdutosActivity.class);
+
+        binding.produtos.setOnClickListener(v -> {
+            Bundle envelope = new Bundle();
+            envelope.putString("tituloHeader", "Produtos em estoque");
+            intent.putExtras(envelope);
+            startActivity(intent);
+        });
+
+        binding.produtosBaixoEstoque.setOnClickListener(v -> {
+            Bundle envelope = new Bundle();
+            envelope.putString("tituloHeader", "Estoque baixo");
+            envelope.putString("filtro", "11");
+            intent.putExtras(envelope);
+            startActivity(intent);
+        });
+
+        binding.produtosProximoValidade.setOnClickListener(v -> {
+            Bundle envelope = new Bundle();
+            envelope.putString("tituloHeader", "Próximos à validade");
+            envelope.putString("filtro", "2025-10-12");
+            intent.putExtras(envelope);
+            startActivity(intent);
+        });
     }
 
     @Override
