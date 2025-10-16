@@ -2,7 +2,7 @@ package com.sustria.codcoz.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 public class Produto {
     @SerializedName("id")
@@ -30,7 +30,7 @@ public class Produto {
     private String marca;
 
     @SerializedName("validade")
-    private Date validade;
+    private LocalDate validade;
 
 
     // Construtor padrão
@@ -38,7 +38,7 @@ public class Produto {
 
     // Construtor principal
 
-    public Produto(Long id, Long empresaId, String nome, Long unidadeMedidaId, String codigoEan, Integer quantidade, String descricao, String marca, Date validade) {
+    public Produto(Long id, Long empresaId, String nome, Long unidadeMedidaId, String codigoEan, Integer quantidade, String descricao, String marca, LocalDate validade) {
         this.id = id;
         this.empresaId = empresaId;
         this.nome = nome;
@@ -116,11 +116,11 @@ public class Produto {
         this.marca = marca;
     }
 
-    public Date getValidade() {
+    public LocalDate getValidade() {
         return validade;
     }
 
-    public void setValidade(Date validade) {
+    public void setValidade(LocalDate validade) {
         this.validade = validade;
     }
 }

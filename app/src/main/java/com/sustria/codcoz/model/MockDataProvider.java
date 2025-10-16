@@ -1,5 +1,6 @@
 package com.sustria.codcoz.model;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
@@ -14,12 +15,12 @@ public class MockDataProvider {
     public static List<Produto> getMockProduto() {
         List<Produto> produtos = new ArrayList<>();
 
-        produtos.add(new Produto(1L, 5L, "Arroz Branco - 1 kg", 2L, "1234567890", 25, "Arroz branco tipo 1", "Camil", new Date()));
-        produtos.add(new Produto(2L, 3L, "Feijão Carioca - 1 kg", 1L, "9876543210", 40, "Feijão tipo 1", "Kicaldo", new Date()));
-        produtos.add(new Produto(3L, 8L, "Açúcar Refinado - 1 kg", 2L, "1928374650", 35, "Açúcar refinado cristal", "União", new Date()));
-        produtos.add(new Produto(4L, 4L, "Café Torrado e Moído - 500 g", 3L, "5647382910", 20, "Café tradicional", "Pilão", new Date()));
-        produtos.add(new Produto(5L, 6L, "Macarrão Espaguete - 500 g", 2L, "1357924680", 50, "Macarrão de trigo tipo espaguete", "Renata", new Date()));
-        produtos.add(new Produto(6L, 7L, "Óleo de Soja - 900 ml", 4L, "2468135790", 30, "Óleo vegetal de soja", "Soya", new Date()));
+        produtos.add(new Produto(1L, 5L, "Arroz Branco - 1 kg", 2L, "1234567890", 10, "Arroz branco tipo 1", "Camil", LocalDate.of(2025, 10, 20)));
+        produtos.add(new Produto(2L, 3L, "Feijão Carioca - 1 kg", 1L, "9876543210", 10, "Feijão tipo 1", "Kicaldo", LocalDate.of(2025, 10, 17)));
+        produtos.add(new Produto(3L, 8L, "Açúcar Refinado - 1 kg", 2L, "1928374650", 10, "Açúcar refinado cristal", "União", LocalDate.of(2025, 10, 23)));
+        produtos.add(new Produto(4L, 4L, "Café Torrado e Moído - 500 g", 3L, "5647382910", 20, "Café tradicional", "Pilão", LocalDate.of(2025, 10, 31)));
+        produtos.add(new Produto(5L, 6L, "Macarrão Espaguete - 500 g", 2L, "1357924680", 50, "Macarrão de trigo tipo espaguete", "Renata", LocalDate.of(2025, 11, 17)));
+        produtos.add(new Produto(6L, 7L, "Óleo de Soja - 900 ml", 4L, "2468135790", 30, "Óleo vegetal de soja", "Soya", LocalDate.of(2025, 11, 13)));
 
         return produtos;
     }

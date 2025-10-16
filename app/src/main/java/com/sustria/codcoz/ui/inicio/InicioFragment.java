@@ -30,7 +30,7 @@ import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.PerfilActivity;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
-import com.sustria.codcoz.ui.inicio.produtos.ProdutoActivity;
+import com.sustria.codcoz.ui.inicio.produtos.ProdutosActivity;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -270,7 +270,7 @@ public class InicioFragment extends Fragment {
     }
 
     private void botoes() {
-        Intent intent = new Intent(getContext(), ProdutoActivity.class);
+        Intent intent = new Intent(getContext(), ProdutosActivity.class);
 
         binding.produtos.setOnClickListener(v -> {
             Bundle envelope = new Bundle();
@@ -282,7 +282,7 @@ public class InicioFragment extends Fragment {
         binding.produtosBaixoEstoque.setOnClickListener(v -> {
             Bundle envelope = new Bundle();
             envelope.putString("tituloHeader", "Estoque baixo");
-            envelope.putString("filtro", "35");
+            envelope.putString("filtro", "11");
             intent.putExtras(envelope);
             startActivity(intent);
         });
