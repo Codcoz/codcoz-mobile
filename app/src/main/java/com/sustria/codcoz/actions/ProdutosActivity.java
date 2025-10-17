@@ -31,11 +31,10 @@ public class ProdutosActivity extends AppCompatActivity {
     private String titulo;
     private ProdutoAdapter produtoAdapter;
     private ProdutoService produtoService;
-    private Boolean telaProximosValidade = false;
-    private Boolean telaEstoqueBaixo = false;
+    private boolean telaProximosValidade = false;
+    private boolean telaEstoqueBaixo = false;
     private List<ProdutoResponse> produtos = new ArrayList<>();
     private Long idEmpresa;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +43,6 @@ public class ProdutosActivity extends AppCompatActivity {
         binding = ActivityProdutosBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Inicializar serviços
         produtoService = new ProdutoService();
         idEmpresa = Long.valueOf(UserDataManager.getInstance(this).getEmpresaId());
 
@@ -54,102 +52,66 @@ public class ProdutosActivity extends AppCompatActivity {
         loadProdutos();
     }
 
-    // Colocar o título do header
     private void setupHeader() {
         Bundle envelope = getIntent().getExtras();
         if (envelope != null) {
-            titulo = envelope.getString("tituloHeader");
-            if (titulo.equals("Próximos à validade")) {
-                telaProximosValidade = true;
-            } else if (titulo.equals("Estoque baixo")) {
-                telaEstoqueBaixo = true;
-            }
+            titulo = envelope.getString("tituloHeader", "");
+            telaProximosValidade = "Próximos à validade".equals(titulo);
+            telaEstoqueBaixo = "Estoque baixo".equals(titulo);
         }
+
         binding.headerProdutos.headerActivityBackTitle.setText(titulo);
         binding.headerProdutos.headerActivityBackArrow.setOnClickListener(v -> finish());
     }
 
-    // Colocando os produtos na recycler view
     private void setupRecyclerView() {
         produtoAdapter = new ProdutoAdapter();
+
+        if (telaEstoqueBaixo) {
+            produtoAdapter.setDisplayMode(ProdutoAdapter.DisplayMode.ESTOQUE_BAIXO);
+        } else if (telaProximosValidade) {
+            produtoAdapter.setDisplayMode(ProdutoAdapter.DisplayMode.PROXIMOS_VALIDADE);
+        }
+
         binding.produtos.setLayoutManager(new LinearLayoutManager(this));
         binding.produtos.setAdapter(produtoAdapter);
-
-        // Configurar listener para clique nos produtos
         produtoAdapter.setOnProdutoClickListener(this::showProdutoDetails);
     }
 
-    // Carregar produtos da API
     private void loadProdutos() {
         if (idEmpresa == null) {
             Toast.makeText(this, "ID da empresa não encontrado", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        ProdutoService.ProdutoCallback<List<ProdutoResponse>> callback = new ProdutoService.ProdutoCallback<>() {
+            @Override
+            public void onSuccess(List<ProdutoResponse> result) {
+                runOnUiThread(() -> {
+                    produtos = result;
+                    produtoAdapter.setProdutos(produtos);
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    Toast.makeText(ProdutosActivity.this, error, Toast.LENGTH_SHORT).show();
+                    produtos = MockDataProvider.getMockProduto();
+                    produtoAdapter.setProdutos(produtos);
+                });
+            }
+        };
+
         if (telaEstoqueBaixo) {
-            produtoService.listarEstoqueBaixo(idEmpresa, new ProdutoService.ProdutoCallback<>() {
-                @Override
-                public void onSuccess(List<ProdutoResponse> result) {
-                    runOnUiThread(() -> {
-                        produtos = result;
-                        produtoAdapter.setProdutos(produtos);
-                    });
-                }
-
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(ProdutosActivity.this, error, Toast.LENGTH_SHORT).show();
-                        // Fallback para dados mock em caso de erro
-                        produtos.addAll(MockDataProvider.getMockProduto());
-                        produtoAdapter.setProdutos(produtos);
-                    });
-                }
-            });
+            produtoService.listarEstoqueBaixo(idEmpresa, callback);
         } else if (telaProximosValidade) {
-            produtoService.listarProximoValidade(idEmpresa, new ProdutoService.ProdutoCallback<>() {
-                @Override
-                public void onSuccess(List<ProdutoResponse> result) {
-                    runOnUiThread(() -> {
-                        produtos = result;
-                        produtoAdapter.setProdutos(produtos);
-                    });
-                }
-
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(ProdutosActivity.this, error, Toast.LENGTH_SHORT).show();
-                        // Fallback para dados mock em caso de erro
-                        produtos.addAll(MockDataProvider.getMockProduto());
-                        produtoAdapter.setProdutos(produtos);
-                    });
-                }
-            });
+            produtoService.listarProximoValidade(idEmpresa, callback);
         } else {
-            produtoService.listarEstoque(idEmpresa, new ProdutoService.ProdutoCallback<>() {
-                @Override
-                public void onSuccess(List<ProdutoResponse> result) {
-                    runOnUiThread(() -> {
-                        produtos = result;
-                        produtoAdapter.setProdutos(produtos);
-                    });
-                }
-
-                @Override
-                public void onError(String error) {
-                    runOnUiThread(() -> {
-                        Toast.makeText(ProdutosActivity.this, error, Toast.LENGTH_SHORT).show();
-                        // Fallback para dados mock em caso de erro
-                        produtos.addAll(MockDataProvider.getMockProduto());
-                        produtoAdapter.setProdutos(produtos);
-                    });
-                }
-            });
+            produtoService.listarEstoque(idEmpresa, callback);
         }
     }
 
-    // parte de busca
     private void setupSearch() {
         binding.editTextBusca.addTextChangedListener(new TextWatcher() {
             @Override
@@ -168,23 +130,23 @@ public class ProdutosActivity extends AppCompatActivity {
     }
 
     private void searchProdutos() {
-        String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim().toLowerCase();
-        List<ProdutoResponse> filtrados = new ArrayList<>();
+        String termo = binding.editTextBusca.getText() == null ? "" :
+                binding.editTextBusca.getText().toString().trim().toLowerCase();
 
         if (termo.isEmpty()) {
             produtoAdapter.setProdutos(produtos);
             return;
         }
 
+        List<ProdutoResponse> filtrados = new ArrayList<>();
         for (ProdutoResponse p : produtos) {
-            if (p.getNome().toLowerCase().contains(termo)) {
+            if (p.getNome() != null && p.getNome().toLowerCase().contains(termo)) {
                 filtrados.add(p);
             }
         }
         produtoAdapter.setProdutos(filtrados);
     }
 
-    // Mostrar detalhes do produto
     private void showProdutoDetails(ProdutoResponse produto) {
         AlertDialog.Builder produtoDetalhe = new AlertDialog.Builder(ProdutosActivity.this);
         LayoutInflater li = LayoutInflater.from(produtoDetalhe.getContext());
@@ -193,7 +155,6 @@ public class ProdutosActivity extends AppCompatActivity {
 
         AlertDialog dialog = produtoDetalhe.create();
         dialog.setCanceledOnTouchOutside(true);
-
         if (dialog.getWindow() != null) {
             dialog.getWindow().setDimAmount(0.5f);
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -210,15 +171,14 @@ public class ProdutosActivity extends AppCompatActivity {
         codigoEan.setText(produto.getCodigoEan());
         quantidade.setText(String.valueOf(produto.getQuantidade()));
         marca.setText(produto.getMarca());
-        validade.setText(String.valueOf(produto.getValidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))));
+        validade.setText(produto.getValidade() != null
+                ? produto.getValidade().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                : "Sem validade");
         descricao.setText(produto.getDescricao());
 
         Button sair = view.findViewById(R.id.btnSair);
-        sair.setOnClickListener(v2 -> {
-            dialog.dismiss();
-        });
+        sair.setOnClickListener(v2 -> dialog.dismiss());
 
         dialog.show();
     }
-
 }

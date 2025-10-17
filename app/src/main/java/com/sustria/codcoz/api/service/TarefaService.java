@@ -19,7 +19,7 @@ public class TarefaService {
         this.tarefaApi = RetrofitClient.getInstance().create(TarefaApi.class);
     }
 
-    public interface TarefaCallback<T> {
+    public interface TarefaCallback<T> { 
         void onSuccess(T result);
 
         void onError(String error);

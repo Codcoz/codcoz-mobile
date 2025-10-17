@@ -16,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public final class RetrofitClient {
 
 //    private static final String BASE_URL = "https://codcoz-api-postgres.onrender.com/";
-    private static final String BASE_URL = "https://splendid-norina-codcoz-e22befe4.koyeb.app/";
+    private static final String BASE_URL = "https://codcoz-api-postgres.koyeb.app/";
     private static Retrofit retrofitInstance;
 
     private RetrofitClient() {
