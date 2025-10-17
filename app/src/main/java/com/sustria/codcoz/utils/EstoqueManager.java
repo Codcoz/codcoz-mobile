@@ -15,16 +15,8 @@ public class EstoqueManager {
         void onError(String error);
     }
 
-
-    /**
-     * Registra entrada de estoque para um produto
-     *
-     * @param codEan     Código EAN do produto
-     * @param quantidade Quantidade a ser adicionada
-     * @param callback   Callback para resultado da operação
-     */
     public void registrarEntrada(String codEan, Integer quantidade, EstoqueCallback callback) {
-        produtoService.entradaEstoque(codEan, quantidade, new ProdutoService.ProdutoCallback<Void>() {
+        produtoService.entradaEstoque(codEan, quantidade, new ProdutoService.ProdutoCallback<>() {
             @Override
             public void onSuccess(Void result) {
                 callback.onSuccess();
@@ -37,15 +29,8 @@ public class EstoqueManager {
         });
     }
 
-    /**
-     * Registra baixa de estoque para um produto
-     *
-     * @param codEan     Código EAN do produto
-     * @param quantidade Quantidade a ser removida
-     * @param callback   Callback para resultado da operação
-     */
     public void registrarBaixa(String codEan, Integer quantidade, EstoqueCallback callback) {
-        produtoService.baixaEstoque(codEan, quantidade, new ProdutoService.ProdutoCallback<Void>() {
+        produtoService.baixaEstoque(codEan, quantidade, new ProdutoService.ProdutoCallback<>() {
             @Override
             public void onSuccess(Void result) {
                 callback.onSuccess();

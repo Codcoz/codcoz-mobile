@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="1dp"
-    android:layout_marginRight="1dp"
+    android:layout_marginLeft="2dp"
+    android:layout_marginRight="2dp"
     android:layout_marginBottom="24dp"
     app:cardCornerRadius="16dp">
 
@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_stroke"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="32dp">
 
         <TextView
             android:id="@+id/nome_produto"
@@ -24,7 +24,7 @@
             android:gravity="center"
             android:text="Arroz Branco - 1 kg"
             android:textColor="@color/colorPrimary"
-            android:textSize="21sp" />
+            android:textSize="32sp" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -40,12 +40,12 @@
 
                 <TextView
                     android:id="@+id/p_codigoEan"
-                    android:layout_width="109dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Código EAN"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
                 <TextView
                     android:id="@+id/tv_codigoEan"
@@ -54,7 +54,7 @@
                     android:layout_weight="1"
                     android:text="3216549874561"
                     android:textAlignment="viewEnd"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
             </LinearLayout>
 
@@ -71,12 +71,12 @@
 
                 <TextView
                     android:id="@+id/p_quantidade"
-                    android:layout_width="109dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Quantidade"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
                 <TextView
                     android:id="@+id/tv_quantidade"
@@ -85,7 +85,7 @@
                     android:layout_weight="1"
                     android:text="100 kg"
                     android:textAlignment="viewEnd"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
             </LinearLayout>
 
@@ -102,12 +102,12 @@
 
                 <TextView
                     android:id="@+id/p_marca"
-                    android:layout_width="109dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Marca"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
                 <TextView
                     android:id="@+id/tv_marca"
@@ -116,7 +116,7 @@
                     android:layout_weight="1"
                     android:text="Camil"
                     android:textAlignment="viewEnd"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
             </LinearLayout>
 
@@ -133,12 +133,12 @@
 
                 <TextView
                     android:id="@+id/p_validade"
-                    android:layout_width="109dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Validade"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
                 <TextView
                     android:id="@+id/tv_validade"
@@ -147,7 +147,7 @@
                     android:layout_weight="1"
                     android:text="15/10/2025"
                     android:textAlignment="viewEnd"
-                    android:textSize="16sp" />
+                    android:textSize="26sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -161,7 +161,7 @@
             android:fontFamily="@font/nunito_semibold"
             android:text="Descrição"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
+            android:textSize="26sp" />
 
         <TextView
             android:id="@+id/tv_descricao"
@@ -174,11 +174,11 @@
             android:paddingBottom="60dp"
             android:text="Arroz tipo 1"
             android:textColor="@color/colorPrimary"
-            android:textSize="16sp" />
+            android:textSize="26sp" />
 
         <Button
             android:id="@+id/btnSair"
-            android:layout_width="135dp"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
@@ -186,9 +186,8 @@
             android:fontFamily="@font/nunito_semibold"
             android:text="Sair"
             android:textColor="@color/colorPrimary"
-            android:textSize="20sp"
+            android:textSize="30sp"
             app:cornerRadius="30dp" />
-
 
     </LinearLayout>
 
