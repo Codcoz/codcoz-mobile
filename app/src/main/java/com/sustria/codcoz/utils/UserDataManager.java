@@ -3,6 +3,7 @@ package com.sustria.codcoz.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.sustria.codcoz.actions.ProdutosActivity;
 import com.sustria.codcoz.api.model.EstoquistaResponse;
 
 import java.text.ParseException;
@@ -22,13 +23,18 @@ public class UserDataManager {
     private EstoquistaResponse userData;
     private boolean isDataLoaded = false;
 
-    private UserDataManager() {}
+    private UserDataManager() {
+    }
 
     public static synchronized UserDataManager getInstance() {
         if (instance == null) {
             instance = new UserDataManager();
         }
         return instance;
+    }
+
+    public static EstoquistaResponse getInstance(ProdutosActivity produtosActivity) {
+        return instance.userData;
     }
 
     public void setUserData(EstoquistaResponse userData, Context context) {

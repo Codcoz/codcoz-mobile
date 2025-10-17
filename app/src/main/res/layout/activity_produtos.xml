@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/colorOnPrimary"
     android:orientation="vertical"
-    tools:context=".ui.inicio.produtos.ProdutosActivity">
+    tools:context=".actions.ProdutosActivity">
 
     <!-- Header do Fragment -->
     <include

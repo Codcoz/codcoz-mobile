@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.BottomsheetProdutoEscaneadoBinding;
-import com.sustria.codcoz.model.Produto;
+import com.sustria.codcoz.api.model.ProdutoResponse;
 
 public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -21,7 +21,7 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
     private static final String ARG_CODIGO = "arg_codigo";
     private static final String ARG_TIPO_MOV = "arg_tipo_mov"; // "baixa" ou "entrada"
     //    private ProdutoRepository produtoRepository;
-    private Produto produto;
+    private ProdutoResponse produto;
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {

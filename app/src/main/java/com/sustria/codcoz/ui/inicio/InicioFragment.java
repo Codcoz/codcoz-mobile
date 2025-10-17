@@ -34,7 +34,7 @@ import com.sustria.codcoz.actions.TarefaDetalheBottomSheetDialogFragment;
 import com.sustria.codcoz.api.adapter.TarefaAdapter;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
-import com.sustria.codcoz.ui.inicio.produtos.ProdutosActivity;
+import com.sustria.codcoz.actions.ProdutosActivity;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.DayOfWeek;

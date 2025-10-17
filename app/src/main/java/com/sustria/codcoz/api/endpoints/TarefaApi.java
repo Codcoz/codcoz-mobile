@@ -1,4 +1,4 @@
-package com.sustria.codcoz.api;
+package com.sustria.codcoz.api.endpoints;
 
 import com.sustria.codcoz.api.model.TarefaResponse;
 

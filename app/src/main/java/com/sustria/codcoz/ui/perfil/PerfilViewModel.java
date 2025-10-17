@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sustria.codcoz.api.RetrofitClient;
-import com.sustria.codcoz.api.TarefaApi;
+import com.sustria.codcoz.api.client.RetrofitClient;
+import com.sustria.codcoz.api.endpoints.TarefaApi;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.utils.UserDataManager;
 
