@@ -5,18 +5,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sustria.codcoz.api.client.RetrofitClient;
-import com.sustria.codcoz.api.endpoints.TarefaApi;
+import com.sustria.codcoz.api.service.TarefaService;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class InicioViewModel extends ViewModel {
 
@@ -28,7 +23,7 @@ public class InicioViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
 
-    private final TarefaApi tarefaApi;
+    private final TarefaService tarefaService;
 
     public InicioViewModel() {
         estoquePercentual = new MutableLiveData<>();
@@ -40,7 +35,7 @@ public class InicioViewModel extends ViewModel {
         errorMessage = new MutableLiveData<>();
 
         // API
-        tarefaApi = RetrofitClient.getInstance().create(TarefaApi.class);
+        tarefaService = new TarefaService();
 
         // Inicializar com os dados padrão
         loadDefaultData();
@@ -104,25 +99,17 @@ public class InicioViewModel extends ViewModel {
         LocalDate dataInicio = hoje.minusMonths(3);
         LocalDate dataFim = hoje.plusMonths(3);
 
-        Call<List<TarefaResponse>> call = tarefaApi.buscarPorPeriodo(email, dataInicio.toString(), dataFim.toString());
-
-        call.enqueue(new Callback<>() {
+        tarefaService.buscarPorPeriodo(email, dataInicio.toString(), dataFim.toString(), new TarefaService.TarefaCallback<List<TarefaResponse>>() {
             @Override
-            public void onResponse(@NonNull Call<List<TarefaResponse>> call, @NonNull Response<List<TarefaResponse>> response) {
+            public void onSuccess(List<TarefaResponse> result) {
                 isLoading.setValue(false);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    tarefas.setValue(response.body());
-                } else {
-                    errorMessage.setValue("Erro ao carregar tarefas: " + response.message());
-                    tarefas.setValue(new ArrayList<>());
-                }
+                tarefas.setValue(result);
             }
 
             @Override
-            public void onFailure(@NonNull Call<List<TarefaResponse>> call, @NonNull Throwable t) {
+            public void onError(String error) {
                 isLoading.setValue(false);
-                errorMessage.setValue("Erro de conexão: " + t.getMessage());
+                errorMessage.setValue(error);
                 tarefas.setValue(new ArrayList<>());
             }
         });
@@ -136,25 +123,19 @@ public class InicioViewModel extends ViewModel {
         }
 
         isLoading.setValue(true);
-        Call<TarefaResponse> call = tarefaApi.finalizarTarefa(tarefaId);
-
-        call.enqueue(new Callback<>() {
+        
+        tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<TarefaResponse>() {
             @Override
-            public void onResponse(@NonNull Call<TarefaResponse> call, @NonNull Response<TarefaResponse> response) {
+            public void onSuccess(TarefaResponse result) {
                 isLoading.setValue(false);
-
-                if (response.isSuccessful()) {
-                    // Recarregar a lista de tarefas após finalizar
-                    loadTarefas();
-                } else {
-                    errorMessage.setValue("Erro ao finalizar tarefa: " + response.message());
-                }
+                // Recarregar a lista de tarefas após finalizar
+                loadTarefas();
             }
 
             @Override
-            public void onFailure(@NonNull Call<TarefaResponse> call, @NonNull Throwable t) {
+            public void onError(String error) {
                 isLoading.setValue(false);
-                errorMessage.setValue("Erro de conexão: " + t.getMessage());
+                errorMessage.setValue(error);
             }
         });
     }

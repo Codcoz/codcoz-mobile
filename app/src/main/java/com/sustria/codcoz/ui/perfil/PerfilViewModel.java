@@ -4,18 +4,13 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sustria.codcoz.api.client.RetrofitClient;
-import com.sustria.codcoz.api.endpoints.TarefaApi;
+import com.sustria.codcoz.api.service.TarefaService;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PerfilViewModel extends ViewModel {
 
@@ -24,7 +19,7 @@ public class PerfilViewModel extends ViewModel {
     private final MutableLiveData<String> errorMessage;
     private final MutableLiveData<String> tipoFiltro;
 
-    private TarefaApi tarefaApi;
+    private TarefaService tarefaService;
 
     public PerfilViewModel() {
         tarefas = new MutableLiveData<>();
@@ -33,7 +28,7 @@ public class PerfilViewModel extends ViewModel {
         tipoFiltro = new MutableLiveData<>();
 
         // Inicializar API
-        tarefaApi = RetrofitClient.getInstance().create(TarefaApi.class);
+        tarefaService = new TarefaService();
     }
 
     // Getters
@@ -72,33 +67,17 @@ public class PerfilViewModel extends ViewModel {
         String inicio = dataInicio.toString();
         String fim = dataFim.toString();
 
-        Call<List<TarefaResponse>> call = tarefaApi.buscarPorTipo(email, inicio, fim, tipo);
-
-        call.enqueue(new Callback<>() {
+        tarefaService.buscarPorTipo(email, inicio, fim, tipo, new TarefaService.TarefaCallback<>() {
             @Override
-            public void onResponse(Call<List<TarefaResponse>> call, Response<List<TarefaResponse>> response) {
+            public void onSuccess(List<TarefaResponse> result) {
                 isLoading.setValue(false);
-
-                if (response.isSuccessful() && response.body() != null) {
-                    tarefas.setValue(response.body());
-                } else {
-                    String errorMsg = "Erro ao carregar tarefas: " + response.code() + " - " + response.message();
-                    if (response.errorBody() != null) {
-                        try {
-                            errorMsg += " - " + response.errorBody().string();
-                        } catch (Exception e) {
-                            errorMsg += " - Erro ao ler corpo da resposta";
-                        }
-                    }
-                    errorMessage.setValue(errorMsg);
-                    tarefas.setValue(new ArrayList<>());
-                }
+                tarefas.setValue(result);
             }
 
             @Override
-            public void onFailure(Call<List<TarefaResponse>> call, Throwable t) {
+            public void onError(String error) {
                 isLoading.setValue(false);
-                errorMessage.setValue("Erro de conexão: " + t.getMessage() + " - " + t.getClass().getSimpleName());
+                errorMessage.setValue(error);
                 tarefas.setValue(new ArrayList<>());
             }
         });

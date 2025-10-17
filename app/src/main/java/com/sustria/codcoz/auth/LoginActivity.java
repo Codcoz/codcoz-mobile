@@ -2,6 +2,7 @@ package com.sustria.codcoz.auth;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Toast;
 
@@ -13,22 +14,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.sustria.codcoz.MainActivity;
 import com.sustria.codcoz.R;
-import com.sustria.codcoz.api.endpoints.EstoquistaApi;
-import com.sustria.codcoz.api.client.RetrofitClient;
 import com.sustria.codcoz.api.model.EstoquistaResponse;
+import com.sustria.codcoz.api.service.EstoquistaService;
 import com.sustria.codcoz.databinding.ActivityLoginBinding;
 import com.sustria.codcoz.utils.UserDataManager;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
 
     private ActivityLoginBinding binding;
     private FirebaseAuth auth;
     private FirebaseFirestore db;
-    private EstoquistaApi estoquistaApi;
+    private EstoquistaService estoquistaService;
     private boolean isPasswordVisible = false;
     private boolean isProcessing = false;
 
@@ -41,7 +37,8 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        estoquistaApi = RetrofitClient.getInstance().create(EstoquistaApi.class);
+        // substituir o estoquistaAPi pelo service
+        estoquistaService = new EstoquistaService();
 
         binding.btnAvancar.setOnClickListener(v -> {
             if (isProcessing) return;
@@ -81,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private boolean isValidEmail(String email) {
-        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 
     private void checkEmailInFirebaseThenApi(String email) {
@@ -108,25 +105,15 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkEmailInApiForRegistration(String email) {
-        estoquistaApi.buscarPorEmail(email).enqueue(new Callback<>() {
+        estoquistaService.buscarPorEmail(email, new EstoquistaService.EstoquistaCallback<>() {
             @Override
-            public void onResponse(Call<EstoquistaResponse> call, Response<EstoquistaResponse> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    EstoquistaResponse estoquista = response.body();
-
-                    if (!"ATIVO".equals(estoquista.getStatus())) {
-                        Toast.makeText(LoginActivity.this, "Usuário inativo. Entre em contato com o gestor", Toast.LENGTH_LONG).show();
-                        setLoading(false);
-                        return;
-                    }
-
-                    // Leva para a tela de cadastro
+            public void onSuccess(EstoquistaResponse result) {
+                if (result != null) {
+                    // E-mail encontrado na API, leva para a tela de cadastro
                     Intent intent = new Intent(LoginActivity.this, CadastroActivity.class);
                     intent.putExtra("email", email);
-                    intent.putExtra("estoquistaData", estoquista);
+                    intent.putExtra("estoquistaData", result);
                     startActivity(intent);
-                    setLoading(false);
-
                 } else {
                     binding.inputLayoutEmail.setError("E-mail não encontrado no sistema");
                     setLoading(false);
@@ -134,7 +121,7 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<EstoquistaResponse> call, Throwable t) {
+            public void onError(String error) {
                 Toast.makeText(LoginActivity.this, "Erro de conexão. Verifique sua internet", Toast.LENGTH_SHORT).show();
                 setLoading(false);
             }
