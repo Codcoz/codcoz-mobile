@@ -20,6 +20,7 @@ import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.ActivityProdutosBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.utils.UserDataManager;
+import com.sustria.codcoz.utils.EmptyStateAdapter;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class ProdutosActivity extends AppCompatActivity {
     private ActivityProdutosBinding binding;
     private String titulo;
     private ProdutoAdapter produtoAdapter;
+    private EmptyStateAdapter emptyStateAdapter;
     private ProdutoService produtoService;
     private boolean telaProximosValidade = false;
     private boolean telaEstoqueBaixo = false;
@@ -66,6 +68,7 @@ public class ProdutosActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         produtoAdapter = new ProdutoAdapter();
+        emptyStateAdapter = new EmptyStateAdapter(produtoAdapter);
 
         if (telaEstoqueBaixo) {
             produtoAdapter.setDisplayMode(ProdutoAdapter.DisplayMode.ESTOQUE_BAIXO);
@@ -74,7 +77,7 @@ public class ProdutosActivity extends AppCompatActivity {
         }
 
         binding.produtos.setLayoutManager(new LinearLayoutManager(this));
-        binding.produtos.setAdapter(produtoAdapter);
+        binding.produtos.setAdapter(emptyStateAdapter);
         produtoAdapter.setOnProdutoClickListener(this::showProdutoDetails);
     }
 
@@ -90,6 +93,24 @@ public class ProdutosActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     produtos = result;
                     produtoAdapter.setProdutos(produtos);
+                    
+                    // Atualizar estado vazio
+                    if (produtos.isEmpty()) {
+                        String emptyTitle = "Nenhum produto encontrado";
+                        String emptyMessage = "Não há produtos para exibir no momento.\nVerifique novamente mais tarde.";
+                        
+                        if (telaEstoqueBaixo) {
+                            emptyTitle = "Estoque em dia";
+                            emptyMessage = "Todos os produtos estão com estoque adequado.\nParabéns pelo controle!";
+                        } else if (telaProximosValidade) {
+                            emptyTitle = "Produtos em dia";
+                            emptyMessage = "Não há produtos próximos ao vencimento.\nÓtimo controle de validade!";
+                        }
+                        
+                        emptyStateAdapter.setEmptyState(true, emptyTitle, emptyMessage);
+                    } else {
+                        emptyStateAdapter.setEmptyState(false);
+                    }
                 });
             }
 
@@ -135,6 +156,23 @@ public class ProdutosActivity extends AppCompatActivity {
 
         if (termo.isEmpty()) {
             produtoAdapter.setProdutos(produtos);
+            // Atualizar estado vazio para lista completa
+            if (produtos.isEmpty()) {
+                String emptyTitle = "Nenhum produto encontrado";
+                String emptyMessage = "Não há produtos para exibir no momento.\nVerifique novamente mais tarde.";
+                
+                if (telaEstoqueBaixo) {
+                    emptyTitle = "Estoque em dia";
+                    emptyMessage = "Todos os produtos estão com estoque adequado.\nParabéns pelo controle!";
+                } else if (telaProximosValidade) {
+                    emptyTitle = "Produtos em dia";
+                    emptyMessage = "Não há produtos próximos ao vencimento.\nÓtimo controle de validade!";
+                }
+                
+                emptyStateAdapter.setEmptyState(true, emptyTitle, emptyMessage);
+            } else {
+                emptyStateAdapter.setEmptyState(false);
+            }
             return;
         }
 
@@ -145,6 +183,14 @@ public class ProdutosActivity extends AppCompatActivity {
             }
         }
         produtoAdapter.setProdutos(filtrados);
+        
+        // Atualizar estado vazio para resultados da busca
+        if (filtrados.isEmpty()) {
+            emptyStateAdapter.setEmptyState(true, "Nenhum produto encontrado", 
+                "Não há produtos que correspondam à sua busca.\nTente usar outros termos de pesquisa.");
+        } else {
+            emptyStateAdapter.setEmptyState(false);
+        }
     }
 
     private void showProdutoDetails(ProdutoResponse produto) {

@@ -66,6 +66,9 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
 
     public static void showSucesso(androidx.fragment.app.FragmentManager fm) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(fm);
+        
         ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_ERRO, false);
@@ -74,12 +77,40 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
     }
 
     public static void showErro(androidx.fragment.app.FragmentManager fm, String mensagem) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(fm);
+        
         ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_ERRO, true);
         args.putString(ARG_MSG_ERRO, mensagem);
         fragment.setArguments(args);
         fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
+    }
+    
+    private static void dismissExistingBottomSheets(@NonNull androidx.fragment.app.FragmentManager fm) {
+        // Fechar todos os bottom sheets existentes
+        if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("FiltrosBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("FiltrosBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
+        }
     }
 }
 

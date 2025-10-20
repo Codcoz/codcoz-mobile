@@ -99,6 +99,38 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         f.setArguments(b);
         return f;
     }
+    
+    @Override
+    public void show(@NonNull androidx.fragment.app.FragmentManager manager, @Nullable String tag) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(manager);
+        super.show(manager, tag);
+    }
+    
+    private static void dismissExistingBottomSheets(@NonNull androidx.fragment.app.FragmentManager fm) {
+        // Fechar todos os bottom sheets existentes
+        if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("FiltrosBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("FiltrosBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
+        }
+    }
 }
 
 

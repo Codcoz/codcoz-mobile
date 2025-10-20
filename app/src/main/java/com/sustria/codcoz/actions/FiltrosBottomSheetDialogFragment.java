@@ -33,6 +33,9 @@ public class FiltrosBottomSheetDialogFragment extends BottomSheetDialogFragment 
 
     public static void show(@NonNull FragmentManager fm, int sortOrder, int tipoFiltro,
                             int periodo) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(fm);
+        
         FiltrosBottomSheetDialogFragment fragment = new FiltrosBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_SORT, sortOrder);
@@ -40,6 +43,31 @@ public class FiltrosBottomSheetDialogFragment extends BottomSheetDialogFragment 
         args.putInt(ARG_PERIODO, periodo);
         fragment.setArguments(args);
         fragment.show(fm, "FiltrosBottomSheetDialogFragment");
+    }
+    
+    private static void dismissExistingBottomSheets(@NonNull FragmentManager fm) {
+        // Fechar todos os bottom sheets existentes
+        if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("FiltrosBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("FiltrosBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
+        }
     }
 
     @Nullable

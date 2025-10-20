@@ -46,6 +46,10 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoV
         this.produtos = produtos != null ? produtos : new ArrayList<>();
         notifyDataSetChanged();
     }
+    
+    public boolean isEmpty() {
+        return produtos.isEmpty();
+    }
 
     public void updateProduto(int position, ProdutoResponse produto) {
         if (position >= 0 && position < produtos.size()) {

@@ -16,12 +16,14 @@ import com.sustria.codcoz.databinding.ActivityPerfilBinding;
 import com.sustria.codcoz.api.adapter.PerfilTarefaAdapter;
 import com.sustria.codcoz.ui.perfil.PerfilViewModel;
 import com.sustria.codcoz.utils.UserDataManager;
+import com.sustria.codcoz.utils.EmptyStateAdapter;
 
 public class PerfilActivity extends AppCompatActivity {
 
     private ActivityPerfilBinding binding;
     private PerfilViewModel perfilViewModel;
     private PerfilTarefaAdapter adapter;
+    private EmptyStateAdapter emptyStateAdapter;
     private int periodoSelecionado = 7; // 7 dias por padrão
     private boolean isAtividadesSelecionado = true; // Atividades por padrão
 
@@ -132,8 +134,9 @@ public class PerfilActivity extends AppCompatActivity {
 
     private void setupRecyclerView() {
         adapter = new PerfilTarefaAdapter();
+        emptyStateAdapter = new EmptyStateAdapter(adapter);
         binding.recyclerViewHistoricoPerfil.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerViewHistoricoPerfil.setAdapter(adapter);
+        binding.recyclerViewHistoricoPerfil.setAdapter(emptyStateAdapter);
     }
 
     private void setupViewModel() {
@@ -143,6 +146,21 @@ public class PerfilActivity extends AppCompatActivity {
         perfilViewModel.getTarefas().observe(this, tarefas -> {
             if (tarefas != null) {
                 adapter.setTarefas(tarefas);
+                
+                // Atualizar estado vazio
+                if (tarefas.isEmpty()) {
+                    String emptyTitle = "Nenhuma atividade encontrada";
+                    String emptyMessage = "Não há atividades registradas no período selecionado.\nTente alterar o período ou verifique novamente mais tarde.";
+                    
+                    if (!isAtividadesSelecionado) {
+                        emptyTitle = "Nenhuma auditoria encontrada";
+                        emptyMessage = "Não há auditorias registradas no período selecionado.\nTente alterar o período ou verifique novamente mais tarde.";
+                    }
+                    
+                    emptyStateAdapter.setEmptyState(true, emptyTitle, emptyMessage);
+                } else {
+                    emptyStateAdapter.setEmptyState(false);
+                }
             }
         });
 

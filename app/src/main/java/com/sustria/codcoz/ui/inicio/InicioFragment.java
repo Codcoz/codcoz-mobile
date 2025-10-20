@@ -36,6 +36,7 @@ import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
 import com.sustria.codcoz.actions.ProdutosActivity;
 import com.sustria.codcoz.utils.UserDataManager;
+import com.sustria.codcoz.utils.EmptyStateAdapter;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -56,6 +57,7 @@ public class InicioFragment extends Fragment {
     private FragmentInicioBinding binding;
     private InicioViewModel inicioViewModel;
     private TarefaAdapter tarefaAdapter;
+    private EmptyStateAdapter emptyStateAdapter;
     private final Map<LocalDate, List<TarefaResponse>> tarefasPorData = new HashMap<>();
 
     @Override
@@ -224,6 +226,24 @@ public class InicioFragment extends Fragment {
                 // Verificar se há tarefas para esta data
                 if (tarefasPorData.containsKey(date)) {
                     container.bolinha.setVisibility(View.VISIBLE);
+                    
+                    List<TarefaResponse> tarefasDoDia = tarefasPorData.get(date);
+                    boolean temTarefaVencida = false;
+                    
+                    if (tarefasDoDia != null) {
+                        for (TarefaResponse tarefa : tarefasDoDia) {
+                            if (tarefa.getDataLimite() != null && tarefa.getDataLimite().isBefore(LocalDate.now())) {
+                                temTarefaVencida = true;
+                                break;
+                            }
+                        }
+                    }
+                    
+                    if (temTarefaVencida) {
+                        container.bolinha.setBackgroundResource(R.drawable.bolinha_vermelha);
+                    } else {
+                        container.bolinha.setBackgroundResource(R.drawable.bolinha_azul);
+                    }
                 } else {
                     container.bolinha.setVisibility(View.GONE);
                 }
@@ -306,11 +326,13 @@ public class InicioFragment extends Fragment {
 
     private void setupRecyclerViewTask() {
         tarefaAdapter = new TarefaAdapter();
+        emptyStateAdapter = new EmptyStateAdapter(tarefaAdapter);
+        
         if (binding.tarefas != null) {
             binding.tarefas.setLayoutManager(new LinearLayoutManager(getContext()));
         }
         if (binding.tarefas != null) {
-            binding.tarefas.setAdapter(tarefaAdapter);
+            binding.tarefas.setAdapter(emptyStateAdapter);
         }
 
         // Listeners para cliques nas tarefas
@@ -322,6 +344,14 @@ public class InicioFragment extends Fragment {
             if (tarefas != null) {
                 tarefaAdapter.setTarefas(tarefas);
                 stageTasksByDay(tarefas);
+                
+                // Atualizar estado vazio
+                if (tarefas.isEmpty()) {
+                    emptyStateAdapter.setEmptyState(true, "Nenhuma tarefa encontrada", 
+                        "Não há tarefas pendentes no momento.\nVerifique novamente mais tarde.");
+                } else {
+                    emptyStateAdapter.setEmptyState(false);
+                }
             }
         });
 
@@ -330,11 +360,9 @@ public class InicioFragment extends Fragment {
 //             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
         });
 
-        // Tratar mensagens de erro
         inicioViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
-            if (errorMessage != null && !errorMessage.isEmpty()) {
-                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), errorMessage);
-            }
+            // Não mostrar popup de erro para 404 ou outros erros de carregamento
+            // Apenas logar ou tratar silenciosamente
         });
     }
 
@@ -348,6 +376,14 @@ public class InicioFragment extends Fragment {
                     tarefasPorData.put(dataLimite, new ArrayList<>());
                 }
                 tarefasPorData.get(dataLimite).add(tarefa);
+            } else {
+                // Se não tem data limite, usar data de criação ou data atual
+                LocalDate dataParaUsar = tarefa.getDataCriacao() != null ? 
+                    tarefa.getDataCriacao() : LocalDate.now();
+                if (!tarefasPorData.containsKey(dataParaUsar)) {
+                    tarefasPorData.put(dataParaUsar, new ArrayList<>());
+                }
+                tarefasPorData.get(dataParaUsar).add(tarefa);
             }
         }
     }

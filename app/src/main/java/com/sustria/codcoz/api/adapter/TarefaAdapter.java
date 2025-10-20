@@ -33,6 +33,10 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         this.tarefas = tarefas != null ? tarefas : new ArrayList<>();
         notifyDataSetChanged();
     }
+    
+    public boolean isEmpty() {
+        return tarefas.isEmpty();
+    }
 
     @NonNull
     @Override

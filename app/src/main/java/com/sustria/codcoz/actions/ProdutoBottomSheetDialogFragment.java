@@ -32,12 +32,39 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
     private Integer quantidade = 1;
 
     public static void show(@NonNull FragmentManager fm, @NonNull String codigo, @NonNull TipoMovimento tipoMov) {
+        dismissExistingBottomSheets(fm);
+
         ProdutoBottomSheetDialogFragment fragment = new ProdutoBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_CODIGO, codigo);
         args.putSerializable(ARG_TIPO_MOV, tipoMov);
         fragment.setArguments(args);
         fragment.show(fm, "ProdutoBottomSheetDialogFragment");
+    }
+
+    private static void dismissExistingBottomSheets(@NonNull FragmentManager fm) {
+        // Fechar todos os bottom sheets existentes
+        if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("FiltrosBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("FiltrosBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
+        }
     }
 
     @Nullable
@@ -117,7 +144,7 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
                 // atualiza os botões sem recursão
                 isUpdating = true;
                 binding.btnMenos.setEnabled(quantidade > 1);
-                binding.btnMais.setEnabled(true); // sempre permite aumentar
+                binding.btnMais.setEnabled(true);
                 isUpdating = false;
             }
         });
@@ -141,7 +168,12 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
             @Override
             public void onError(String error) {
                 setLoadingState(false);
-                showErrorAndDismiss("Erro ao buscar produto: " + error);
+                // Se o código foi escaneado mas produto não encontrado
+                if (error.contains("não encontrado") || error.contains("404")) {
+                    showErrorAndDismiss("Produto não encontrado no sistema.\nVerifique se o código está correto.");
+                } else {
+                    showErrorAndDismiss("Erro ao buscar produto: " + error);
+                }
             }
         });
     }
@@ -207,6 +239,7 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
 
                             @Override
                             public void onError(String error) {
+                                dismiss();
                                 ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), error);
                             }
                         };
@@ -218,7 +251,8 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
                         }
                     } catch (Exception e) {
                         String message = e.getMessage() != null ? e.getMessage() : "Falha ao processar a operação.";
-                        showErrorAndDismiss(message);
+                        dismiss();
+                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), message);
                     }
                 }
         );
