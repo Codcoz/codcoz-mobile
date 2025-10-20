@@ -132,23 +132,25 @@ public class ProdutoService {
         });
     }
 
-    public void buscarProdutos(Long idEmpresa, ProdutoCallback<List<ProdutoResponse>> callback) {
-        produtoApi.buscarProdutos(idEmpresa).enqueue(new Callback<>() {
+    public void buscarProdutoPorEan(String codigoEan, ProdutoCallback<ProdutoResponse> callback) {
+        Call<ProdutoResponse> call = produtoApi.buscarProdutoPorEan(codigoEan);
+        call.enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<ProdutoResponse>> call, Response<List<ProdutoResponse>> response) {
-                if (response.isSuccessful()) {
+            public void onResponse(Call<ProdutoResponse> call, Response<ProdutoResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
                     callback.onSuccess(response.body());
                 } else {
-                    callback.onError("Erro ao buscar produtos: " + response.code());
+                    callback.onError("Produto não encontrado ou erro de resposta.");
                 }
             }
 
             @Override
-            public void onFailure(Call<List<ProdutoResponse>> call, Throwable t) {
+            public void onFailure(Call<ProdutoResponse> call, Throwable t) {
                 callback.onError("Erro de conexão: " + t.getMessage());
             }
         });
     }
+
 
     public void entradaEstoque(String codEan, Integer quantidade, ProdutoCallback<Void> callback) {
         produtoApi.entradaEstoque(codEan, quantidade).enqueue(new Callback<>() {

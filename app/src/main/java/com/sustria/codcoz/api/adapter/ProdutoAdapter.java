@@ -47,18 +47,6 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoV
         notifyDataSetChanged();
     }
 
-    public void addProduto(ProdutoResponse produto) {
-        this.produtos.add(produto);
-        notifyItemInserted(this.produtos.size() - 1);
-    }
-
-    public void removeProduto(int position) {
-        if (position >= 0 && position < produtos.size()) {
-            this.produtos.remove(position);
-            notifyItemRemoved(position);
-        }
-    }
-
     public void updateProduto(int position, ProdutoResponse produto) {
         if (position >= 0 && position < produtos.size()) {
             this.produtos.set(position, produto);

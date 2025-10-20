@@ -11,6 +11,7 @@ public class TarefaResponse implements Serializable {
     private String relator;
     private String responsavel;
     private String pedido;
+    private Boolean notificacaoLido;
     private String situacao;
     private LocalDate dataCriacao;
     private LocalDate dataLimite;
@@ -43,6 +44,14 @@ public class TarefaResponse implements Serializable {
 
     public String getResponsavel() {
         return responsavel;
+    }
+
+    public Boolean getNotificacaoLido() {
+        return notificacaoLido;
+    }
+
+    public void setNotificacaoLido(Boolean value) {
+        this.notificacaoLido = value;
     }
 
     public String getPedido() {

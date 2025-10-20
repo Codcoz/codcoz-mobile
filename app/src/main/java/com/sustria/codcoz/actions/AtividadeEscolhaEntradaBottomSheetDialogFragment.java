@@ -48,7 +48,7 @@ public class AtividadeEscolhaEntradaBottomSheetDialogFragment extends BottomShee
 
         binding.btnManual.setOnClickListener(v -> {
             dismiss();
-            ProdutoBottomSheetDialogFragment.show(getParentFragmentManager(), "", "entrada");
+            ProdutoBottomSheetDialogFragment.show(getParentFragmentManager(), "", ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA);
         });
 
         binding.btnCancelar.setOnClickListener(v -> dismiss());

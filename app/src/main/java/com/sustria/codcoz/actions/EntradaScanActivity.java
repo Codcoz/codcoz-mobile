@@ -52,6 +52,7 @@ public class EntradaScanActivity extends AppCompatActivity implements BarcodeCal
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == CAMERA_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                setupScanner();
             } else {
                 Toast.makeText(this, "Permissão da câmera necessária para escanear códigos", Toast.LENGTH_LONG).show();
                 finish();
@@ -66,7 +67,7 @@ public class EntradaScanActivity extends AppCompatActivity implements BarcodeCal
             // Pausa scanner para evitar múltiplas leituras enquanto o bottom sheet está aberto
             barcodeView.pause();
             // Abre o bottom sheet para confirmar entrada, apenas se existir no repositório
-            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, "entrada");
+            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA);
         }
     }
 

@@ -119,7 +119,7 @@
                     android:layout_height="wrap_content"
                     android:background="@null"
                     android:fontFamily="@font/nunito_semibold"
-                    android:hint="Buscar produto..."
+                    android:hint="Buscar receita..."
                     android:imeOptions="actionSearch"
                     android:inputType="text"
                     android:maxLines="1"

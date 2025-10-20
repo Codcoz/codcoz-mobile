@@ -30,8 +30,8 @@ public interface ProdutoApi {
     @GET("produto/listar/estoque/{id_empresa}")
     Call<List<ProdutoResponse>> listarEstoque(@Path("id_empresa") Long idEmpresa);
 
-    @GET("produto/buscar/{id_empresa}")
-    Call<List<ProdutoResponse>> buscarProdutos(@Path("id_empresa") Long idEmpresa);
+    @GET("produto/buscar/{cod_ean}")
+    Call<ProdutoResponse> buscarProdutoPorEan(@Path("cod_ean") String codigoEan);
 
     @PUT("estoque/entrada/{cod_ean}")
     Call<Void> entradaEstoque(@Path("cod_ean") String codEan, @Query("quantidade") Integer quantidade);
