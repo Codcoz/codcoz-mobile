@@ -18,6 +18,7 @@ public class UserDataManager {
     private static final String KEY_NOME = "nome";
     private static final String KEY_SOBRENOME = "sobrenome";
     private static final String KEY_DATA_CONTRATACAO = "data_contratacao";
+    private static final String KEY_IMAGEM_PERFIL = "imagem_perfil";
 
     private static UserDataManager instance;
     private EstoquistaResponse userData;
@@ -49,6 +50,7 @@ public class UserDataManager {
             editor.putString(KEY_NOME, userData.getNome());
             editor.putString(KEY_SOBRENOME, userData.getSobrenome());
             editor.putString(KEY_DATA_CONTRATACAO, userData.getDataContratacao());
+            editor.putString(KEY_IMAGEM_PERFIL, userData.getImagemPerfil());
             editor.apply();
         }
     }
@@ -63,6 +65,7 @@ public class UserDataManager {
             cachedUser.setNome(prefs.getString(KEY_NOME, ""));
             cachedUser.setSobrenome(prefs.getString(KEY_SOBRENOME, ""));
             cachedUser.setDataContratacao(prefs.getString(KEY_DATA_CONTRATACAO, ""));
+            cachedUser.setImagemPerfil(prefs.getString(KEY_IMAGEM_PERFIL, "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar"));
             this.userData = cachedUser;
             this.isDataLoaded = true;
         }
@@ -113,5 +116,12 @@ public class UserDataManager {
             }
         }
         return "--/--/----";
+    }
+
+    public String getImagemPerfil() {
+        if (userData != null && userData.getImagemPerfil() != null && !userData.getImagemPerfil().isEmpty()) {
+            return userData.getImagemPerfil();
+        }
+        return "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar";
     }
 }

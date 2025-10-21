@@ -1,5 +1,7 @@
 package com.sustria.codcoz.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -13,8 +15,13 @@ public class TarefaResponse implements Serializable {
     private String pedido;
     private Boolean notificacaoLido;
     private String situacao;
+    @SerializedName("data_criacao")
     private LocalDate dataCriacao;
+    
+    @SerializedName("data_limite")
     private LocalDate dataLimite;
+    
+    @SerializedName("data_conclusao")
     private LocalDate dataConclusao;
 
     public Long getId() {
@@ -72,6 +79,18 @@ public class TarefaResponse implements Serializable {
 
     public LocalDate getDataConclusao() {
         return dataConclusao;
+    }
+
+    public void setDataCriacao(LocalDate dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
+
+    public void setDataLimite(LocalDate dataLimite) {
+        this.dataLimite = dataLimite;
+    }
+
+    public void setDataConclusao(LocalDate dataConclusao) {
+        this.dataConclusao = dataConclusao;
     }
 
 }

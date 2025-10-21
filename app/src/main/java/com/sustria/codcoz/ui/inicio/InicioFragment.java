@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -69,10 +71,10 @@ public class InicioFragment extends Fragment {
 
         inicioViewModel = new ViewModelProvider(this).get(InicioViewModel.class);
 
-        // Carregar dados do usuário do cache
+        // Carrega os dados do usuário do cache
         loadUserData();
 
-        // Observar dados do estoque
+        // Observa os dados do estoque
         inicioViewModel.getEstoquePercentual().observe(getViewLifecycleOwner(), percentual -> {
             binding.txtPercentualAtual.setText(percentual + "%");
             PieChart pieChart = binding.chartEstoque;
@@ -111,10 +113,10 @@ public class InicioFragment extends Fragment {
         inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(),
                 statusAnterior -> binding.tvStatusAnterior.setText("Status: " + statusAnterior));
 
-        // Configurar RecyclerView de tarefas
+        // Configura RecyclerView de tarefas
         setupRecyclerViewTask();
 
-        // Observar dados das tarefas
+        // Observa oa dados das tarefas
         watchTasks();
 
         return root;
@@ -223,13 +225,13 @@ public class InicioFragment extends Fragment {
                     container.textView.setBackgroundResource(R.drawable.bolinha_normal);
                 }
 
-                // Verificar se há tarefas para esta data
+                // Verifica se há tarefas para esta data
                 if (tarefasPorData.containsKey(date)) {
                     container.bolinha.setVisibility(View.VISIBLE);
-                    
+
                     List<TarefaResponse> tarefasDoDia = tarefasPorData.get(date);
                     boolean temTarefaVencida = false;
-                    
+
                     if (tarefasDoDia != null) {
                         for (TarefaResponse tarefa : tarefasDoDia) {
                             if (tarefa.getDataLimite() != null && tarefa.getDataLimite().isBefore(LocalDate.now())) {
@@ -238,7 +240,7 @@ public class InicioFragment extends Fragment {
                             }
                         }
                     }
-                    
+
                     if (temTarefaVencida) {
                         container.bolinha.setBackgroundResource(R.drawable.bolinha_vermelha);
                     } else {
@@ -322,12 +324,27 @@ public class InicioFragment extends Fragment {
         String nomeCompleto = userDataManager.getNomeCompleto();
         binding.headerHome.headerNome.setText("Olá, " + nomeCompleto + "!");
         binding.headerHome.headerFuncao.setText("Estoquista");
+
+        // Carrega a imagem de perfil no header
+        loadHeaderProfileImage();
+    }
+
+    private void loadHeaderProfileImage() {
+        String imageUrl = UserDataManager.getInstance().getImagemPerfil();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_imagem_perfil)
+                    .error(R.drawable.ic_imagem_perfil)
+                    .circleCrop()
+                    .into(binding.headerHome.headerPerfil);
+        }
     }
 
     private void setupRecyclerViewTask() {
         tarefaAdapter = new TarefaAdapter();
         emptyStateAdapter = new EmptyStateAdapter(tarefaAdapter);
-        
+
         if (binding.tarefas != null) {
             binding.tarefas.setLayoutManager(new LinearLayoutManager(getContext()));
         }
@@ -344,25 +361,15 @@ public class InicioFragment extends Fragment {
             if (tarefas != null) {
                 tarefaAdapter.setTarefas(tarefas);
                 stageTasksByDay(tarefas);
-                
-                // Atualizar estado vazio
+
+                // Atualiza o estado vazio
                 if (tarefas.isEmpty()) {
-                    emptyStateAdapter.setEmptyState(true, "Nenhuma tarefa encontrada", 
-                        "Não há tarefas pendentes no momento.\nVerifique novamente mais tarde.");
+                    emptyStateAdapter.setEmptyState(true, "Nenhuma tarefa encontrada",
+                            "Não há tarefas pendentes no momento.\nVerifique novamente mais tarde.");
                 } else {
                     emptyStateAdapter.setEmptyState(false);
                 }
             }
-        });
-
-        // Observar o estado de carregamento
-        inicioViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
-//             binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
-        });
-
-        inicioViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
-            // Não mostrar popup de erro para 404 ou outros erros de carregamento
-            // Apenas logar ou tratar silenciosamente
         });
     }
 
@@ -378,8 +385,8 @@ public class InicioFragment extends Fragment {
                 tarefasPorData.get(dataLimite).add(tarefa);
             } else {
                 // Se não tem data limite, usar data de criação ou data atual
-                LocalDate dataParaUsar = tarefa.getDataCriacao() != null ? 
-                    tarefa.getDataCriacao() : LocalDate.now();
+                LocalDate dataParaUsar = tarefa.getDataCriacao() != null ?
+                        tarefa.getDataCriacao() : LocalDate.now();
                 if (!tarefasPorData.containsKey(dataParaUsar)) {
                     tarefasPorData.put(dataParaUsar, new ArrayList<>());
                 }

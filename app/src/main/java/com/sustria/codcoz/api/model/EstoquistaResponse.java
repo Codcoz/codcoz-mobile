@@ -9,6 +9,7 @@ public class EstoquistaResponse implements Serializable {
     private Integer empresaId;
     private String dataContratacao;
     private String status;
+    private String imagemPerfil;
 
     public EstoquistaResponse() {
     }
@@ -59,6 +60,14 @@ public class EstoquistaResponse implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getImagemPerfil() {
+        return imagemPerfil;
+    }
+
+    public void setImagemPerfil(String imagemPerfil) {
+        this.imagemPerfil = imagemPerfil;
     }
 }
 

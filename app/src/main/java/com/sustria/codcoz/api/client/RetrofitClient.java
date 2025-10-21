@@ -41,12 +41,20 @@ public final class RetrofitClient {
                     .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>)
                             (json, typeOfT, context) -> {
                         try {
-                            return LocalDate.parse(json.getAsString());
+                            if (json.isJsonNull()) {
+                                return null;
+                            }
+                            String dateString = json.getAsString();
+                            if (dateString == null || dateString.isEmpty()) {
+                                return null;
+                            }
+                            return LocalDate.parse(dateString);
                         } catch (Exception e) {
                             throw new JsonParseException("Erro ao converter data: " + json.getAsString(), e);
                         }
                     })
                     .setDateFormat("yyyy-MM-dd")
+                    .serializeNulls()
                     .create();
 
             retrofitInstance = new Retrofit.Builder()
