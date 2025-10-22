@@ -15,14 +15,14 @@ public class TarefaResponse implements Serializable {
     private String pedido;
     private Boolean notificacaoLido;
     private String situacao;
-    @SerializedName("data_criacao")
-    private LocalDate dataCriacao;
-    
-    @SerializedName("data_limite")
-    private LocalDate dataLimite;
-    
-    @SerializedName("data_conclusao")
-    private LocalDate dataConclusao;
+    @SerializedName("dataCriacao")
+    private String dataCriacaoString;
+
+    @SerializedName("dataLimite")
+    public String dataLimiteString;
+
+    @SerializedName("dataConclusao")
+    private String dataConclusaoString;
 
     public Long getId() {
         return id;
@@ -30,10 +30,6 @@ public class TarefaResponse implements Serializable {
 
     public void setId(Long value) {
         this.id = value;
-    }
-
-    public String getEmpresa() {
-        return empresa;
     }
 
     public String getTipoTarefa() {
@@ -47,10 +43,6 @@ public class TarefaResponse implements Serializable {
 
     public String getRelator() {
         return relator;
-    }
-
-    public String getResponsavel() {
-        return responsavel;
     }
 
     public Boolean getNotificacaoLido() {
@@ -70,27 +62,40 @@ public class TarefaResponse implements Serializable {
     }
 
     public LocalDate getDataCriacao() {
-        return dataCriacao;
+        if (dataCriacaoString == null || dataCriacaoString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dataCriacaoString);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public LocalDate getDataLimite() {
-        return dataLimite;
+        if (dataLimiteString == null || dataLimiteString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dataLimiteString);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public LocalDate getDataConclusao() {
-        return dataConclusao;
-    }
-
-    public void setDataCriacao(LocalDate dataCriacao) {
-        this.dataCriacao = dataCriacao;
-    }
-
-    public void setDataLimite(LocalDate dataLimite) {
-        this.dataLimite = dataLimite;
+        if (dataConclusaoString == null || dataConclusaoString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dataConclusaoString);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void setDataConclusao(LocalDate dataConclusao) {
-        this.dataConclusao = dataConclusao;
+        this.dataConclusaoString = dataConclusao != null ? dataConclusao.toString() : null;
     }
 
 }

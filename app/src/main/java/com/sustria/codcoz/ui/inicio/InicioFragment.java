@@ -9,8 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -18,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -32,13 +31,13 @@ import com.kizitonwose.calendar.view.ViewContainer;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.ConfirmacaoBottomSheetDialogFragment;
 import com.sustria.codcoz.actions.PerfilActivity;
+import com.sustria.codcoz.actions.ProdutosActivity;
 import com.sustria.codcoz.actions.TarefaDetalheBottomSheetDialogFragment;
 import com.sustria.codcoz.api.adapter.TarefaAdapter;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.databinding.FragmentInicioBinding;
-import com.sustria.codcoz.actions.ProdutosActivity;
-import com.sustria.codcoz.utils.UserDataManager;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
+import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -231,17 +230,26 @@ public class InicioFragment extends Fragment {
 
                     List<TarefaResponse> tarefasDoDia = tarefasPorData.get(date);
                     boolean temTarefaVencida = false;
+                    boolean temTarefaConcluida = false;
 
-                    if (tarefasDoDia != null) {
+
+                    if (tarefasDoDia != null && !tarefasDoDia.isEmpty()) {
                         for (TarefaResponse tarefa : tarefasDoDia) {
-                            if (tarefa.getDataLimite() != null && tarefa.getDataLimite().isBefore(LocalDate.now())) {
+                            
+                            // Verifica se a tarefa está concluída
+                            if (tarefa.getSituacao() != null && tarefa.getSituacao().toLowerCase().contains("concluída")) {
+                                temTarefaConcluida = true;
+                            }
+                            // Verifica se a tarefa tem data limite e se está vencida
+                            else if (tarefa.getDataLimite() != null && tarefa.getDataLimite().isBefore(LocalDate.now())) {
                                 temTarefaVencida = true;
-                                break;
                             }
                         }
                     }
 
-                    if (temTarefaVencida) {
+                    if (temTarefaConcluida) {
+                        container.bolinha.setBackgroundResource(R.drawable.bolinha_verde); // Verde para concluídas
+                    } else if (temTarefaVencida) {
                         container.bolinha.setBackgroundResource(R.drawable.bolinha_vermelha);
                     } else {
                         container.bolinha.setBackgroundResource(R.drawable.bolinha_azul);
@@ -255,14 +263,28 @@ public class InicioFragment extends Fragment {
 
                     if (tarefasPorData.containsKey(dataTarefa)) {
                         List<TarefaResponse> tarefasDoDia = tarefasPorData.get(dataTarefa);
-                        if (tarefasDoDia != null && tarefasDoDia.size() == 1) {
-                            TarefaDetalheBottomSheetDialogFragment.newInstance(
-                                            tarefasDoDia.get(0).getTipoTarefa(),
-                                            tarefasDoDia.get(0).getIngrediente(),
-                                            tarefasDoDia.get(0).getRelator(),
-                                            tarefasDoDia.get(0).getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
-                                    )
-                                    .show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
+                        if (tarefasDoDia != null && !tarefasDoDia.isEmpty()) {
+                            if (tarefasDoDia.size() == 1) {
+                                // Se há apenas uma tarefa, mostra o BottomSheet diretamente
+                                TarefaResponse tarefa = tarefasDoDia.get(0);
+                                String tipoTarefa = tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa";
+                                String ingrediente = tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "Produto";
+                                String relator = tarefa.getRelator() != null ? tarefa.getRelator() : "N/A";
+                                String dataLimite = tarefa.getDataLimite() != null ?
+                                        tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A";
+
+                                TarefaDetalheBottomSheetDialogFragment.newInstance(
+                                                tipoTarefa,
+                                                ingrediente,
+                                                relator,
+                                                dataLimite
+                                        )
+                                        .show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
+                            } else {
+                                // Se há múltiplas tarefas, mostra uma mensagem
+                                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(),
+                                        "Há " + tarefasDoDia.size() + " tarefas para este dia. Use a lista de tarefas para visualizá-las.");
+                            }
                         }
                     } else {
                         ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Nenhuma tarefa para este dia.");
@@ -359,11 +381,20 @@ public class InicioFragment extends Fragment {
     private void watchTasks() {
         inicioViewModel.getTarefas().observe(getViewLifecycleOwner(), tarefas -> {
             if (tarefas != null) {
-                tarefaAdapter.setTarefas(tarefas);
+                // Filtrar tarefas concluídas para o RecyclerView
+                List<TarefaResponse> tarefasPendentes = new ArrayList<>();
+                for (TarefaResponse tarefa : tarefas) {
+                    if (tarefa.getSituacao() == null || 
+                        !tarefa.getSituacao().toLowerCase().contains("concluída")) {
+                        tarefasPendentes.add(tarefa);
+                    }
+                }
+                
+                tarefaAdapter.setTarefas(tarefasPendentes);
                 stageTasksByDay(tarefas);
 
                 // Atualiza o estado vazio
-                if (tarefas.isEmpty()) {
+                if (tarefasPendentes.isEmpty()) {
                     emptyStateAdapter.setEmptyState(true, "Nenhuma tarefa encontrada",
                             "Não há tarefas pendentes no momento.\nVerifique novamente mais tarde.");
                 } else {
@@ -377,16 +408,16 @@ public class InicioFragment extends Fragment {
         tarefasPorData.clear();
 
         for (TarefaResponse tarefa : tarefas) {
+            LocalDate dataParaUsar = null;
+
+            // Prioriza data limite, e não usa data atual
             if (tarefa.getDataLimite() != null) {
-                LocalDate dataLimite = tarefa.getDataLimite();
-                if (!tarefasPorData.containsKey(dataLimite)) {
-                    tarefasPorData.put(dataLimite, new ArrayList<>());
-                }
-                tarefasPorData.get(dataLimite).add(tarefa);
+                dataParaUsar = tarefa.getDataLimite();
             } else {
-                // Se não tem data limite, usar data de criação ou data atual
-                LocalDate dataParaUsar = tarefa.getDataCriacao() != null ?
-                        tarefa.getDataCriacao() : LocalDate.now();
+                dataParaUsar = LocalDate.now();
+            }
+
+            if (dataParaUsar != null) {
                 if (!tarefasPorData.containsKey(dataParaUsar)) {
                     tarefasPorData.put(dataParaUsar, new ArrayList<>());
                 }
@@ -396,22 +427,18 @@ public class InicioFragment extends Fragment {
     }
 
     private void openDialogTask(TarefaResponse tarefa) {
+        String tipoTarefa = tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa";
+        String ingrediente = tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "Produto";
+        String relator = tarefa.getRelator() != null ? tarefa.getRelator() : "N/A";
+        String dataLimite = tarefa.getDataLimite() != null ?
+                tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : "N/A";
+
         TarefaDetalheBottomSheetDialogFragment.newInstance(
-                tarefa.getTipoTarefa(),
-                tarefa.getIngrediente(),
-                tarefa.getRelator(),
-                tarefa.getDataLimite() != null ? tarefa.getDataLimite().format(DateTimeFormatter.ofPattern("dd/MM/yyyy")) : null
+                tipoTarefa,
+                ingrediente,
+                relator,
+                dataLimite
         ).show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
-    }
-
-    private boolean isAuditoria(String tipo) {
-        String t = tipo.toLowerCase(Locale.ROOT);
-        return t.contains("auditor") || t.contains("confer") || t.contains("estoque");
-    }
-
-    private boolean isAtividade(String tipo) {
-        String t = tipo.toLowerCase(Locale.ROOT);
-        return t.contains("ativ");
     }
 
     private void botoes() {
@@ -440,6 +467,7 @@ public class InicioFragment extends Fragment {
             startActivity(intent);
         });
     }
+
 
     @Override
     public void onDestroyView() {

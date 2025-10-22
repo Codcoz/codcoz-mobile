@@ -48,7 +48,7 @@
                 android:id="@+id/tv_name_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Arroz camil - 2 unidades"
+                android:text="Arroz camil"
                 android:textColor="@color/colorOnSurfaceVariant"
                 android:textSize="12sp" />
 

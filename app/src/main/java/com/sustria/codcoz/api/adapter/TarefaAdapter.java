@@ -28,12 +28,11 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
     public void setOnTarefaClickListener(OnTarefaClickListener listener) {
         this.listener = listener;
     }
-
     public void setTarefas(List<TarefaResponse> tarefas) {
         this.tarefas = tarefas != null ? tarefas : new ArrayList<>();
         notifyDataSetChanged();
     }
-    
+
     public boolean isEmpty() {
         return tarefas.isEmpty();
     }
@@ -53,10 +52,11 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
         // Configurar o título da tarefa
         holder.tvTitle.setText(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa");
 
-        // Configurar o código/pedido
-        String codigo = tarefa.getPedido() != null ? tarefa.getPedido() :
-                (tarefa.getId() != null ? "ID: " + tarefa.getId() : "");
-        holder.tvId.setText(codigo);
+        // Configurar o ID da tarefa
+        holder.tvId.setText(tarefa.getId() != null ? "ID: " + tarefa.getId() : "ID: N/A");
+
+        // Configurar o nome do produto
+        holder.tvName.setText(tarefa.getIngrediente() != null ? tarefa.getIngrediente() : "Produto");
 
         holder.button.setOnClickListener(v -> {
             if (listener != null) {
@@ -72,12 +72,14 @@ public class TarefaAdapter extends RecyclerView.Adapter<TarefaAdapter.TarefaView
 
     static class TarefaViewHolder extends RecyclerView.ViewHolder {
         TextView tvTitle;
+        TextView tvName;
         TextView tvId;
         Button button;
 
         TarefaViewHolder(@NonNull View itemView) {
             super(itemView);
             tvTitle = itemView.findViewById(R.id.tv_title_card);
+            tvName = itemView.findViewById(R.id.tv_name_card);
             tvId = itemView.findViewById(R.id.tv_id_card);
             button = itemView.findViewById(R.id.button);
         }
