@@ -223,8 +223,7 @@ public class PerfilActivity extends AppCompatActivity {
             }
         });
 
-        // Configurar clique no avatar para alterar imagem
-        binding.ivAvatar.setOnClickListener(v -> {
+        binding.btnEditProfile.setOnClickListener(v -> {
             if (imagePickerManager != null) {
                 imagePickerManager.showImagePickerOptions();
             } else {
@@ -232,10 +231,8 @@ public class PerfilActivity extends AppCompatActivity {
             }
         });
         
-        // Configurar clique longo para visualizar imagem em tela cheia
-        binding.ivAvatar.setOnLongClickListener(v -> {
+        binding.ivAvatar.setOnClickListener(v -> {
             showFullScreenImage();
-            return true;
         });
     }
 
@@ -281,7 +278,7 @@ public class PerfilActivity extends AppCompatActivity {
                         userDataManager.setUserData(userDataManager.getUserData(), PerfilActivity.this);
                     }
 
-                    loadProfileImage();
+                        loadProfileImage();
                     hideProgressDialog();
                     Toast.makeText(PerfilActivity.this, "Imagem atualizada com sucesso!", Toast.LENGTH_SHORT).show();
                 })

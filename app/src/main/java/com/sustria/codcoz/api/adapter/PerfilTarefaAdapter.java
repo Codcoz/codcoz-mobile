@@ -44,14 +44,13 @@ public class PerfilTarefaAdapter extends RecyclerView.Adapter<PerfilTarefaAdapte
         // Configura o nome da tarefa
         holder.tvNome.setText(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa");
 
-        // Configurar o código/pedido
+        // Configurar o código
         String codigo = tarefa.getPedido() != null ? tarefa.getPedido() :
                 (tarefa.getId() != null ? "ID: " + tarefa.getId() : "");
         holder.tvCodigo.setText(codigo);
 
-        // Configurar a data
-        if (tarefa.getDataCriacao() != null) {
-            holder.tvData.setText(tarefa.getDataCriacao().format(DateTimeFormatter.ofPattern("dd MMMM", new Locale("pt", "BR"))));
+        if (tarefa.getDataConclusao() != null) {
+            holder.tvData.setText(tarefa.getDataConclusao().format(DateTimeFormatter.ofPattern("dd MMMM", new Locale("pt", "BR"))));
         } else {
             holder.tvData.setText("Data não disponível");
         }
