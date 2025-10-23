@@ -24,8 +24,8 @@ public class CardapioService {
         void onError(String error);
     }
 
-    public void getCardapios(CardapioCallback<List<CardapioResponse>> callback) {
-        cardapioApi.getCardapios().enqueue(new Callback<>() {
+    public void getCardapios(String empresaId, CardapioCallback<List<CardapioResponse>> callback) {
+        cardapioApi.getCardapios(empresaId).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<CardapioResponse>> call, Response<List<CardapioResponse>> response) {
                 if (response.isSuccessful()) {

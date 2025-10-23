@@ -24,9 +24,9 @@ public class ReceitaService {
         void onError(String error);
     }
 
-    // uscar receitas da API NoSQL
-    public void getReceitas(ReceitaCallback<List<ReceitaResponse>> callback) {
-        receitaApi.getReceitas().enqueue(new Callback<>() {
+    // Buscar receitas da API NoSQL
+    public void getReceitas(String empresaId, ReceitaCallback<List<ReceitaResponse>> callback) {
+        receitaApi.getReceitas(empresaId).enqueue(new Callback<>() {
             @Override
             public void onResponse(Call<List<ReceitaResponse>> call, Response<List<ReceitaResponse>> response) {
                 if (response.isSuccessful()) {

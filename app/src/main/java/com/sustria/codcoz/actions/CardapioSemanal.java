@@ -14,6 +14,7 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.CardapioResponse;
 import com.sustria.codcoz.api.service.CardapioService;
 import com.sustria.codcoz.databinding.ActivityCardapioSemanalBinding;
+import com.sustria.codcoz.utils.UserDataManager;
 import com.sustria.codcoz.api.model.DiaSemanaResponse;
 import com.sustria.codcoz.api.model.ItemRefeicaoResponse;
 
@@ -59,7 +60,13 @@ public class CardapioSemanal extends AppCompatActivity {
     }
 
     private void carregarCardapios() {
-        cardapioService.getCardapios(new CardapioService.CardapioCallback<List<CardapioResponse>>() {
+        Integer empresaId = UserDataManager.getInstance().getEmpresaId();
+        if (empresaId == null) {
+            mostrarEstadoVazio("Erro", "Empresa não identificada");
+            return;
+        }
+        
+        cardapioService.getCardapios(empresaId.toString(), new CardapioService.CardapioCallback<List<CardapioResponse>>() {
             @Override
             public void onSuccess(List<CardapioResponse> cardapios) {
                 runOnUiThread(() -> {

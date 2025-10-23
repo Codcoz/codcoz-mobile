@@ -20,6 +20,7 @@ import com.sustria.codcoz.api.model.ReceitaResponse;
 import com.sustria.codcoz.api.service.ReceitaService;
 import com.sustria.codcoz.databinding.FragmentCardapioBinding;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
+import com.sustria.codcoz.utils.UserDataManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,7 +74,13 @@ public class CardapioFragment extends Fragment {
     }
 
     private void carregarReceitas() {
-        receitaService.getReceitas(new ReceitaService.ReceitaCallback<List<ReceitaResponse>>() {
+        Integer empresaId = UserDataManager.getInstance().getEmpresaId();
+        if (empresaId == null) {
+            Log.e("Cardapio", "EmpresaId não encontrado");
+            return;
+        }
+        
+        receitaService.getReceitas(empresaId.toString(), new ReceitaService.ReceitaCallback<List<ReceitaResponse>>() {
             @Override
             public void onSuccess(List<ReceitaResponse> receitasApi) {
                 if (getActivity() != null) {
