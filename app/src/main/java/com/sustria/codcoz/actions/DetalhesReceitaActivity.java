@@ -20,6 +20,7 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.ActivityDetalhesReceitaBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.model.Receita;
+import com.sustria.codcoz.api.model.ReceitaApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,14 +70,20 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
 
     private void loadReceitaData() {
         Intent intent = getIntent();
-        String receitaId = intent.getStringExtra("RECEITA_ID");
+        ReceitaApi receitaApi = (ReceitaApi) intent.getSerializableExtra("RECEITA_API");
 
-        if (receitaId != null) {
-            List<Receita> receitas = MockDataProvider.getMockReceitas();
-            for (Receita r : receitas) {
-                if (r.getId().equals(receitaId)) {
-                    displayReceita(r);
-                    break;
+        if (receitaApi != null) {
+            displayReceitaApi(receitaApi);
+        } else {
+            // Fallback para dados mockados se não receber ReceitaApi
+            String receitaId = intent.getStringExtra("RECEITA_ID");
+            if (receitaId != null) {
+                List<Receita> receitas = MockDataProvider.getMockReceitas();
+                for (Receita r : receitas) {
+                    if (r.getId().equals(receitaId)) {
+                        displayReceita(r);
+                        break;
+                    }
                 }
             }
         }
@@ -102,12 +109,49 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
         }
     }
 
+    private void displayReceitaApi(ReceitaApi receitaApi) {
+        // Título
+        binding.tvTituloReceita.setText(receitaApi.getNome());
+
+        // Descrição
+        if (receitaApi.getDescricao() != null) {
+            binding.tvDescricaoReceita.setText(receitaApi.getDescricao());
+        }
+
+        // Tempos e porções
+        if (receitaApi.getTempoPreparoMinutos() != null) {
+            binding.tvTempoPreparo.setText("Tempo de preparo: " + receitaApi.getTempoPreparoMinutos() + " minutos");
+        }
+        if (receitaApi.getTempoCozimentoMinutos() != null) {
+            binding.tvTempoCozimento.setText("Tempo de cozimento: " + receitaApi.getTempoCozimentoMinutos() + " minutos");
+        }
+        if (receitaApi.getPorcoes() != null) {
+            binding.tvPorcoes.setText("Rende " + receitaApi.getPorcoes() + " porções");
+        }
+
+        // Ingredientes
+        if (receitaApi.getIngredientes() != null) {
+            ingredienteAdapter.setIngredientesApi(receitaApi.getIngredientes());
+        }
+
+        // Instruções
+        if (receitaApi.getModoPreparo() != null) {
+            instrucaoAdapter.setInstrucoesApi(receitaApi.getModoPreparo());
+        }
+    }
+
     // Adapter para ingredientes
     private static class IngredienteAdapter extends RecyclerView.Adapter<IngredienteAdapter.IngredienteViewHolder> {
         private List<Receita.Ingrediente> ingredientes = new ArrayList<>();
+        private List<ReceitaApi.IngredienteApi> ingredientesApi = new ArrayList<>();
 
         public void setIngredientes(List<Receita.Ingrediente> ingredientes) {
             this.ingredientes = ingredientes;
+            notifyDataSetChanged();
+        }
+
+        public void setIngredientesApi(List<ReceitaApi.IngredienteApi> ingredientesApi) {
+            this.ingredientesApi = ingredientesApi;
             notifyDataSetChanged();
         }
 
@@ -120,14 +164,20 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(IngredienteViewHolder holder, int position) {
-            Receita.Ingrediente ingrediente = ingredientes.get(position);
-            holder.tvNomeIngrediente.setText(ingrediente.getNome());
-            holder.tvQuantidadeIngrediente.setText(ingrediente.getQuantidade() + " " + ingrediente.getUnidade());
+            if (!ingredientesApi.isEmpty()) {
+                ReceitaApi.IngredienteApi ingrediente = ingredientesApi.get(position);
+                holder.tvNomeIngrediente.setText(ingrediente.getNome());
+                holder.tvQuantidadeIngrediente.setText(ingrediente.getQuantidade() + " " + ingrediente.getUnidade_medida());
+            } else {
+                Receita.Ingrediente ingrediente = ingredientes.get(position);
+                holder.tvNomeIngrediente.setText(ingrediente.getNome());
+                holder.tvQuantidadeIngrediente.setText(ingrediente.getQuantidade() + " " + ingrediente.getUnidade());
+            }
         }
 
         @Override
         public int getItemCount() {
-            return ingredientes.size();
+            return !ingredientesApi.isEmpty() ? ingredientesApi.size() : ingredientes.size();
         }
 
         static class IngredienteViewHolder extends RecyclerView.ViewHolder {
@@ -145,9 +195,15 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
     // Adapter para instruções
     private static class InstrucaoAdapter extends RecyclerView.Adapter<InstrucaoAdapter.InstrucaoViewHolder> {
         private List<String> instrucoes = new ArrayList<>();
+        private List<ReceitaApi.ModoPreparoApi> instrucoesApi = new ArrayList<>();
 
         public void setInstrucoes(List<String> instrucoes) {
             this.instrucoes = instrucoes;
+            notifyDataSetChanged();
+        }
+
+        public void setInstrucoesApi(List<ReceitaApi.ModoPreparoApi> instrucoesApi) {
+            this.instrucoesApi = instrucoesApi;
             notifyDataSetChanged();
         }
 
@@ -160,14 +216,20 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(InstrucaoViewHolder holder, int position) {
-            String instrucao = instrucoes.get(position);
-            holder.tvNumeroInstrucao.setText(String.valueOf(position + 1));
-            holder.tvTextoInstrucao.setText(instrucao);
+            if (!instrucoesApi.isEmpty()) {
+                ReceitaApi.ModoPreparoApi instrucao = instrucoesApi.get(position);
+                holder.tvNumeroInstrucao.setText(String.valueOf(instrucao.getOrdem()));
+                holder.tvTextoInstrucao.setText(instrucao.getPasso());
+            } else {
+                String instrucao = instrucoes.get(position);
+                holder.tvNumeroInstrucao.setText(String.valueOf(position + 1));
+                holder.tvTextoInstrucao.setText(instrucao);
+            }
         }
 
         @Override
         public int getItemCount() {
-            return instrucoes.size();
+            return !instrucoesApi.isEmpty() ? instrucoesApi.size() : instrucoes.size();
         }
 
         static class InstrucaoViewHolder extends RecyclerView.ViewHolder {

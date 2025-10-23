@@ -1,30 +1,10 @@
 package com.sustria.codcoz.model;
 
-import com.sustria.codcoz.api.model.ProdutoResponse;
-
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MockDataProvider {
-
-    /**
-     * Gera dados mockados para o histórico de baixas
-     */
-
-    public static List<ProdutoResponse> getMockProduto() {
-        List<ProdutoResponse> produtos = new ArrayList<>();
-
-        produtos.add(new ProdutoResponse("1234567890", "Arroz Branco - 1 kg", "Arroz branco tipo 1", 10, "Camil", LocalDate.of(2025, 10, 20)));
-        produtos.add(new ProdutoResponse("9876543210", "Feijão Carioca - 1 kg", "Feijão tipo 1", 5, "Kicaldo", LocalDate.of(2025, 10, 17)));
-        produtos.add(new ProdutoResponse("1928374650", "Açúcar Refinado - 1 kg", "Açúcar refinado cristal", 8, "União", LocalDate.of(2025, 10, 23)));
-        produtos.add(new ProdutoResponse("5647382910", "Café Torrado e Moído - 500 g", "Café tradicional", 20, "Pilão", LocalDate.of(2025, 10, 31)));
-        produtos.add(new ProdutoResponse("1357924680", "Macarrão Espaguete - 500 g", "Macarrão de trigo tipo espaguete", 50, "Renata", LocalDate.of(2025, 11, 17)));
-        produtos.add(new ProdutoResponse("2468135790", "Óleo de Soja - 900 ml", "Óleo vegetal de soja", 30, "Soya", LocalDate.of(2025, 11, 13)));
-
-        return produtos;
-    }
 
     public static List<RegistroHistorico> getMockRegistrosHistorico() {
         List<RegistroHistorico> registros = new ArrayList<>();

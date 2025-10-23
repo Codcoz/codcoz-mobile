@@ -18,9 +18,8 @@ import com.sustria.codcoz.api.adapter.ProdutoAdapter;
 import com.sustria.codcoz.api.model.ProdutoResponse;
 import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.ActivityProdutosBinding;
-import com.sustria.codcoz.model.MockDataProvider;
-import com.sustria.codcoz.utils.UserDataManager;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
+import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -93,12 +92,12 @@ public class ProdutosActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     produtos = result;
                     produtoAdapter.setProdutos(produtos);
-                    
+
                     // Atualizar estado vazio
                     if (produtos.isEmpty()) {
                         String emptyTitle = "Nenhum produto encontrado";
                         String emptyMessage = "Não há produtos para exibir no momento.\nVerifique novamente mais tarde.";
-                        
+
                         if (telaEstoqueBaixo) {
                             emptyTitle = "Estoque em dia";
                             emptyMessage = "Todos os produtos estão com estoque adequado.\nParabéns pelo controle!";
@@ -106,7 +105,7 @@ public class ProdutosActivity extends AppCompatActivity {
                             emptyTitle = "Produtos em dia";
                             emptyMessage = "Não há produtos próximos ao vencimento.\nÓtimo controle de validade!";
                         }
-                        
+
                         emptyStateAdapter.setEmptyState(true, emptyTitle, emptyMessage);
                     } else {
                         emptyStateAdapter.setEmptyState(false);
@@ -118,8 +117,6 @@ public class ProdutosActivity extends AppCompatActivity {
             public void onError(String error) {
                 runOnUiThread(() -> {
                     Toast.makeText(ProdutosActivity.this, error, Toast.LENGTH_SHORT).show();
-                    produtos = MockDataProvider.getMockProduto();
-                    produtoAdapter.setProdutos(produtos);
                 });
             }
         };
@@ -160,7 +157,7 @@ public class ProdutosActivity extends AppCompatActivity {
             if (produtos.isEmpty()) {
                 String emptyTitle = "Nenhum produto encontrado";
                 String emptyMessage = "Não há produtos para exibir no momento.\nVerifique novamente mais tarde.";
-                
+
                 if (telaEstoqueBaixo) {
                     emptyTitle = "Estoque em dia";
                     emptyMessage = "Todos os produtos estão com estoque adequado.\nParabéns pelo controle!";
@@ -168,7 +165,7 @@ public class ProdutosActivity extends AppCompatActivity {
                     emptyTitle = "Produtos em dia";
                     emptyMessage = "Não há produtos próximos ao vencimento.\nÓtimo controle de validade!";
                 }
-                
+
                 emptyStateAdapter.setEmptyState(true, emptyTitle, emptyMessage);
             } else {
                 emptyStateAdapter.setEmptyState(false);
@@ -183,11 +180,11 @@ public class ProdutosActivity extends AppCompatActivity {
             }
         }
         produtoAdapter.setProdutos(filtrados);
-        
+
         // Atualizar estado vazio para resultados da busca
         if (filtrados.isEmpty()) {
-            emptyStateAdapter.setEmptyState(true, "Nenhum produto encontrado", 
-                "Não há produtos que correspondam à sua busca.\nTente usar outros termos de pesquisa.");
+            emptyStateAdapter.setEmptyState(true, "Nenhum produto encontrado",
+                    "Não há produtos que correspondam à sua busca.\nTente usar outros termos de pesquisa.");
         } else {
             emptyStateAdapter.setEmptyState(false);
         }

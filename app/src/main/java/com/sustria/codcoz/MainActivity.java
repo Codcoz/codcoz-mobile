@@ -110,7 +110,9 @@ public class MainActivity extends AppCompatActivity {
 
         binding.optionEntradaManual.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, BaixaManualActivity.class));
+            Intent intent = new Intent(this, BaixaManualActivity.class);
+            intent.putExtra("is_entrada", true);
+            startActivity(intent);
         });
 
         // Conteúdo - Baixa
@@ -120,7 +122,9 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.optionBaixaManual.setOnClickListener(v -> {
             hidePopup();
-            startActivity(new Intent(this, BaixaManualActivity.class));
+            Intent intent = new Intent(this, BaixaManualActivity.class);
+            intent.putExtra("is_entrada", false);
+            startActivity(intent);
         });
 
         // Estado inicial

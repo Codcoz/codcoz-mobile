@@ -278,7 +278,8 @@ public class InicioFragment extends Fragment {
                                                 ingrediente,
                                                 relator,
                                                 dataLimite,
-                                                tarefa.getSituacao()
+                                                tarefa.getSituacao(),
+                                                tarefa.getId()
                                         )
                                         .show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
                             } else {
@@ -439,7 +440,8 @@ public class InicioFragment extends Fragment {
                 ingrediente,
                 relator,
                 dataLimite,
-                tarefa.getSituacao()
+                tarefa.getSituacao(),
+                tarefa.getId()
         ).show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
     }
 

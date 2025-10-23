@@ -21,7 +21,7 @@ public class ProdutoResponse {
     private String marca;
 
     @SerializedName("validade")
-    private LocalDate validade;
+    private String validadeString;
 
 
     // Construtor padrão
@@ -29,13 +29,13 @@ public class ProdutoResponse {
     }
 
     // Construtor principal
-    public ProdutoResponse(String codigoEan, String nome, String descricao, Integer quantidade, String marca, LocalDate validade) {
+    public ProdutoResponse(String codigoEan, String nome, String descricao, Integer quantidade, String marca, String validadeString) {
         this.codigoEan = codigoEan;
         this.nome = nome;
         this.descricao = descricao;
         this.quantidade = quantidade;
         this.marca = marca;
-        this.validade = validade;
+        this.validadeString = validadeString;
     }
 
     // Getters e Setters
@@ -80,11 +80,26 @@ public class ProdutoResponse {
         this.marca = marca;
     }
 
+    public String getValidadeString() {
+        return validadeString;
+    }
+
+    public void setValidadeString(String validadeString) {
+        this.validadeString = validadeString;
+    }
+
     public LocalDate getValidade() {
-        return validade;
+        if (validadeString == null || validadeString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(validadeString);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public void setValidade(LocalDate validade) {
-        this.validade = validade;
+        this.validadeString = validade != null ? validade.toString() : null;
     }
 }
