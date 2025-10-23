@@ -1,11 +1,8 @@
-package com.sustria.codcoz.api;
+package com.sustria.codcoz.api.client;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonParseException;
 
-import java.time.LocalDate;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -15,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class RetrofitClient {
 
-    private static final String BASE_URL = "https://codcoz-api-postgres.onrender.com/";
+    private static final String BASE_URL = "https://codcoz-api-postgres.koyeb.app/";
     private static Retrofit retrofitInstance;
 
     private RetrofitClient() {
@@ -37,15 +34,8 @@ public final class RetrofitClient {
                     .build();
 
             Gson gson = new GsonBuilder()
-                    .registerTypeAdapter(LocalDate.class, (JsonDeserializer<LocalDate>)
-                            (json, typeOfT, context) -> {
-                        try {
-                            return LocalDate.parse(json.getAsString());
-                        } catch (Exception e) {
-                            throw new JsonParseException("Erro ao converter data: " + json.getAsString(), e);
-                        }
-                    })
                     .setDateFormat("yyyy-MM-dd")
+                    .serializeNulls()
                     .create();
 
             retrofitInstance = new Retrofit.Builder()

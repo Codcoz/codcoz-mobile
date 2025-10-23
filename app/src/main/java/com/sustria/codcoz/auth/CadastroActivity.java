@@ -112,6 +112,7 @@ public class CadastroActivity extends AppCompatActivity {
         usuario.put("dataContratacao", estoquista.getDataContratacao());
         usuario.put("status", estoquista.getStatus());
         usuario.put("empresaId", estoquista.getEmpresaId());
+        usuario.put("imagemPerfil", "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar");
 
         // Vi que é boa prática colocar o uid do firebase no documento do usuário
         usuario.put("uid", uid);

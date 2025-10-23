@@ -19,6 +19,7 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
     private static final String ARG_PRODUTO = "arg_produto";
     private static final String ARG_RELATOR = "arg_relator";
     private static final String ARG_DATA = "arg_data";
+    private static final String ARG_SITUACAO = "arg_situacao";
 
     private BottomsheetTarefaDetalheBinding binding;
 
@@ -48,11 +49,15 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         String produto = args != null ? args.getString(ARG_PRODUTO) : null;
         String relator = args != null ? args.getString(ARG_RELATOR) : null;
         String data = args != null ? args.getString(ARG_DATA) : null;
+        String situacao = args != null ? args.getString(ARG_SITUACAO) : null;
 
         if (tipo != null) binding.txtTitulo.setText(tipo);
         if (produto != null) binding.txtProduto.setText(produto);
         if (relator != null) binding.txtRelator.setText(relator);
         if (data != null) binding.txtData.setText(data);
+        
+        // Verificar situação e ajustar bottomsheet
+        verificarSituacaoTarefa(situacao, data);
 
         binding.btnFechar.setOnClickListener(v -> dismiss());
 
@@ -89,15 +94,97 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         });
     }
 
-    public static TarefaDetalheBottomSheetDialogFragment newInstance(String tipo, String produto, String relator, String data) {
+    public static TarefaDetalheBottomSheetDialogFragment newInstance(String tipo, String produto, String relator, String data, String situacao) {
         TarefaDetalheBottomSheetDialogFragment f = new TarefaDetalheBottomSheetDialogFragment();
         Bundle b = new Bundle();
         b.putString(ARG_TIPO, tipo);
         b.putString(ARG_PRODUTO, produto);
         b.putString(ARG_RELATOR, relator);
         b.putString(ARG_DATA, data);
+        b.putString(ARG_SITUACAO, situacao);
         f.setArguments(b);
         return f;
+    }
+    
+    @Override
+    public void show(@NonNull androidx.fragment.app.FragmentManager manager, @Nullable String tag) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(manager);
+        super.show(manager, tag);
+    }
+    
+    private static void dismissExistingBottomSheets(@NonNull androidx.fragment.app.FragmentManager fm) {
+        // Fechar todos os bottom sheets existentes
+        if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmacaoBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("ConfirmarRegistroBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("FiltrosBottomSheetDialogFragment") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("FiltrosBottomSheetDialogFragment")).dismiss();
+        }
+        if (fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AuditoriaQuantidadeBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("AtividadeEscolhaEntradaBottomSheetDialog")).dismiss();
+        }
+        if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
+            ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
+        }
+    }
+    
+    private void verificarSituacaoTarefa(String situacao, String dataLimite) {
+        if (situacao != null && situacao.toLowerCase().contains("concluída")) {
+            // Tarefa já foi concluída
+            configurarTarefaConcluida();
+        } else if (situacao != null && situacao.toLowerCase().contains("concluída") && 
+                   verificarSeAtrasada(dataLimite)) {
+            // Tarefa concluída com atraso
+            configurarTarefaConcluidaComAtraso();
+        } else {
+            // Tarefa pendente - manter comportamento atual
+            configurarTarefaPendente();
+        }
+    }
+    
+    private boolean verificarSeAtrasada(String dataLimite) {
+        if (dataLimite == null || dataLimite.trim().isEmpty()) {
+            return false;
+        }
+        
+        try {
+            java.time.LocalDate limite = java.time.LocalDate.parse(dataLimite);
+            java.time.LocalDate hoje = java.time.LocalDate.now();
+            return limite.isBefore(hoje);
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    
+    private void configurarTarefaConcluida() {
+        binding.btnRegistrar.setText("Tarefa Concluída");
+        binding.btnRegistrar.setBackgroundResource(R.drawable.bg_tab_selected);
+        binding.btnRegistrar.setEnabled(false);
+        binding.btnRegistrar.setAlpha(0.6f);
+    }
+    
+    private void configurarTarefaConcluidaComAtraso() {
+        binding.btnRegistrar.setText("Tarefa realizada com atraso");
+        binding.btnRegistrar.setBackgroundResource(R.drawable.bg_tab_error);
+        binding.btnRegistrar.setEnabled(false);
+        binding.btnRegistrar.setAlpha(0.6f);
+    }
+    
+    private void configurarTarefaPendente() {
+        binding.btnRegistrar.setText("Registrar");
+        binding.btnRegistrar.setBackgroundResource(R.drawable.bg_tab_selected);
+        binding.btnRegistrar.setEnabled(true);
+        binding.btnRegistrar.setAlpha(1.0f);
     }
 }
 

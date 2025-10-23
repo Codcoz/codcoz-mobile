@@ -66,7 +66,7 @@ public class BaixaScanActivity extends AppCompatActivity implements BarcodeCallb
             // Pausa scanner para evitar múltiplas leituras enquanto o bottom sheet está aberto
             barcodeView.pause();
             // Abre o bottom sheet para confirmar baixa, apenas se existir no repositório
-            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, "baixa");
+            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA);
         }
     }
 

@@ -15,6 +15,7 @@ import com.sustria.codcoz.actions.FiltrosBottomSheetDialogFragment;
 import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
 import com.sustria.codcoz.model.MockDataProvider;
 import com.sustria.codcoz.model.RegistroHistorico;
+import com.sustria.codcoz.utils.EmptyStateAdapter;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -23,6 +24,7 @@ import java.util.List;
 public class HistoricoFragment extends Fragment {
     private FragmentHistoricoBinding binding;
     private HistoricoListAdapter adapter;
+    private EmptyStateAdapter emptyStateAdapter;
     private final List<RegistroHistorico> dadosOriginais = new ArrayList<>();
     private SortOrder sortOrder = SortOrder.MAIS_RECENTES;
     private TipoFiltro tipoFiltro = TipoFiltro.TODOS;
@@ -125,8 +127,9 @@ public class HistoricoFragment extends Fragment {
 
     private void setupLista() {
         adapter = new HistoricoListAdapter();
+        emptyStateAdapter = new EmptyStateAdapter(adapter);
         binding.recyclerViewHistorico.setLayoutManager(new LinearLayoutManager(getContext()));
-        binding.recyclerViewHistorico.setAdapter(adapter);
+        binding.recyclerViewHistorico.setAdapter(emptyStateAdapter);
     }
 
     private void seedDadosMock() {
@@ -168,6 +171,14 @@ public class HistoricoFragment extends Fragment {
         if (sortOrder == SortOrder.MAIS_RECENTES) filtrados.sort(comp.reversed());
         else filtrados.sort(comp);
         adapter.submit(filtrados);
+        
+        // Atualizar estado vazio
+        if (filtrados.isEmpty()) {
+            emptyStateAdapter.setEmptyState(true, "Nenhum registro encontrado", 
+                "Não há registros de histórico para os filtros selecionados.\nTente ajustar os filtros ou verifique novamente mais tarde.");
+        } else {
+            emptyStateAdapter.setEmptyState(false);
+        }
     }
 
 

@@ -25,9 +25,9 @@
     <color name="custom_secondary_opacity_44">#44FFCC00</color>
     <color name="custom_green_success_opacity_44">#4425A70B</color>
     <color name="custom_cian_opacity_44">#443CB0B7</color>
-    <color name="custom_blue_link_opacity_44">#440C8CE9</color>
-    <color name="custom_red_link_opacity_44">#44FBDEDE</color>
-    <color name="custom_yellow_link_opacity_44">#44FFF5CC</color>
+    <color name="custom_blue_link_opacity_44">#4471C5FF</color>
+    <color name="custom_red_link_opacity_44">#44FBD2D2</color>
+    <color name="custom_yellow_link_opacity_44">#44FAE3B5</color>
 
     <color name="white_transparent_33">#33FFFFFF</color>
     <color name="transparent_33">#88000000</color>

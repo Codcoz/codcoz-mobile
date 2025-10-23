@@ -1,6 +1,13 @@
 package com.sustria.codcoz.actions;
 
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,19 +18,31 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.bumptech.glide.Glide;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.databinding.ActivityPerfilBinding;
 import com.sustria.codcoz.api.adapter.PerfilTarefaAdapter;
 import com.sustria.codcoz.ui.perfil.PerfilViewModel;
 import com.sustria.codcoz.utils.UserDataManager;
+import com.sustria.codcoz.utils.EmptyStateAdapter;
+import com.sustria.codcoz.utils.CloudinaryManager;
+import com.sustria.codcoz.utils.ImagePickerManager;
 
 public class PerfilActivity extends AppCompatActivity {
 
     private ActivityPerfilBinding binding;
     private PerfilViewModel perfilViewModel;
     private PerfilTarefaAdapter adapter;
+    private EmptyStateAdapter emptyStateAdapter;
     private int periodoSelecionado = 7; // 7 dias por padrão
     private boolean isAtividadesSelecionado = true; // Atividades por padrão
+
+    private ImagePickerManager imagePickerManager;
+    private FirebaseAuth auth;
+    private FirebaseFirestore db;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,14 +61,19 @@ public class PerfilActivity extends AppCompatActivity {
             return WindowInsetsCompat.CONSUMED;
         });
 
+        // Inicializa o Firebase e Cloudinary
+        auth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+        CloudinaryManager.init(this);
+
         setupHeader();
         setupUi();
         setupRecyclerView();
         setupViewModel();
+        setupImagePicker();
         carregarDadosUsuario();
-        
-        // Carregar tarefas iniciais
-        carregarTarefas();
+
+        loadTasks();
     }
 
     private void setupHeader() {
@@ -61,11 +85,11 @@ public class PerfilActivity extends AppCompatActivity {
         // Tabs Atividades/Auditorias
         binding.tabAtividades.setOnClickListener(v -> {
             selectTab(true);
-            carregarTarefas();
+            loadTasks();
         });
         binding.tabAuditorias.setOnClickListener(v -> {
             selectTab(false);
-            carregarTarefas();
+            loadTasks();
         });
 
         // Período
@@ -73,19 +97,19 @@ public class PerfilActivity extends AppCompatActivity {
             resetPeriodoButtons();
             v.setBackgroundResource(R.drawable.bg_tab_selected);
             periodoSelecionado = 7;
-            carregarTarefas();
+            loadTasks();
         });
         binding.op30dias.setOnClickListener(v -> {
             resetPeriodoButtons();
             v.setBackgroundResource(R.drawable.bg_tab_selected);
             periodoSelecionado = 30;
-            carregarTarefas();
+            loadTasks();
         });
         binding.op90dias.setOnClickListener(v -> {
             resetPeriodoButtons();
             v.setBackgroundResource(R.drawable.bg_tab_selected);
             periodoSelecionado = 90;
-            carregarTarefas();
+            loadTasks();
         });
     }
 
@@ -108,7 +132,7 @@ public class PerfilActivity extends AppCompatActivity {
 
     private void carregarDadosUsuario() {
         UserDataManager userDataManager = UserDataManager.getInstance();
-        
+
         if (userDataManager.isDataLoaded()) {
             // Dados já estão no cache, usar diretamente
             atualizarDadosPerfil();
@@ -124,29 +148,48 @@ public class PerfilActivity extends AppCompatActivity {
         UserDataManager userDataManager = UserDataManager.getInstance();
         String nomeCompleto = userDataManager.getNomeCompleto();
         String dataFormatada = userDataManager.getDataContratacaoFormatada();
-        
+
         binding.tvNome.setText(nomeCompleto);
         binding.tvFuncao.setText("Estoquista");
         binding.tvDesde.setText("Desde " + dataFormatada);
+
+        // Carregar imagem de perfil
+        loadProfileImage();
     }
 
     private void setupRecyclerView() {
         adapter = new PerfilTarefaAdapter();
+        emptyStateAdapter = new EmptyStateAdapter(adapter);
         binding.recyclerViewHistoricoPerfil.setLayoutManager(new LinearLayoutManager(this));
-        binding.recyclerViewHistoricoPerfil.setAdapter(adapter);
+        binding.recyclerViewHistoricoPerfil.setAdapter(emptyStateAdapter);
     }
 
     private void setupViewModel() {
         perfilViewModel = new ViewModelProvider(this).get(PerfilViewModel.class);
-        
-        // Observar lista de tarefas
+
+        // Observa a lista de tarefas
         perfilViewModel.getTarefas().observe(this, tarefas -> {
             if (tarefas != null) {
                 adapter.setTarefas(tarefas);
+
+                // Atualiza o estado vazio
+                if (tarefas.isEmpty()) {
+                    String emptyTitle = "Nenhuma atividade encontrada";
+                    String emptyMessage = "Não há atividades registradas no período selecionado.\nTente alterar o período ou verifique novamente mais tarde.";
+
+                    if (!isAtividadesSelecionado) {
+                        emptyTitle = "Nenhuma auditoria encontrada";
+                        emptyMessage = "Não há auditorias registradas no período selecionado.\nTente alterar o período ou verifique novamente mais tarde.";
+                    }
+
+                    emptyStateAdapter.setEmptyState(true, emptyTitle, emptyMessage);
+                } else {
+                    emptyStateAdapter.setEmptyState(false);
+                }
             }
         });
 
-        // Observar estado de carregamento
+        // Observa estado de carregamento
         perfilViewModel.getIsLoading().observe(this, isLoading -> {
             // Aqui você pode mostrar/ocultar um indicador de carregamento se necessário
         });
@@ -154,16 +197,155 @@ public class PerfilActivity extends AppCompatActivity {
         // Observar mensagens de erro
         perfilViewModel.getErrorMessage().observe(this, errorMessage -> {
             if (errorMessage != null && !errorMessage.isEmpty()) {
-                // Mostrar erro para o usuário (opcional)
+
             }
         });
     }
 
-    private void carregarTarefas() {
+    private void loadTasks() {
         if (isAtividadesSelecionado) {
             perfilViewModel.loadAtividades(periodoSelecionado);
         } else {
             perfilViewModel.loadAuditorias(periodoSelecionado);
         }
+    }
+
+    private void setupImagePicker() {
+        imagePickerManager = new ImagePickerManager(this, new ImagePickerManager.ImagePickerCallback() {
+            @Override
+            public void onImageSelected(Uri imageUri) {
+                uploadImageToCloudinary(imageUri);
+            }
+
+            @Override
+            public void onError(String error) {
+                Toast.makeText(PerfilActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        binding.btnEditProfile.setOnClickListener(v -> {
+            if (imagePickerManager != null) {
+                imagePickerManager.showImagePickerOptions();
+            } else {
+                Toast.makeText(this, "ImagePicker não inicializado", Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        binding.ivAvatar.setOnClickListener(v -> {
+            showFullScreenImage();
+        });
+    }
+
+    private void uploadImageToCloudinary(Uri imageUri) {
+        if (auth.getCurrentUser() == null) {
+            Toast.makeText(this, "Usuário não autenticado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        showProgressDialog("Carregando a imagem...");
+        String userId = auth.getCurrentUser().getUid();
+
+        CloudinaryManager.uploadImage(this, imageUri, userId, new CloudinaryManager.UploadCallbackListener() {
+            @Override
+            public void onSuccess(String url) {
+                updateUserProfileImage(url);
+            }
+
+            @Override
+            public void onError(String error) {
+                hideProgressDialog();
+                Toast.makeText(PerfilActivity.this, error, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void updateUserProfileImage(String imageUrl) {
+        if (auth.getCurrentUser() == null) {
+            hideProgressDialog();
+            Toast.makeText(this, "Usuário não autenticado", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String userId = auth.getCurrentUser().getUid()  ;
+
+        db.collection("usuarios").document(userId)
+                .update("imagemPerfil", imageUrl)
+                .addOnSuccessListener(aVoid -> {
+                    // Atualizar cache local
+                    UserDataManager userDataManager = UserDataManager.getInstance();
+                    if (userDataManager.getUserData() != null) {
+                        userDataManager.getUserData().setImagemPerfil(imageUrl);
+                        userDataManager.setUserData(userDataManager.getUserData(), PerfilActivity.this);
+                    }
+
+                        loadProfileImage();
+                    hideProgressDialog();
+                    Toast.makeText(PerfilActivity.this, "Imagem atualizada com sucesso!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    hideProgressDialog();
+                    Toast.makeText(PerfilActivity.this, "Erro ao atualizar imagem", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void loadProfileImage() {
+        String imageUrl = UserDataManager.getInstance().getImagemPerfil();
+        if (imageUrl != null && !imageUrl.isEmpty()) {
+            Glide.with(this)
+                    .load(imageUrl)
+                    .placeholder(R.drawable.ic_imagem_perfil)
+                    .error(R.drawable.ic_imagem_perfil)
+                    .circleCrop()
+                    .into(binding.ivProfileImage);
+        }
+    }
+    
+    private void showProgressDialog(String message) {
+        if (progressDialog == null) {
+            progressDialog = new ProgressDialog(this);
+            progressDialog.setCancelable(false);
+        }
+        progressDialog.setMessage(message);
+        progressDialog.show();
+    }
+    
+    private void hideProgressDialog() {
+        if (progressDialog != null && progressDialog.isShowing()) {
+            progressDialog.dismiss();
+        }
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        hideProgressDialog();
+    }
+    
+    private void showFullScreenImage() {
+        String imageUrl = UserDataManager.getInstance().getImagemPerfil();
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return;
+        }
+        
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_fullscreen_image, null);
+        
+        ImageView fullScreenImageView = dialogView.findViewById(R.id.iv_fullscreen_image);
+        
+        Glide.with(this)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_imagem_perfil)
+                .error(R.drawable.ic_imagem_perfil)
+                .into(fullScreenImageView);
+        
+        builder.setView(dialogView);
+        builder.setCancelable(true);
+        
+        AlertDialog dialog = builder.create();
+        
+        // Configurar clique na imagem para fechar
+        fullScreenImageView.setOnClickListener(v -> dialog.dismiss());
+        
+        dialog.show();
     }
 }

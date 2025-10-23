@@ -1,5 +1,7 @@
 package com.sustria.codcoz.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -11,10 +13,16 @@ public class TarefaResponse implements Serializable {
     private String relator;
     private String responsavel;
     private String pedido;
+    private Boolean notificacaoLido;
     private String situacao;
-    private LocalDate dataCriacao;
-    private LocalDate dataLimite;
-    private LocalDate dataConclusao;
+    @SerializedName("dataCriacao")
+    private String dataCriacaoString;
+
+    @SerializedName("dataLimite")
+    public String dataLimiteString;
+
+    @SerializedName("dataConclusao")
+    private String dataConclusaoString;
 
     public Long getId() {
         return id;
@@ -22,10 +30,6 @@ public class TarefaResponse implements Serializable {
 
     public void setId(Long value) {
         this.id = value;
-    }
-
-    public String getEmpresa() {
-        return empresa;
     }
 
     public String getTipoTarefa() {
@@ -41,8 +45,12 @@ public class TarefaResponse implements Serializable {
         return relator;
     }
 
-    public String getResponsavel() {
-        return responsavel;
+    public Boolean getNotificacaoLido() {
+        return notificacaoLido;
+    }
+
+    public void setNotificacaoLido(Boolean value) {
+        this.notificacaoLido = value;
     }
 
     public String getPedido() {
@@ -54,15 +62,40 @@ public class TarefaResponse implements Serializable {
     }
 
     public LocalDate getDataCriacao() {
-        return dataCriacao;
+        if (dataCriacaoString == null || dataCriacaoString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dataCriacaoString);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public LocalDate getDataLimite() {
-        return dataLimite;
+        if (dataLimiteString == null || dataLimiteString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dataLimiteString);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public LocalDate getDataConclusao() {
-        return dataConclusao;
+        if (dataConclusaoString == null || dataConclusaoString.trim().isEmpty()) {
+            return null;
+        }
+        try {
+            return LocalDate.parse(dataConclusaoString);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public void setDataConclusao(LocalDate dataConclusao) {
+        this.dataConclusaoString = dataConclusao != null ? dataConclusao.toString() : null;
     }
 
 }
