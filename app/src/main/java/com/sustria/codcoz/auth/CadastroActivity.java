@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -13,6 +14,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.sustria.codcoz.MainActivity;
 import com.sustria.codcoz.api.model.EstoquistaResponse;
 import com.sustria.codcoz.databinding.ActivityCadastroBinding;
+import com.sustria.codcoz.actions.ErrorBottomSheet;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.util.HashMap;
@@ -42,7 +44,7 @@ public class CadastroActivity extends AppCompatActivity {
 
         // Se os dados não chegaram, não podemos continuar
         if (estoquistaData == null || estoquistaData.getEmail() == null) {
-            Toast.makeText(this, "Erro: Dados do usuário não recebidos.", Toast.LENGTH_LONG).show();
+            ErrorBottomSheet.showGenericError(this);
             finish();
             return;
         }
@@ -90,9 +92,7 @@ public class CadastroActivity extends AppCompatActivity {
                             salvarUsuarioFirestore(user.getUid(), estoquistaData);
                         }
                     } else {
-                        Toast.makeText(CadastroActivity.this,
-                                "Erro ao criar conta: " + task.getException().getMessage(),
-                                Toast.LENGTH_LONG).show();
+                        ErrorBottomSheet.showAuthError(CadastroActivity.this);
                         setLoading(false);
                     }
                 });
@@ -100,22 +100,12 @@ public class CadastroActivity extends AppCompatActivity {
 
     private void salvarUsuarioFirestore(String uid, EstoquistaResponse estoquista) {
         if (estoquista.getEmpresaId() == null) {
-            Toast.makeText(this, "Empresa não identificada", Toast.LENGTH_SHORT).show();
+            ErrorBottomSheet.show(this, "Dados incompletos", "Informações da empresa não encontradas");
             setLoading(false);
             return;
         }
 
-        Map<String, Object> usuario = new HashMap<>();
-        usuario.put("email", estoquista.getEmail());
-        usuario.put("nome", estoquista.getNome());
-        usuario.put("sobrenome", estoquista.getSobrenome());
-        usuario.put("dataContratacao", estoquista.getDataContratacao());
-        usuario.put("status", estoquista.getStatus());
-        usuario.put("empresaId", estoquista.getEmpresaId());
-        usuario.put("imagemPerfil", "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar");
-
-        // Vi que é boa prática colocar o uid do firebase no documento do usuário
-        usuario.put("uid", uid);
+        Map<String, Object> usuario = getUsuario(uid, estoquista);
 
         db.collection("usuarios").document(uid)
                 .set(usuario)
@@ -129,9 +119,25 @@ public class CadastroActivity extends AppCompatActivity {
                     finish();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(CadastroActivity.this, "Erro ao salvar dados do usuário", Toast.LENGTH_SHORT).show();
+                    ErrorBottomSheet.showGenericError(CadastroActivity.this);
                     setLoading(false);
                 });
+    }
+
+    @NonNull
+    private static Map<String, Object> getUsuario(String uid, EstoquistaResponse estoquista) {
+        Map<String, Object> usuario = new HashMap<>();
+        usuario.put("email", estoquista.getEmail());
+        usuario.put("nome", estoquista.getNome());
+        usuario.put("sobrenome", estoquista.getSobrenome());
+        usuario.put("dataContratacao", estoquista.getDataContratacao());
+        usuario.put("status", estoquista.getStatus());
+        usuario.put("empresaId", estoquista.getEmpresaId());
+        usuario.put("imagemPerfil", "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar");
+
+        // Vi que é boa prática colocar o uid do firebase no documento do usuário
+        usuario.put("uid", uid);
+        return usuario;
     }
 
     private void setLoading(boolean loading) {
