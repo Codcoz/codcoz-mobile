@@ -136,6 +136,16 @@
                         android:textSize="18sp" />
 
                     <TextView
+                        android:id="@+id/tvDescricaoReceita"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/nunito_semibold"
+                        android:text="Descrição"
+                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textSize="14sp" />
+
+                    <TextView
                         android:id="@+id/tvTempoPreparo"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -159,8 +169,9 @@
                         android:id="@+id/tvPorcoes"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
                         android:fontFamily="@font/nunito_semibold"
-                        android:text="Rende 6 porções"
+                        android:text="Rende 4 porções"
                         android:textColor="@color/colorOnSurfaceVariant"
                         android:textSize="14sp" />
 

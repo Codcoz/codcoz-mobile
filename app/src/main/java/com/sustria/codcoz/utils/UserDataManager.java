@@ -124,4 +124,11 @@ public class UserDataManager {
         }
         return "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar";
     }
+
+    public Integer getEmpresaId() {
+        if (userData != null && userData.getEmpresaId() != null) {
+            return userData.getEmpresaId();
+        }
+        return null;
+    }
 }

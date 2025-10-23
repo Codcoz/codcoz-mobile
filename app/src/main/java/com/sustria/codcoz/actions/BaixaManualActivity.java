@@ -1,6 +1,9 @@
 package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.Nullable;
@@ -11,11 +14,16 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.api.model.ProdutoResponse;
+import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.ActivityBaixaManualBinding;
 
 public class BaixaManualActivity extends AppCompatActivity {
 
     private ActivityBaixaManualBinding binding;
+    private ProdutoService produtoService;
+    private ProdutoResponse produtoEncontrado;
+    private boolean isEntrada; // true para entrada, false para baixa
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -23,6 +31,12 @@ public class BaixaManualActivity extends AppCompatActivity {
         binding = ActivityBaixaManualBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
         EdgeToEdge.enable(this);
+
+        // Inicializar serviço
+        produtoService = new ProdutoService();
+        
+        // Verificar se é entrada ou baixa
+        isEntrada = getIntent().getBooleanExtra("is_entrada", false);
 
         // da a cor para a parte que fica de status(onde fica a bateria, rede, etc...)
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -32,18 +46,65 @@ public class BaixaManualActivity extends AppCompatActivity {
             return WindowInsetsCompat.CONSUMED;
         });
         setupHeader();
+        setupClickListeners();
+    }
 
+    private void setupHeader() {
+        String titulo = isEntrada ? "Realizar Nova Entrada" : "Realizar Nova Baixa";
+        binding.headerBaixaManual.headerActivityBackTitle.setText(titulo);
+        binding.headerBaixaManual.headerActivityBackArrow.setOnClickListener(v -> finish());
+    }
+    
+    private void setupClickListeners() {
         binding.btnAvancar.setOnClickListener(v -> {
             String codigo = binding.etCodigoProduto.getText() != null ? binding.etCodigoProduto.getText().toString().trim() : "";
             if (codigo.isEmpty()) {
                 binding.etCodigoProduto.setError("Informe o código do produto");
+                return;
+            }
+            
+            buscarProduto(codigo);
+        });
+    }
+    
+    private void buscarProduto(String codigo) {
+        setLoadingState(true);
+        
+        produtoService.buscarProdutoPorEan(codigo, new ProdutoService.ProdutoCallback<ProdutoResponse>() {
+            @Override
+            public void onSuccess(ProdutoResponse produto) {
+                runOnUiThread(() -> {
+                    setLoadingState(false);
+                    produtoEncontrado = produto;
+                    mostrarDetalhesProduto(produto);
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                runOnUiThread(() -> {
+                    setLoadingState(false);
+                    Log.e("BaixaManual", "Erro ao buscar produto: " + error);
+                    Toast.makeText(BaixaManualActivity.this, "Erro ao buscar produto: " + error, Toast.LENGTH_LONG).show();
+                });
             }
         });
     }
-
-    private void setupHeader() {
-        binding.headerBaixaManual.headerActivityBackTitle.setText("Realizar Nova Baixa");
-        binding.headerBaixaManual.headerActivityBackArrow.setOnClickListener(v -> finish());
+    
+    private void mostrarDetalhesProduto(ProdutoResponse produto) {
+        // Aqui você pode mostrar um dialog ou bottom sheet com os detalhes do produto
+        // e um campo para inserir a quantidade
+        ProdutoBottomSheetDialogFragment.show(
+            getSupportFragmentManager(), 
+            produto.getCodigoEan(), 
+            isEntrada ? ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA : ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA
+        );
+    }
+    
+    private void setLoadingState(boolean loading) {
+        binding.btnAvancar.setEnabled(!loading);
+        binding.btnAvancar.setText(loading ? "Buscando..." : "Avançar");
+        binding.etCodigoProduto.setEnabled(!loading);
     }
 }
 

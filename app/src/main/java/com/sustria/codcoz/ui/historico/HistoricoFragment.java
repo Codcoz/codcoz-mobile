@@ -13,8 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sustria.codcoz.actions.FiltrosBottomSheetDialogFragment;
 import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
-import com.sustria.codcoz.model.MockDataProvider;
-import com.sustria.codcoz.model.RegistroHistorico;
+import com.sustria.codcoz.api.model.MockDataProvider;
+import com.sustria.codcoz.api.model.RegistroHistorico;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
 
 import java.util.ArrayList;
@@ -134,8 +134,8 @@ public class HistoricoFragment extends Fragment {
 
     private void seedDadosMock() {
         dadosOriginais.clear();
-        // Usar dados mockados do MockDataProvider
-        dadosOriginais.addAll(MockDataProvider.getMockRegistrosHistorico());
+        // Mostrar estado vazio em vez de dados mockados
+        emptyStateAdapter.setEmptyState(true, "Nenhum histórico encontrado", "Não há registros de histórico disponíveis.");
         aplicarFiltrosEBusca();
     }
 
