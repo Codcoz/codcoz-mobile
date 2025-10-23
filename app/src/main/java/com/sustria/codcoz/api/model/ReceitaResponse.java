@@ -3,7 +3,7 @@ package com.sustria.codcoz.api.model;
 import java.io.Serializable;
 import java.util.List;
 
-public class ReceitaApi implements Serializable {
+public class ReceitaResponse implements Serializable {
     private String id;
     private String nome;
     private String descricao;
@@ -16,12 +16,12 @@ public class ReceitaApi implements Serializable {
     private String dataCriacao;
 
     // Construtores
-    public ReceitaApi() {}
+    public ReceitaResponse() {}
 
-    public ReceitaApi(String id, String nome, String descricao, String urlImagem, 
-                     List<IngredienteApi> ingredientes, List<ModoPreparoApi> modoPreparo,
-                     Integer tempoPreparoMinutos, Integer tempoCozimentoMinutos, 
-                     Integer porcoes, String dataCriacao) {
+    public ReceitaResponse(String id, String nome, String descricao, String urlImagem,
+                           List<IngredienteApi> ingredientes, List<ModoPreparoApi> modoPreparo,
+                           Integer tempoPreparoMinutos, Integer tempoCozimentoMinutos,
+                           Integer porcoes, String dataCriacao) {
         this.id = id;
         this.nome = nome;
         this.descricao = descricao;

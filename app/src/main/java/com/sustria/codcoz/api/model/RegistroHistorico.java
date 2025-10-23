@@ -1,4 +1,4 @@
-package com.sustria.codcoz.model;
+package com.sustria.codcoz.api.model;
 
 import com.google.gson.annotations.SerializedName;
 

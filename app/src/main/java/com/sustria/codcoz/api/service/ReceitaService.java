@@ -2,6 +2,7 @@ package com.sustria.codcoz.api.service;
 
 import com.sustria.codcoz.api.client.RetrofitClientNoSql;
 import com.sustria.codcoz.api.endpoints.ReceitaApi;
+import com.sustria.codcoz.api.model.ReceitaResponse;
 
 import java.util.List;
 
@@ -24,10 +25,10 @@ public class ReceitaService {
     }
 
     // uscar receitas da API NoSQL
-    public void getReceitas(ReceitaCallback<List<com.sustria.codcoz.api.model.ReceitaApi>> callback) {
+    public void getReceitas(ReceitaCallback<List<ReceitaResponse>> callback) {
         receitaApi.getReceitas().enqueue(new Callback<>() {
             @Override
-            public void onResponse(Call<List<com.sustria.codcoz.api.model.ReceitaApi>> call, Response<List<com.sustria.codcoz.api.model.ReceitaApi>> response) {
+            public void onResponse(Call<List<ReceitaResponse>> call, Response<List<ReceitaResponse>> response) {
                 if (response.isSuccessful()) {
                     callback.onSuccess(response.body());
                 } else {
@@ -36,7 +37,7 @@ public class ReceitaService {
             }
 
             @Override
-            public void onFailure(Call<List<com.sustria.codcoz.api.model.ReceitaApi>> call, Throwable t) {
+            public void onFailure(Call<List<ReceitaResponse>> call, Throwable t) {
                 callback.onError("Erro de conexão: " + t.getMessage());
             }
         });

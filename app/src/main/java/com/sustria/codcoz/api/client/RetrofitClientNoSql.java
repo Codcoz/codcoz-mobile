@@ -11,7 +11,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class RetrofitClientNoSql {
-    private static final String BASE_URL = "https://uneven-tracie-codcoz-mongo-3517b0bd.koyeb.app/";
+    private static final String BASE_URL = "https://codcoz-api-mongo.koyeb.app/";
     private static Retrofit retrofitInstance;
 
     private RetrofitClientNoSql() {

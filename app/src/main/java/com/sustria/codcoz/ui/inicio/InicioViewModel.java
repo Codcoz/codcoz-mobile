@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.sustria.codcoz.api.service.TarefaService;
+import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.utils.UserDataManager;
 
@@ -22,8 +23,12 @@ public class InicioViewModel extends ViewModel {
     private final MutableLiveData<List<TarefaResponse>> tarefas;
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
+    private final MutableLiveData<Integer> quantidadeEstoque;
+    private final MutableLiveData<Integer> quantidadeEstoqueBaixo;
+    private final MutableLiveData<Integer> quantidadeProximoValidade;
 
     private final TarefaService tarefaService;
+    private final ProdutoService produtoService;
 
     public InicioViewModel() {
         estoquePercentual = new MutableLiveData<>();
@@ -33,12 +38,16 @@ public class InicioViewModel extends ViewModel {
         tarefas = new MutableLiveData<>();
         isLoading = new MutableLiveData<>();
         errorMessage = new MutableLiveData<>();
+        quantidadeEstoque = new MutableLiveData<>();
+        quantidadeEstoqueBaixo = new MutableLiveData<>();
+        quantidadeProximoValidade = new MutableLiveData<>();
 
-        // API
         tarefaService = new TarefaService();
+        produtoService = new ProdutoService();
 
         // Inicializar com os dados padrão
         loadDefaultData();
+        loadQuantidadeDados();
     }
 
     private void loadDefaultData() {
@@ -47,6 +56,49 @@ public class InicioViewModel extends ViewModel {
         estoqueStatus.setValue("Ótimo!");
         estoquePercentualAnterior.setValue(62);
         estoqueStatusAnterior.setValue("bom");
+    }
+
+    private void loadQuantidadeDados() {
+        UserDataManager userDataManager = UserDataManager.getInstance();
+        Integer empresaId = userDataManager.getEmpresaId();
+        
+        if (empresaId != null) {
+            produtoService.getQuantidadeEstoque(Long.valueOf(empresaId), new ProdutoService.ProdutoCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    quantidadeEstoque.setValue(result);
+                }
+
+                @Override
+                public void onError(String error) {
+                    quantidadeEstoque.setValue(0);
+                }
+            });
+
+            produtoService.getQuantidadeEstoqueBaixo(Long.valueOf(empresaId), new ProdutoService.ProdutoCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    quantidadeEstoqueBaixo.setValue(result);
+                }
+
+                @Override
+                public void onError(String error) {
+                    quantidadeEstoqueBaixo.setValue(0);
+                }
+            });
+
+            produtoService.getQuantidadeProximoValidade(Long.valueOf(empresaId), new ProdutoService.ProdutoCallback<Integer>() {
+                @Override
+                public void onSuccess(Integer result) {
+                    quantidadeProximoValidade.setValue(result);
+                }
+
+                @Override
+                public void onError(String error) {
+                    quantidadeProximoValidade.setValue(0);
+                }
+            });
+        }
     }
 
     // Getters para dados do estoque
@@ -64,6 +116,19 @@ public class InicioViewModel extends ViewModel {
 
     public LiveData<String> getEstoqueStatusAnterior() {
         return estoqueStatusAnterior;
+    }
+
+
+    public LiveData<Integer> getQuantidadeEstoque() {
+        return quantidadeEstoque;
+    }
+
+    public LiveData<Integer> getQuantidadeEstoqueBaixo() {
+        return quantidadeEstoqueBaixo;
+    }
+
+    public LiveData<Integer> getQuantidadeProximoValidade() {
+        return quantidadeProximoValidade;
     }
 
 

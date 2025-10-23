@@ -11,15 +11,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.DetalhesReceitaActivity;
-import com.sustria.codcoz.api.model.ReceitaApi;
+import com.sustria.codcoz.api.model.ReceitaResponse;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaViewHolder> {
-    private List<ReceitaApi> receitas = new ArrayList<>();
+    private List<ReceitaResponse> receitas = new ArrayList<>();
 
-    public void setReceitas(List<ReceitaApi> receitas) {
+    public void setReceitas(List<ReceitaResponse> receitas) {
         this.receitas = receitas;
         notifyDataSetChanged();
     }
@@ -34,7 +34,7 @@ public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaV
 
     @Override
     public void onBindViewHolder(@NonNull ReceitaViewHolder holder, int position) {
-        ReceitaApi receita = receitas.get(position);
+        ReceitaResponse receita = receitas.get(position);
         holder.tvNomeReceita.setText(receita.getNome());
         holder.tvPorcoes.setText(receita.getPorcoes() + " porções possíveis");
 

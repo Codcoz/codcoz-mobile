@@ -1,10 +1,10 @@
-package com.sustria.codcoz.model;
+package com.sustria.codcoz.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-public class ItemRefeicao {
+public class ItemRefeicaoResponse {
 
     @SerializedName("tipo")
     private String tipo; // "Café da Manhã", "Almoço", "Café da Tarde"´v
@@ -14,11 +14,11 @@ public class ItemRefeicao {
 
 
     // Construtor padrão
-    public ItemRefeicao() {
+    public ItemRefeicaoResponse() {
     }
 
     // Construtor principal
-    public ItemRefeicao(String tipo, List<String> itens) {
+    public ItemRefeicaoResponse(String tipo, List<String> itens) {
         this.tipo = tipo;
         this.itens = itens;
     }

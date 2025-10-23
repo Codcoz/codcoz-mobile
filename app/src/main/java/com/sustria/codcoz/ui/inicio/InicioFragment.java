@@ -112,6 +112,28 @@ public class InicioFragment extends Fragment {
         inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(),
                 statusAnterior -> binding.tvStatusAnterior.setText("Status: " + statusAnterior));
 
+        // Observa os dados reais da API para os cards
+        inicioViewModel.getQuantidadeEstoque().observe(getViewLifecycleOwner(),
+                quantidade -> {
+                    if (quantidade != null) {
+                        binding.prodEstoques.setText(quantidade + "");
+                    }
+                });
+
+        inicioViewModel.getQuantidadeEstoqueBaixo().observe(getViewLifecycleOwner(),
+                quantidade -> {
+                    if (quantidade != null) {
+                        binding.baixoEstoque.setText(quantidade + "");
+                    }
+                });
+
+        inicioViewModel.getQuantidadeProximoValidade().observe(getViewLifecycleOwner(),
+                quantidade -> {
+                    if (quantidade != null) {
+                        binding.proximosValidade.setText(quantidade + "");
+                    }
+                });
+
         // Configura RecyclerView de tarefas
         setupRecyclerViewTask();
 
@@ -235,7 +257,7 @@ public class InicioFragment extends Fragment {
 
                     if (tarefasDoDia != null && !tarefasDoDia.isEmpty()) {
                         for (TarefaResponse tarefa : tarefasDoDia) {
-                            
+
                             // Verifica se a tarefa está concluída
                             if (tarefa.getSituacao() != null && tarefa.getSituacao().toLowerCase().contains("concluída")) {
                                 temTarefaConcluida = true;
@@ -386,12 +408,12 @@ public class InicioFragment extends Fragment {
                 // Filtrar tarefas concluídas para o RecyclerView
                 List<TarefaResponse> tarefasPendentes = new ArrayList<>();
                 for (TarefaResponse tarefa : tarefas) {
-                    if (tarefa.getSituacao() == null || 
-                        !tarefa.getSituacao().toLowerCase().contains("concluída")) {
+                    if (tarefa.getSituacao() == null ||
+                            !tarefa.getSituacao().toLowerCase().contains("concluída")) {
                         tarefasPendentes.add(tarefa);
                     }
                 }
-                
+
                 tarefaAdapter.setTarefas(tarefasPendentes);
                 stageTasksByDay(tarefas);
 

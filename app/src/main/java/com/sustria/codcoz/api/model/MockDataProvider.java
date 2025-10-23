@@ -1,6 +1,4 @@
-package com.sustria.codcoz.model;
-
-import com.sustria.codcoz.api.model.RegistroHistorico;
+package com.sustria.codcoz.api.model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,88 +76,88 @@ public class MockDataProvider {
         return registros;
     }
 
-    public static List<com.sustria.codcoz.api.model.DiaSemana> getMockCardapioSemanal() {
-        List<com.sustria.codcoz.api.model.DiaSemana> cardapio = new ArrayList<>();
+    public static List<DiaSemanaResponse> getMockCardapioSemanal() {
+        List<DiaSemanaResponse> cardapio = new ArrayList<>();
 
         // Segunda-feira
-        List<ItemRefeicao> segundaRefeicoes = new ArrayList<>();
-        segundaRefeicoes.add(new ItemRefeicao(
+        List<ItemRefeicaoResponse> segundaRefeicoes = new ArrayList<>();
+        segundaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Manhã",
                 List.of("Pão francês", "Manteiga", "Café com leite", "Açúcar")
         ));
-        segundaRefeicoes.add(new ItemRefeicao(
+        segundaRefeicoes.add(new ItemRefeicaoResponse(
                 "Almoço",
                 List.of("Arroz branco", "Feijão preto", "Frango grelhado", "Salada de alface", "Suco de laranja")
         ));
-        segundaRefeicoes.add(new ItemRefeicao(
+        segundaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Tarde",
                 List.of("Bolo de chocolate", "Café", "Leite")
         ));
-        cardapio.add(new com.sustria.codcoz.api.model.DiaSemana("Segunda-feira", segundaRefeicoes));
+        cardapio.add(new DiaSemanaResponse("Segunda-feira", segundaRefeicoes));
 
         // Terça-feira
-        List<ItemRefeicao> tercaRefeicoes = new ArrayList<>();
-        tercaRefeicoes.add(new ItemRefeicao(
+        List<ItemRefeicaoResponse> tercaRefeicoes = new ArrayList<>();
+        tercaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Manhã",
                 List.of("Pão de forma", "Geleia", "Café", "Leite")
         ));
-        tercaRefeicoes.add(new ItemRefeicao(
+        tercaRefeicoes.add(new ItemRefeicaoResponse(
                 "Almoço",
                 List.of("Arroz integral", "Feijão carioca", "Carne assada", "Salada de tomate", "Suco de maracujá")
         ));
-        tercaRefeicoes.add(new ItemRefeicao(
+        tercaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Tarde",
                 List.of("Biscoito", "Café com leite", "Açúcar")
         ));
-        cardapio.add(new com.sustria.codcoz.api.model.DiaSemana("Terça-feira", tercaRefeicoes));
+        cardapio.add(new DiaSemanaResponse("Terça-feira", tercaRefeicoes));
 
         // Quarta-feira
-        List<ItemRefeicao> quartaRefeicoes = new ArrayList<>();
-        quartaRefeicoes.add(new ItemRefeicao(
+        List<ItemRefeicaoResponse> quartaRefeicoes = new ArrayList<>();
+        quartaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Manhã",
                 List.of("Pão francês", "Queijo", "Café", "Leite")
         ));
-        quartaRefeicoes.add(new ItemRefeicao(
+        quartaRefeicoes.add(new ItemRefeicaoResponse(
                 "Almoço",
                 List.of("Arroz branco", "Feijão preto", "Peixe frito", "Salada de couve", "Suco de limão")
         ));
-        quartaRefeicoes.add(new ItemRefeicao(
+        quartaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Tarde",
                 List.of("Pudim", "Café", "Leite")
         ));
-        cardapio.add(new com.sustria.codcoz.api.model.DiaSemana("Quarta-feira", quartaRefeicoes));
+        cardapio.add(new DiaSemanaResponse("Quarta-feira", quartaRefeicoes));
 
         // Quinta-feira
-        List<ItemRefeicao> quintaRefeicoes = new ArrayList<>();
-        quintaRefeicoes.add(new ItemRefeicao(
+        List<ItemRefeicaoResponse> quintaRefeicoes = new ArrayList<>();
+        quintaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Manhã",
                 List.of("Pão de forma", "Presunto", "Café", "Leite")
         ));
-        quintaRefeicoes.add(new ItemRefeicao(
+        quintaRefeicoes.add(new ItemRefeicaoResponse(
                 "Almoço",
                 List.of("Arroz integral", "Feijão preto", "Frango grelhado", "Salada de alface", "Suco de laranja")
         ));
-        quintaRefeicoes.add(new ItemRefeicao(
+        quintaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Tarde",
                 List.of("Bolo de cenoura", "Café", "Leite")
         ));
-        cardapio.add(new com.sustria.codcoz.api.model.DiaSemana("Quinta-feira", quintaRefeicoes));
+        cardapio.add(new DiaSemanaResponse("Quinta-feira", quintaRefeicoes));
 
         // Sexta-feira
-        List<ItemRefeicao> sextaRefeicoes = new ArrayList<>();
-        sextaRefeicoes.add(new ItemRefeicao(
+        List<ItemRefeicaoResponse> sextaRefeicoes = new ArrayList<>();
+        sextaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Manhã",
                 List.of("Pão francês", "Manteiga", "Café", "Leite")
         ));
-        sextaRefeicoes.add(new ItemRefeicao(
+        sextaRefeicoes.add(new ItemRefeicaoResponse(
                 "Almoço",
                 List.of("Arroz branco", "Feijão carioca", "Carne assada", "Salada de tomate", "Suco de maracujá")
         ));
-        sextaRefeicoes.add(new ItemRefeicao(
+        sextaRefeicoes.add(new ItemRefeicaoResponse(
                 "Café da Tarde",
                 List.of("Biscoito", "Café com leite", "Açúcar")
         ));
-        cardapio.add(new com.sustria.codcoz.api.model.DiaSemana("Sexta-feira", sextaRefeicoes));
+        cardapio.add(new DiaSemanaResponse("Sexta-feira", sextaRefeicoes));
 
         return cardapio;
     }

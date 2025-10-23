@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sustria.codcoz.actions.CardapioSemanal;
 import com.sustria.codcoz.api.adapter.ReceitaAdapter;
-import com.sustria.codcoz.api.model.ReceitaApi;
+import com.sustria.codcoz.api.model.ReceitaResponse;
 import com.sustria.codcoz.api.service.ReceitaService;
 import com.sustria.codcoz.databinding.FragmentCardapioBinding;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
@@ -29,7 +29,7 @@ public class CardapioFragment extends Fragment {
     private FragmentCardapioBinding binding;
     private ReceitaAdapter receitaAdapter;
     private EmptyStateAdapter emptyStateAdapter;
-    private List<ReceitaApi> receitas = new ArrayList<>();
+    private List<ReceitaResponse> receitas = new ArrayList<>();
     private ReceitaService receitaService;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -50,7 +50,7 @@ public class CardapioFragment extends Fragment {
         setupBusca();
         carregarReceitas();
 
-        return root;
+        return root;        
     }
 
     private void setupHeader() {
@@ -73,9 +73,9 @@ public class CardapioFragment extends Fragment {
     }
 
     private void carregarReceitas() {
-        receitaService.getReceitas(new ReceitaService.ReceitaCallback<List<ReceitaApi>>() {
+        receitaService.getReceitas(new ReceitaService.ReceitaCallback<List<ReceitaResponse>>() {
             @Override
-            public void onSuccess(List<ReceitaApi> receitasApi) {
+            public void onSuccess(List<ReceitaResponse> receitasApi) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
                         receitas = receitasApi;
@@ -125,7 +125,7 @@ public class CardapioFragment extends Fragment {
 
     private void aplicarBusca() {
         String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim().toLowerCase();
-        List<ReceitaApi> filtrados = new ArrayList<>();
+        List<ReceitaResponse> filtrados = new ArrayList<>();
 
         if (termo.isEmpty()) {
             receitaAdapter.setReceitas(receitas);
@@ -139,7 +139,7 @@ public class CardapioFragment extends Fragment {
             return;
         }
 
-        for (ReceitaApi r : receitas) {
+        for (ReceitaResponse r : receitas) {
             if (r.getNome().toLowerCase().contains(termo)) {
                 filtrados.add(r);
             }
