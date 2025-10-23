@@ -44,7 +44,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutNovaSenha"
-            android:layout_width="600dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
@@ -64,7 +64,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutConfirmacaoSenha"
-            android:layout_width="600dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80dp"
@@ -86,7 +86,7 @@
         <Button
             android:id="@+id/btnCadastrar"
             android:layout_width="500dp"
-            android:layout_height="70dp"
+            android:layout_height="80dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="80dp"
             android:backgroundTint="@color/colorSecondary"

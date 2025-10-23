@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:id="@+id/containerCadastro"
-        android:layout_width="393dp"
+        android:layout_width="match_parent"
         android:layout_height="584dp"
         android:background="@drawable/bg_branco_login"
         android:orientation="vertical"
@@ -36,7 +36,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
             android:layout_marginBottom="45dp"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar Senha"
@@ -45,7 +44,7 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutSenha"
-            android:layout_width="294dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
@@ -64,10 +63,10 @@
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutConfirmarSenha"
-            android:layout_width="294dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="48dp"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
             app:hintTextColor="@color/colorOnSurfaceVariant"
             app:passwordToggleEnabled="true"

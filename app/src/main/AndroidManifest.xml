@@ -26,6 +26,7 @@
         <activity
             android:name=".MainActivity"
             android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".auth.EsqueceuSenhaActivity" />
         <activity android:name=".auth.LoginActivity" />
         <activity android:name=".auth.CadastroActivity" />
         <activity android:name=".actions.PerfilActivity" />

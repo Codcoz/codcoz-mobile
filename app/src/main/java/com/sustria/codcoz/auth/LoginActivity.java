@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,6 +16,7 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.EstoquistaResponse;
 import com.sustria.codcoz.api.service.EstoquistaService;
 import com.sustria.codcoz.databinding.ActivityLoginBinding;
+import com.sustria.codcoz.actions.ErrorBottomSheet;
 import com.sustria.codcoz.utils.UserDataManager;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,6 +27,7 @@ public class LoginActivity extends AppCompatActivity {
     private EstoquistaService estoquistaService;
     private boolean isPasswordVisible = false;
     private boolean isProcessing = false;
+    private boolean isEmailValidated = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +38,6 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        // substituir o estoquistaAPi pelo service
         estoquistaService = new EstoquistaService();
 
         binding.btnAvancar.setOnClickListener(v -> {
@@ -75,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 checkEmailInFirebaseThenApi(txtEmail);
             }
         });
+
     }
 
     private boolean isValidEmail(String email) {
@@ -89,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (emailExistsInFirebase) {
                     isPasswordVisible = true;
+                    isEmailValidated = true;
+                    lockEmailField();
                     binding.inputLayoutSenha.setVisibility(View.VISIBLE);
                     binding.tvEsqueceuSenha.setVisibility(View.VISIBLE);
                     binding.btnAvancar.setText(R.string.entrar);
@@ -98,7 +101,7 @@ public class LoginActivity extends AppCompatActivity {
                     checkEmailInApiForRegistration(email);
                 }
             } else {
-                binding.inputLayoutEmail.setError("Erro ao verificar e-mail. Tente novamente");
+                ErrorBottomSheet.showGenericError(LoginActivity.this);
                 setLoading(false);
             }
         });
@@ -115,14 +118,14 @@ public class LoginActivity extends AppCompatActivity {
                     intent.putExtra("estoquistaData", result);
                     startActivity(intent);
                 } else {
-                    binding.inputLayoutEmail.setError("E-mail não encontrado no sistema");
+                    ErrorBottomSheet.show(LoginActivity.this, "E-mail não encontrado", "Verifique se o e-mail está correto");
                     setLoading(false);
                 }
             }
 
             @Override
             public void onError(String error) {
-                Toast.makeText(LoginActivity.this, "Erro de conexão. Verifique sua internet", Toast.LENGTH_SHORT).show();
+                ErrorBottomSheet.show(LoginActivity.this, "E-mail não encontrado", "Verifique se o e-mail está correto");
                 setLoading(false);
             }
         });
@@ -135,11 +138,11 @@ public class LoginActivity extends AppCompatActivity {
                 if (user != null) {
                     fetchUserDataFromFirestore(user.getUid());
                 } else {
-                    Toast.makeText(LoginActivity.this, "Erro ao obter usuário. Tente novamente", Toast.LENGTH_SHORT).show();
+                    ErrorBottomSheet.showGenericError(LoginActivity.this);
                     setLoading(false);
                 }
             } else {
-                binding.inputLayoutSenha.setError("E-mail ou senha incorretos");
+                ErrorBottomSheet.showAuthError(LoginActivity.this);
                 setLoading(false);
             }
         });
@@ -154,17 +157,17 @@ public class LoginActivity extends AppCompatActivity {
                         if (estoquista != null && "ATIVO".equals(estoquista.getStatus())) {
                             proceedToMainWithUser(estoquista);
                         } else {
-                            Toast.makeText(LoginActivity.this, "Usuário inativo ou com dados inválidos.", Toast.LENGTH_LONG).show();
+                            ErrorBottomSheet.show(LoginActivity.this, "Usuário inativo", "Entre em contato com o administrador");
                             auth.signOut(); // Desloga o usuário se ele estiver inativo
                             setLoading(false);
                         }
                     } else {
-                        Toast.makeText(LoginActivity.this, "Dados do usuário não encontrados.", Toast.LENGTH_SHORT).show();
+                        ErrorBottomSheet.showGenericError(LoginActivity.this);
                         setLoading(false);
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(LoginActivity.this, "Erro ao carregar dados do usuário: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    ErrorBottomSheet.showGenericError(LoginActivity.this);
                     setLoading(false);
                 });
     }
@@ -179,10 +182,51 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
+    private void lockEmailField() {
+        binding.editEmail.setEnabled(false);
+        binding.editEmail.setAlpha(0.6f);
+        binding.inputLayoutEmail.setHint("E-mail validado");
+
+        binding.inputLayoutEmail.setBoxStrokeColor(getResources().getColor(R.color.custom_green_success, null));
+
+        binding.tvEsqueceuSenha.setText("Esqueceu a senha?");
+        binding.tvEsqueceuSenha.setVisibility(View.VISIBLE);
+        binding.tvEsqueceuSenha.setOnClickListener(v -> {
+            if (isProcessing) return;
+            Intent intent = new Intent(LoginActivity.this, EsqueceuSenhaActivity.class);
+            startActivity(intent);
+        });
+
+        binding.editEmail.setOnClickListener(v -> {
+            if (isEmailValidated) {
+                resetEmailField();
+            }
+        });
+    }
+
+    private void resetEmailField() {
+        isEmailValidated = false;
+        isPasswordVisible = false;
+        binding.editEmail.setEnabled(true);
+        binding.editEmail.setAlpha(1f);
+        binding.inputLayoutEmail.setHint("Digite seu e-mail");
+
+        binding.inputLayoutEmail.setBoxStrokeColor(getResources().getColor(R.color.colorOnSurfaceVariant, null));
+
+        binding.inputLayoutSenha.setVisibility(View.GONE);
+        binding.tvEsqueceuSenha.setVisibility(View.GONE);
+        binding.btnAvancar.setText("Avançar");
+        binding.editEmail.requestFocus();
+    }
+
     private void setLoading(boolean loading) {
         isProcessing = loading;
         binding.btnAvancar.setEnabled(!loading);
-        binding.editEmail.setEnabled(!loading);
+
+        if (!isEmailValidated) {
+            binding.editEmail.setEnabled(!loading);
+        }
+
         binding.editSenha.setEnabled(!loading);
         binding.btnAvancar.setAlpha(loading ? 0.6f : 1f);
     }
