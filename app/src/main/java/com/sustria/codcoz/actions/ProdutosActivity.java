@@ -6,6 +6,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -219,7 +220,7 @@ public class ProdutosActivity extends AppCompatActivity {
                 : "Sem validade");
         descricao.setText(produto.getDescricao());
 
-        Button sair = view.findViewById(R.id.btnSair);
+        ImageButton sair = view.findViewById(R.id.btnSair);
         sair.setOnClickListener(v2 -> dialog.dismiss());
 
         dialog.show();

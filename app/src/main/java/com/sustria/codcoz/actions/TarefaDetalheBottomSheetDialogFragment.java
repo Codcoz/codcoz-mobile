@@ -49,10 +49,10 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         // Inicializar serviço
         tarefaService = new TarefaService();
-        
+
         Bundle args = getArguments();
         String tipo = args != null ? args.getString(ARG_TIPO) : null;
         String produto = args != null ? args.getString(ARG_PRODUTO) : null;
@@ -65,7 +65,7 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         if (produto != null) binding.txtProduto.setText(produto);
         if (relator != null) binding.txtRelator.setText(relator);
         if (data != null) binding.txtData.setText(data);
-        
+
         // Verificar situação e ajustar bottomsheet
         verificarSituacaoTarefa(situacao, data);
 
@@ -88,7 +88,7 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
             if (situacao != null && situacao.toLowerCase().contains("concluída")) {
                 return; // Não fazer nada se já foi concluída
             }
-            
+
             // Finalizar a tarefa diretamente
             if (tarefaId != null && tarefaId > 0) {
                 finalizarTarefa();
@@ -110,14 +110,14 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         f.setArguments(b);
         return f;
     }
-    
+
     @Override
     public void show(@NonNull androidx.fragment.app.FragmentManager manager, @Nullable String tag) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(manager);
         super.show(manager, tag);
     }
-    
+
     private static void dismissExistingBottomSheets(@NonNull androidx.fragment.app.FragmentManager fm) {
         // Fechar todos os bottom sheets existentes
         if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
@@ -142,13 +142,13 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
             ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
         }
     }
-    
+
     private void verificarSituacaoTarefa(String situacao, String dataLimite) {
         if (situacao != null && situacao.toLowerCase().contains("concluída")) {
             // Tarefa já foi concluída
             configurarTarefaConcluida();
-        } else if (situacao != null && situacao.toLowerCase().contains("concluída") && 
-                   verificarSeAtrasada(dataLimite)) {
+        } else if (situacao != null && situacao.toLowerCase().contains("concluída") &&
+                verificarSeAtrasada(dataLimite)) {
             // Tarefa concluída com atraso
             configurarTarefaConcluidaComAtraso();
         } else {
@@ -156,12 +156,12 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
             configurarTarefaPendente();
         }
     }
-    
+
     private boolean verificarSeAtrasada(String dataLimite) {
         if (dataLimite == null || dataLimite.trim().isEmpty()) {
             return false;
         }
-        
+
         try {
             java.time.LocalDate limite = java.time.LocalDate.parse(dataLimite);
             java.time.LocalDate hoje = java.time.LocalDate.now();
@@ -170,38 +170,38 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
             return false;
         }
     }
-    
+
     private void configurarTarefaConcluida() {
-        binding.btnRegistrar.setText("Tarefa Concluída");
+        binding.btnRegistrar.setText("Concluída");
         binding.btnRegistrar.setBackgroundResource(R.drawable.bg_tab_selected);
         binding.btnRegistrar.setEnabled(false);
         binding.btnRegistrar.setAlpha(0.6f);
     }
-    
+
     private void configurarTarefaConcluidaComAtraso() {
-        binding.btnRegistrar.setText("Tarefa realizada com atraso");
+        binding.btnRegistrar.setText("Atrasada");
         binding.btnRegistrar.setBackgroundResource(R.drawable.bg_tab_error);
         binding.btnRegistrar.setEnabled(false);
         binding.btnRegistrar.setAlpha(0.6f);
     }
-    
+
     private void configurarTarefaPendente() {
         binding.btnRegistrar.setText("Registrar");
         binding.btnRegistrar.setBackgroundResource(R.drawable.bg_tab_selected);
         binding.btnRegistrar.setEnabled(true);
         binding.btnRegistrar.setAlpha(1.0f);
     }
-    
+
     private void finalizarTarefa() {
         if (tarefaService == null || tarefaId == null || tarefaId <= 0) {
             ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Erro ao finalizar tarefa: dados inválidos");
             return;
         }
-        
+
         // Mostrar loading
         binding.btnRegistrar.setText("Finalizando...");
         binding.btnRegistrar.setEnabled(false);
-        
+
         tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<TarefaResponse>() {
             @Override
             public void onSuccess(TarefaResponse result) {

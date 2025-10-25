@@ -27,18 +27,18 @@
                 android:layout_width="60dp"
                 android:layout_height="60dp"
                 android:layout_gravity="center"
-                android:scaleType="centerCrop"
                 android:backgroundTint="@color/colorBackground"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_voltar" />
 
             <TextView
                 android:id="@+id/nome_produto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginEnd="120dp"
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="32dp"
                 android:text="Arroz Branco - 1 kg"
                 android:textColor="@color/colorPrimary"
                 android:textSize="38sp" />
