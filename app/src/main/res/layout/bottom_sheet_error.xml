@@ -37,7 +37,7 @@
         android:textSize="16sp" />
 
     <TextView
-        android:id="@+id/btnErrorOk"
+        android:id="@+id/btnFechar"
         android:layout_width="245dp"
         android:layout_height="60dp"
         android:layout_gravity="center"

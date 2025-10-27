@@ -21,13 +21,13 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="32dp">
+            android:padding="48dp">
 
             <LinearLayout
                 android:id="@+id/barra_busca"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -37,19 +37,19 @@
 
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="60dp"
-                    android:layout_marginEnd="16dp"
+                    android:layout_height="80dp"
+                    android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_stroke"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp">
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/ic_search" />
 
                     <EditText
@@ -64,18 +64,18 @@
                         android:inputType="text"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorOnSurfaceVariant"
-                        android:textSize="24sp" />
+                        android:textSize="28sp" />
 
                 </LinearLayout>
 
                 <ImageView
                     android:id="@+id/imageViewFiltro"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:clickable="true"
                     android:focusable="true"
-                    android:padding="5dp"
+                    android:padding="8dp"
                     android:src="@drawable/ic_filtro" />
 
             </LinearLayout>
@@ -83,8 +83,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewHistorico"
                 android:layout_width="0dp"
-                android:layout_height="900dp"
-                android:layout_marginTop="25dp"
+                android:layout_height="1000dp"
+                android:layout_marginTop="32dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barra_busca"

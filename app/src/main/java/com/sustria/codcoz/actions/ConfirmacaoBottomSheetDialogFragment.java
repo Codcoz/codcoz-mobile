@@ -11,8 +11,8 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.databinding.BottomSheetErrorBinding;
 import com.sustria.codcoz.databinding.BottomsheetProdutoConfirmadoBinding;
-import com.sustria.codcoz.databinding.BottomsheetProdutoErroBinding;
 
 public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -20,7 +20,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
     private static final String ARG_MSG_ERRO = "arg_msg_erro";
 
     private BottomsheetProdutoConfirmadoBinding bindingSucesso;
-    private BottomsheetProdutoErroBinding bindingErro;
+    private BottomSheetErrorBinding bindingErro;
     private boolean isErro;
     private String mensagemErro;
 
@@ -31,7 +31,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
         isErro = args != null && args.getBoolean(ARG_IS_ERRO, false);
         mensagemErro = args != null ? args.getString(ARG_MSG_ERRO) : null;
         if (isErro) {
-            bindingErro = BottomsheetProdutoErroBinding.inflate(inflater, container, false);
+            bindingErro = BottomSheetErrorBinding.inflate(inflater, container, false);
             return bindingErro.getRoot();
         } else {
             bindingSucesso = BottomsheetProdutoConfirmadoBinding.inflate(inflater, container, false);
@@ -56,7 +56,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
         if (isErro && bindingErro != null) {
             if (mensagemErro != null) {
-                bindingErro.txtMensagemErro.setText(mensagemErro);
+                bindingErro.tvErrorTitle.setText(mensagemErro);
             }
             bindingErro.btnFechar.setOnClickListener(v -> {
                 dismiss();

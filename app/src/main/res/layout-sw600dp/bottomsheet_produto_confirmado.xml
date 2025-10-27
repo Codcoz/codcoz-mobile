@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="500dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
-    android:padding="32dp">
+    android:padding="48dp">
 
     <ImageView
-        android:layout_width="96dp"
-        android:layout_height="96dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="48dp"
         android:src="@drawable/ic_confirmacao" />
@@ -25,15 +25,15 @@
 
     <TextView
         android:id="@+id/btnFechar"
-        android:layout_width="500dp"
-        android:layout_height="80dp"
+        android:layout_width="345dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:background="@drawable/bg_tab_selected_big"
         android:fontFamily="@font/nunito_bold"
         android:gravity="center"
         android:text="Fechar"
         android:textColor="@color/colorPrimary"
-        android:textSize="32sp" />
+        android:textSize="26sp" />
 
 </LinearLayout>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="550dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical">
 
@@ -10,11 +10,11 @@
         android:id="@+id/txtTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="48dp"
+        android:layout_margin="32dp"
         android:fontFamily="@font/nunito_bold"
         android:text="Tarefa"
         android:textColor="@color/colorPrimary"
-        android:textSize="32sp" />
+        android:textSize="28sp" />
 
     <View
         android:layout_width="match_parent"
@@ -25,12 +25,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="48dp">
+        android:padding="32dp">
         <!-- Informações do produto -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal">
 
             <TextView
@@ -39,7 +40,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:text="Produto: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/txtProduto"
@@ -48,14 +49,14 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
         </LinearLayout>
 
         <!-- Informações do relator -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="16dp"
             android:orientation="horizontal">
 
             <TextView
@@ -64,7 +65,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:text="Relator: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/txtRelator"
@@ -73,14 +74,14 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
         </LinearLayout>
 
         <!-- Data limite -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="72dp"
+            android:layout_marginBottom="64dp"
             android:orientation="horizontal">
 
             <TextView
@@ -89,7 +90,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:text="Data Limite: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/txtData"
@@ -98,7 +99,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
         </LinearLayout>
 
         <!-- Botões -->
@@ -110,26 +111,26 @@
 
             <TextView
                 android:id="@+id/btnFechar"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
+                android:layout_marginEnd="24dp"
                 android:background="@drawable/bg_tab_unselected_big"
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="center"
                 android:text="Fechar"
                 android:textColor="@color/colorPrimary"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
             <TextView
                 android:id="@+id/btnRegistrar"
-                android:layout_width="200dp"
-                android:layout_height="60dp"
+                android:layout_width="160dp"
+                android:layout_height="50dp"
                 android:background="@drawable/bg_tab_selected_big"
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="center"
                 android:text="Registrar"
                 android:textColor="@color/colorPrimary"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>

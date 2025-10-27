@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="550dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
     android:padding="32dp">
@@ -14,7 +14,7 @@
         android:fontFamily="@font/nunito_bold"
         android:text="Como deseja registrar?"
         android:textColor="@color/colorPrimary"
-        android:textSize="28sp" />
+        android:textSize="26sp" />
 
     <!-- Opções de entrada -->
     <LinearLayout
@@ -28,7 +28,7 @@
         <LinearLayout
             android:id="@+id/btnScanner"
             android:layout_width="0dp"
-            android:layout_height="225dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
             android:layout_weight="1"
             android:background="@drawable/bg_summary_card"
@@ -40,8 +40,8 @@
             android:padding="24dp">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/ic_barcode_scan" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:fontFamily="@font/nunito_bold"
                 android:text="Escanear produto"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -60,7 +60,7 @@
                 android:gravity="center"
                 android:text="Escanear código de barras"
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -68,7 +68,7 @@
         <LinearLayout
             android:id="@+id/btnManual"
             android:layout_width="0dp"
-            android:layout_height="225dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_weight="1"
             android:background="@drawable/bg_summary_card"
@@ -80,8 +80,8 @@
             android:padding="24dp">
 
             <ImageView
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:src="@drawable/ic_entrada_manual" />
 
             <TextView
@@ -91,7 +91,7 @@
                 android:fontFamily="@font/nunito_bold"
                 android:text="Entrada manual"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="20sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -100,7 +100,7 @@
                 android:gravity="center"
                 android:text="Cadastrar produtos manualmente"
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="22sp" />
+                android:textSize="18sp" />
 
         </LinearLayout>
 
@@ -109,10 +109,10 @@
     <!-- Botão Fechar -->
     <TextView
         android:id="@+id/btnCancelar"
-        android:layout_width="500dp"
-        android:layout_height="80dp"
+        android:layout_width="345dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
-        android:background="@drawable/bg_tab_unselected_big"
+        android:background="@drawable/bg_tab_selected_big"
         android:fontFamily="@font/nunito_bold"
         android:gravity="center"
         android:text="Fechar"

@@ -25,8 +25,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:zxing_framing_rect_height="320dp"
-            app:zxing_framing_rect_width="640dp" />
+            app:zxing_framing_rect_height="200dp"
+            app:zxing_framing_rect_width="360dp" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"

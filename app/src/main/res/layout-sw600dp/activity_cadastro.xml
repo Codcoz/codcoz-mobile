@@ -10,8 +10,8 @@
 
     <ImageView
         android:id="@+id/imageViewLogo"
-        android:layout_width="300dp"
-        android:layout_height="250dp"
+        android:layout_width="200dp"
+        android:layout_height="160dp"
         app:layout_constraintBottom_toTopOf="@+id/containerCadastro"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -21,10 +21,11 @@
     <LinearLayout
         android:id="@+id/containerCadastro"
         android:layout_width="match_parent"
-        android:layout_height="850dp"
+        android:layout_height="640dp"
+        android:layout_gravity="center"
         android:background="@drawable/bg_branco_login"
         android:orientation="vertical"
-        android:padding="24dp"
+        android:padding="48dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -35,12 +36,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="45dp"
-            android:layout_marginBottom="80dp"
+            android:layout_marginBottom="64dp"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar Senha"
             android:textColor="@color/colorPrimary"
-            android:textSize="64sp" />
+            android:textSize="40sp" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/inputLayoutNovaSenha"
@@ -59,7 +59,7 @@
                 android:hint="Nova senha"
                 android:inputType="textPassword"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
@@ -67,7 +67,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="64dp"
             app:boxStrokeColor="@color/colorOnSurfaceVariant"
             app:hintTextColor="@color/colorOnSurfaceVariant"
             app:passwordToggleEnabled="true"
@@ -80,20 +80,20 @@
                 android:hint="Confirme sua senha"
                 android:inputType="textPassword"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp" />
+                android:textSize="22sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnCadastrar"
-            android:layout_width="500dp"
-            android:layout_height="80dp"
+            android:layout_width="345dp"
+            android:layout_height="70dp"
             android:layout_gravity="center_horizontal"
-            android:layout_marginTop="80dp"
+            android:layout_marginTop="64dp"
             android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_semibold"
             android:text="Cadastrar"
             android:textColor="@color/colorPrimary"
-            android:textSize="28sp"
+            android:textSize="26sp"
             app:cornerRadius="30dp" />
 
     </LinearLayout>

@@ -13,7 +13,7 @@
         android:fontFamily="@font/nunito_semibold"
         android:text="Macarrão"
         android:textColor="@color/colorOnSurfaceVariant"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tvQuantidadeIngrediente"
@@ -22,6 +22,6 @@
         android:fontFamily="@font/nunito_semibold"
         android:text="500g"
         android:textColor="@color/colorOnSurfaceVariant"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
 </LinearLayout>

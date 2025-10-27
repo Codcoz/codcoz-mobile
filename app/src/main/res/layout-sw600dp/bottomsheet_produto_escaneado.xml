@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="550dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_bottomsheet">
 
     <ProgressBar
@@ -23,28 +23,28 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="48dp"
+            android:layout_marginBottom="64dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/btnClosePopup"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:contentDescription="Fechar"
-                android:padding="2dp"
+                android:padding="4dp"
                 android:src="@drawable/ic_voltar" />
 
             <TextView
                 android:id="@+id/tvNomeProduto"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="24dp"
+                android:layout_marginStart="32dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Carregando..."
                 android:textColor="@color/colorPrimary"
-                android:textSize="32sp" />
+                android:textSize="26sp" />
         </LinearLayout>
 
         <!-- Informações do produto -->
@@ -60,7 +60,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:text="Código: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/tvCodigoProduto"
@@ -69,7 +69,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -84,7 +84,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:text="Fornecedor: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/tvFornecedorProduto"
@@ -93,7 +93,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
         </LinearLayout>
 
         <LinearLayout
@@ -108,7 +108,7 @@
                 android:fontFamily="@font/nunito_regular"
                 android:text="Estoque atual: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
 
             <TextView
                 android:id="@+id/tvEstoqueAtual"
@@ -117,7 +117,7 @@
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="26sp" />
+                android:textSize="22sp" />
         </LinearLayout>
 
         <!-- Seletor de quantidade -->
@@ -139,7 +139,7 @@
 
             <EditText
                 android:id="@+id/etQuantidade"
-                android:layout_width="100dp"
+                android:layout_width="80dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="48dp"
                 android:layout_marginEnd="48dp"
@@ -161,23 +161,22 @@
                 android:layout_height="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Aumentar quantidade"
-                android:src="@drawable/ic_add"
-                app:tint="@color/colorPrimary" />
+                android:src="@drawable/ic_add" />
 
         </LinearLayout>
 
         <!-- Botão Confirmar -->
         <TextView
             android:id="@+id/btnConfirmar"
-            android:layout_width="500dp"
-            android:layout_height="80dp"
+            android:layout_width="345dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_tab_selected_big"
             android:fontFamily="@font/nunito_bold"
             android:gravity="center"
             android:text="Confirmar"
             android:textColor="@color/colorPrimary"
-            android:textSize="32sp" />
+            android:textSize="26sp" />
 
     </LinearLayout>
 

@@ -37,7 +37,7 @@
         android:fontFamily="@font/nunito_semibold"
         android:text="Ordenar por"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -47,9 +47,10 @@
 
         <TextView
             android:id="@+id/opMaisRecentes"
-            android:layout_width="263dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
+            android:layout_weight="1"
             android:background="@drawable/bg_tab_selected"
             android:gravity="center"
             android:text="Mais recentes"
@@ -59,8 +60,9 @@
 
         <TextView
             android:id="@+id/opMaisAntigos"
-            android:layout_width="263dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Mais antigos"
@@ -76,7 +78,7 @@
         android:fontFamily="@font/nunito_semibold"
         android:text="Tipo de registro"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -86,9 +88,10 @@
 
         <TextView
             android:id="@+id/opTipoEntrada"
-            android:layout_width="263dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
+            android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Entrada"
@@ -98,8 +101,9 @@
 
         <TextView
             android:id="@+id/opTipoBaixa"
-            android:layout_width="263dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Baixa"
@@ -115,7 +119,7 @@
         android:fontFamily="@font/nunito_semibold"
         android:text="Período"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -170,9 +174,10 @@
 
         <TextView
             android:id="@+id/op15dias"
-            android:layout_width="263dp"
-            android:layout_height="40dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="24dp"
+            android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Últimos 15 dias"
@@ -182,9 +187,9 @@
 
         <TextView
             android:id="@+id/op30dias"
-            android:layout_width="263dp"
+            android:layout_width="0dp"
             android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
             android:background="@drawable/bg_tab_unselected"
             android:gravity="center"
             android:text="Últimos 30 dias"
@@ -203,8 +208,8 @@
 
     <Button
         android:id="@+id/btnAplicarFiltros"
-        android:layout_width="500dp"
-        android:layout_height="80dp"
+        android:layout_width="345dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
         android:backgroundTint="@color/colorSecondary"
