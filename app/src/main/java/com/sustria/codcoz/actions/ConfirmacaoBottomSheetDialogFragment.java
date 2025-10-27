@@ -58,9 +58,19 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
             if (mensagemErro != null) {
                 bindingErro.txtMensagemErro.setText(mensagemErro);
             }
-            bindingErro.btnFechar.setOnClickListener(v -> dismiss());
+            bindingErro.btnFechar.setOnClickListener(v -> {
+                dismiss();
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            });
         } else if (bindingSucesso != null) {
-            bindingSucesso.btnFechar.setOnClickListener(v -> dismiss());
+            bindingSucesso.btnFechar.setOnClickListener(v -> {
+                dismiss();
+                if (getActivity() != null) {
+                    getActivity().finish();
+                }
+            });
         }
     }
 
@@ -113,6 +123,3 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
         }
     }
 }
-
-
-

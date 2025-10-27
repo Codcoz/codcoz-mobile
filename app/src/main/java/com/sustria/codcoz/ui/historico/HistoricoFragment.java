@@ -6,26 +6,30 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.FiltrosBottomSheetDialogFragment;
-import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
-import com.sustria.codcoz.api.model.MockDataProvider;
 import com.sustria.codcoz.api.model.RegistroHistorico;
+import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class HistoricoFragment extends Fragment {
     private FragmentHistoricoBinding binding;
     private HistoricoListAdapter adapter;
     private EmptyStateAdapter emptyStateAdapter;
-    private final List<RegistroHistorico> dadosOriginais = new ArrayList<>();
+    private HistoricoViewModel historicoEstoquistaViewModel;
     private SortOrder sortOrder = SortOrder.MAIS_RECENTES;
     private TipoFiltro tipoFiltro = TipoFiltro.TODOS;
     private PeriodoFiltro periodoFiltro = PeriodoFiltro.TODOS;
@@ -37,14 +41,15 @@ public class HistoricoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        HistoricoViewModel historicoEstoquistaViewModel =
+        historicoEstoquistaViewModel =
                 new ViewModelProvider(this).get(HistoricoViewModel.class);
 
         binding = FragmentHistoricoBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         setupLista();
-        seedDadosMock();
+        setupObservers();
+        carregarDados();
         setupBusca();
 
         binding.imageViewFiltro.setOnClickListener(v -> {
@@ -65,18 +70,25 @@ public class HistoricoFragment extends Fragment {
                 FiltrosBottomSheetDialogFragment.REQUEST_KEY,
                 getViewLifecycleOwner(),
                 (requestKey, result) -> {
-                    int sort = result.getInt(FiltrosBottomSheetDialogFragment.RESULT_SORT,
-                            0);
-                    int tipo = result.getInt(FiltrosBottomSheetDialogFragment.RESULT_TIPO,
-                            0);
-                    int periodo = result.getInt(FiltrosBottomSheetDialogFragment.RESULT_PERIODO,
-                            0);
+                    int sort = result.getInt(FiltrosBottomSheetDialogFragment.RESULT_SORT, 0);
+                    int tipo = result.getInt(FiltrosBottomSheetDialogFragment.RESULT_TIPO, 0);
+                    int periodo = result.getInt(FiltrosBottomSheetDialogFragment.RESULT_PERIODO, 0);
+                    boolean limparFiltros = result.getBoolean(FiltrosBottomSheetDialogFragment.RESULT_LIMPAR, false);
 
-                    sortOrder = (sort == 0) ? SortOrder.MAIS_RECENTES : SortOrder.MAIS_ANTIGOS;
-                    tipoFiltro = (tipo == 1) ? TipoFiltro.ENTRADA : (tipo == 2 ? TipoFiltro.BAIXA
-                            : TipoFiltro.TODOS);
-                    periodoFiltro = mapIntToPeriodo(periodo);
-                    aplicarFiltrosEBusca();
+                    if (limparFiltros) {
+                        // Limpar filtros
+                        sortOrder = SortOrder.MAIS_RECENTES;
+                        tipoFiltro = TipoFiltro.TODOS;
+                        periodoFiltro = PeriodoFiltro.TODOS;
+                        binding.editTextBusca.setText("");
+                        historicoEstoquistaViewModel.limparFiltros();
+                    } else {
+                        // Aplicar filtros normalmente
+                        sortOrder = (sort == 0) ? SortOrder.MAIS_RECENTES : SortOrder.MAIS_ANTIGOS;
+                        tipoFiltro = (tipo == 1) ? TipoFiltro.ENTRADA : (tipo == 2 ? TipoFiltro.BAIXA : TipoFiltro.TODOS);
+                        periodoFiltro = mapIntToPeriodo(periodo);
+                        aplicarFiltrosEBusca();
+                    }
                 }
         );
 
@@ -132,11 +144,38 @@ public class HistoricoFragment extends Fragment {
         binding.recyclerViewHistorico.setAdapter(emptyStateAdapter);
     }
 
-    private void seedDadosMock() {
-        dadosOriginais.clear();
-        // Mostrar estado vazio em vez de dados mockados
-        emptyStateAdapter.setEmptyState(true, "Nenhum histórico encontrado", "Não há registros de histórico disponíveis.");
-        aplicarFiltrosEBusca();
+    private void setupObservers() {
+        // Observar dados de histórico
+        historicoEstoquistaViewModel.getHistoricoData().observe(getViewLifecycleOwner(), registros -> {
+            if (registros != null && !registros.isEmpty()) {
+                adapter.submit(registros);
+                emptyStateAdapter.setEmptyState(false);
+            } else {
+                emptyStateAdapter.setEmptyState(true, "Nenhum histórico encontrado", "Não há registros de histórico disponíveis.");
+            }
+        });
+
+        // Observar estado de carregamento
+        historicoEstoquistaViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null) {
+                binding.progressBarHistorico.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                binding.recyclerViewHistorico.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+            }
+        });
+
+        // Observar mensagens de erro
+        historicoEstoquistaViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
+            if (errorMessage != null) {
+                emptyStateAdapter.setEmptyState(true, "Erro ao carregar dados", errorMessage);
+                binding.progressBarHistorico.setVisibility(View.GONE);
+                binding.recyclerViewHistorico.setVisibility(View.VISIBLE);
+            }
+        });
+    }
+
+    private void carregarDados() {
+        // Carregar dados reais do ViewModel (com fallback para mockados)
+        historicoEstoquistaViewModel.carregarDadosReais();
     }
 
     private void setupBusca() {
@@ -157,28 +196,14 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void aplicarFiltrosEBusca() {
-        String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim().toLowerCase();
-        long now = System.currentTimeMillis();
-        List<RegistroHistorico> filtrados = new ArrayList<>();
-        for (RegistroHistorico r : dadosOriginais) {
-            if (!termo.isEmpty() && !r.getNome().toLowerCase().contains(termo)) continue;
-            if (tipoFiltro != TipoFiltro.TODOS && !r.getTipo().toString().equals(tipoFiltro.toString()))
-                continue;
-            if (!periodoFiltro.passa(r.getEpochMillis(), now)) continue;
-            filtrados.add(r);
-        }
-        Comparator<RegistroHistorico> comp = Comparator.comparingLong(RegistroHistorico::getEpochMillis);
-        if (sortOrder == SortOrder.MAIS_RECENTES) filtrados.sort(comp.reversed());
-        else filtrados.sort(comp);
-        adapter.submit(filtrados);
-        
-        // Atualizar estado vazio
-        if (filtrados.isEmpty()) {
-            emptyStateAdapter.setEmptyState(true, "Nenhum registro encontrado", 
-                "Não há registros de histórico para os filtros selecionados.\nTente ajustar os filtros ou verifique novamente mais tarde.");
-        } else {
-            emptyStateAdapter.setEmptyState(false);
-        }
+        String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim();
+        String tipoFiltroStr = tipoFiltro == TipoFiltro.TODOS ? "TODOS" : tipoFiltro.toString();
+        String periodoFiltroStr = periodoFiltro == PeriodoFiltro.TODOS ? "TODOS" : periodoFiltro.toString();
+        String sortOrderStr = sortOrder == SortOrder.MAIS_RECENTES ? "MAIS_RECENTES" : "MAIS_ANTIGOS";
+
+        historicoEstoquistaViewModel.filtrarDados(termo, tipoFiltroStr, periodoFiltroStr);
+        // Aplicar ordenação
+        historicoEstoquistaViewModel.aplicarOrdenacao(sortOrderStr);
     }
 
 
@@ -210,12 +235,12 @@ public class HistoricoFragment extends Fragment {
     }
 
 
-    static class HistoricoListAdapter extends androidx.recyclerview.widget.RecyclerView.Adapter<HistoricoListAdapter.VH> {
+    static class HistoricoListAdapter extends RecyclerView.Adapter<HistoricoListAdapter.VH> {
         private final List<RegistroHistorico> itens = new ArrayList<>();
 
         @Override
         public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-            android.view.View v = android.view.LayoutInflater.from(parent.getContext()).inflate(com.sustria.codcoz.R.layout.item_historico_de_baixas, parent, false);
+            View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_historico_de_baixas, parent, false);
             return new VH(v);
         }
 
@@ -225,8 +250,8 @@ public class HistoricoFragment extends Fragment {
             h.nome.setText(r.getNome());
             h.unidades.setText(String.valueOf(r.getUnidades()));
             h.codigo.setText(r.getCodigo());
-            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd MMMM | HH:mm", java.util.Locale.getDefault());
-            h.data.setText(sdf.format(new java.util.Date(r.getEpochMillis())));
+            SimpleDateFormat sdf = new SimpleDateFormat("dd MMMM | HH:mm", Locale.getDefault());
+            h.data.setText(sdf.format(new Date(r.getEpochMillis())));
         }
 
         @Override
@@ -240,18 +265,18 @@ public class HistoricoFragment extends Fragment {
             notifyDataSetChanged();
         }
 
-        static class VH extends androidx.recyclerview.widget.RecyclerView.ViewHolder {
-            final android.widget.TextView nome;
-            final android.widget.TextView unidades;
-            final android.widget.TextView codigo;
-            final android.widget.TextView data;
+        static class VH extends RecyclerView.ViewHolder {
+            final TextView nome;
+            final TextView unidades;
+            final TextView codigo;
+            final TextView data;
 
             VH(View itemView) {
                 super(itemView);
-                nome = itemView.findViewById(com.sustria.codcoz.R.id.tv_nome);
-                unidades = itemView.findViewById(com.sustria.codcoz.R.id.tv_unidades);
-                codigo = itemView.findViewById(com.sustria.codcoz.R.id.tv_cod_produto);
-                data = itemView.findViewById(com.sustria.codcoz.R.id.dataMovimentacao);
+                nome = itemView.findViewById(R.id.tv_nome);
+                unidades = itemView.findViewById(R.id.tv_unidades);
+                codigo = itemView.findViewById(R.id.tv_cod_produto);
+                data = itemView.findViewById(R.id.dataMovimentacao);
             }
         }
     }

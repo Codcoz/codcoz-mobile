@@ -85,7 +85,10 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
                     getParentFragmentManager(),
                     nome,
                     estoqueAntigo,
-                    estoqueAtualizado
+                    estoqueAtualizado,
+                    null, // codigoEan - não disponível na auditoria
+                    null, // quantidade - não disponível na auditoria
+                    null  // tipoMovimento - não disponível na auditoria
             );
         });
     }

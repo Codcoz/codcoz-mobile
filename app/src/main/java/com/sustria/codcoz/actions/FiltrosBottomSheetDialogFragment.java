@@ -20,6 +20,7 @@ public class FiltrosBottomSheetDialogFragment extends BottomSheetDialogFragment 
     public static final String RESULT_SORT = "result_sort";
     public static final String RESULT_TIPO = "result_tipo";
     public static final String RESULT_PERIODO = "result_periodo";
+    public static final String RESULT_LIMPAR = "result_limpar";
 
     public static final String ARG_SORT = "arg_sort";
     public static final String ARG_TIPO = "arg_tipo";
@@ -208,6 +209,15 @@ public class FiltrosBottomSheetDialogFragment extends BottomSheetDialogFragment 
             tipoFiltro = 0;
             periodo = 0;
             setupInitialSelection();
+            
+            // Comunicar que os filtros foram limpos
+            Bundle result = new Bundle();
+            result.putInt(RESULT_SORT, sortOrder);
+            result.putInt(RESULT_TIPO, tipoFiltro);
+            result.putInt(RESULT_PERIODO, periodo);
+            result.putBoolean(RESULT_LIMPAR, true);
+            getParentFragmentManager().setFragmentResult(REQUEST_KEY, result);
+            dismiss();
         });
     }
 

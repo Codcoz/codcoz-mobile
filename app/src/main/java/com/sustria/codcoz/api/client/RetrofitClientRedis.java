@@ -3,19 +3,20 @@ package com.sustria.codcoz.api.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public final class RetrofitClientNoSql {
-    private static final String BASE_URL = "https://codcoz-api-mongo.koyeb.app/";
+public class RetrofitClientRedis {
+    private static final String BASE_URL = "https://codcoz-api-redis.onrender.com/";
     private static Retrofit retrofit;
-
-    private RetrofitClientNoSql() {
-    }
 
     public static Retrofit getInstance() {
         if (retrofit == null) {
