@@ -145,16 +145,6 @@ public class HistoricoFragment extends Fragment {
     }
 
     private void setupObservers() {
-        // Observar dados de histórico
-        historicoEstoquistaViewModel.getHistoricoData().observe(getViewLifecycleOwner(), registros -> {
-            if (registros != null && !registros.isEmpty()) {
-                adapter.submit(registros);
-                emptyStateAdapter.setEmptyState(false);
-            } else {
-                emptyStateAdapter.setEmptyState(true, "Nenhum histórico encontrado", "Não há registros de histórico disponíveis.");
-            }
-        });
-
         // Observar estado de carregamento
         historicoEstoquistaViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
@@ -167,18 +157,42 @@ public class HistoricoFragment extends Fragment {
 
         // Observar mensagens de erro
         historicoEstoquistaViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
-            if (errorMessage != null) {
-                emptyStateAdapter.setEmptyState(true, "Erro ao carregar dados", errorMessage);
-                if (binding.progressBarHistorico != null) {
-                    binding.progressBarHistorico.setVisibility(View.GONE);
-                }
-                binding.recyclerViewHistorico.setVisibility(View.VISIBLE);
+            // Quando não há erro ou erro foi limpo, atualizar baseado nos dados
+            if (errorMessage == null || errorMessage.isEmpty()) {
+                List<RegistroHistorico> registros = historicoEstoquistaViewModel.getHistoricoData().getValue();
+                atualizarListaComDados(registros, null);
             }
+        });
+
+        // Observar dados de histórico
+        historicoEstoquistaViewModel.getHistoricoData().observe(getViewLifecycleOwner(), registros -> {
+            String errorMessage = historicoEstoquistaViewModel.getErrorMessage().getValue();
+            atualizarListaComDados(registros, errorMessage);
         });
     }
 
+    private void atualizarListaComDados(List<RegistroHistorico> registros, String errorMessage) {
+        // Se houver erro e não houver dados, mostrar mensagem de erro
+        if (errorMessage != null && !errorMessage.isEmpty() && (registros == null || registros.isEmpty())) {
+            emptyStateAdapter.setEmptyState(true, "Erro ao carregar dados", errorMessage);
+            if (binding.progressBarHistorico != null) {
+                binding.progressBarHistorico.setVisibility(View.GONE);
+            }
+            binding.recyclerViewHistorico.setVisibility(View.VISIBLE);
+        } 
+        // Se houver dados (mesmo com erro), mostrar os dados
+        else if (registros != null && !registros.isEmpty()) {
+            adapter.submit(registros);
+            emptyStateAdapter.setEmptyState(false);
+        } 
+        // Se não houver dados e não houver erro, mostrar empty state
+        else {
+            emptyStateAdapter.setEmptyState(true, "Nenhum histórico encontrado", "Não há registros de histórico disponíveis.");
+        }
+    }
+
     private void carregarDados() {
-        // Carregar dados reais do ViewModel (com fallback para mockados)
+        // Carregar dados reais da API
         historicoEstoquistaViewModel.carregarDadosReais();
     }
 

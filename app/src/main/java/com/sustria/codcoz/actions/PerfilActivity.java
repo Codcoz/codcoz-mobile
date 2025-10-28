@@ -2,6 +2,7 @@ package com.sustria.codcoz.actions;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,6 +23,7 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.auth.LoginActivity;
 import com.sustria.codcoz.databinding.ActivityPerfilBinding;
 import com.sustria.codcoz.api.adapter.PerfilTarefaAdapter;
 import com.sustria.codcoz.ui.perfil.PerfilViewModel;
@@ -111,6 +113,9 @@ public class PerfilActivity extends AppCompatActivity {
             periodoSelecionado = 90;
             loadTasks();
         });
+
+        // Botão de logout
+        binding.btnLogout.setOnClickListener(v -> confirmarLogout());
     }
 
     private void selectTab(boolean atividades) {
@@ -347,5 +352,25 @@ public class PerfilActivity extends AppCompatActivity {
         fullScreenImageView.setOnClickListener(v -> dialog.dismiss());
         
         dialog.show();
+    }
+
+    private void confirmarLogout() {
+        LogoutBottomSheet.show(this, this::realizarLogout);
+    }
+
+    private void realizarLogout() {
+        // Deslogar do Firebase
+        if (auth != null) {
+            auth.signOut();
+        }
+
+        // Limpar cache do usuário
+        UserDataManager.getInstance().clearCache(this);
+
+        // Redirecionar para tela de login
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

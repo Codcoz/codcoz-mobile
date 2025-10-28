@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.sustria.codcoz.api.model.HistoricoBaixaResponse;
-import com.sustria.codcoz.api.model.MockDataProvider;
 import com.sustria.codcoz.api.model.RegistroHistorico;
 import com.sustria.codcoz.api.service.HistoricoService;
 import com.sustria.codcoz.utils.UserDataManager;
@@ -15,6 +14,7 @@ import com.sustria.codcoz.utils.UserDataManager;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class HistoricoViewModel extends ViewModel {
@@ -49,21 +49,6 @@ public class HistoricoViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public void carregarDadosMockados() {
-        isLoading.setValue(true);
-        errorMessage.setValue(null);
-
-        try {
-            List<RegistroHistorico> dados = MockDataProvider.getMockRegistrosHistorico();
-            dadosOriginais = dados; // Armazenar dados originais
-            historicoData.setValue(dados);
-        } catch (Exception e) {
-            errorMessage.setValue("Erro ao carregar dados: " + e.getMessage());
-        } finally {
-            isLoading.setValue(false);
-        }
-    }
-
     public void carregarDadosReais() {
         Log.d("HistoricoViewModel", "Iniciando carregamento de dados reais");
         isLoading.setValue(true);
@@ -77,8 +62,7 @@ public class HistoricoViewModel extends ViewModel {
             Log.w("HistoricoViewModel", "ID da empresa não encontrado");
             errorMessage.setValue("ID da empresa não encontrado. Faça login novamente.");
             isLoading.setValue(false);
-            // Fallback para dados mockados
-            carregarDadosMockados();
+            historicoData.setValue(new ArrayList<>());
             return;
         }
 
@@ -91,9 +75,16 @@ public class HistoricoViewModel extends ViewModel {
                     @Override
                     public void onSuccess(List<HistoricoBaixaResponse> result) {
                         Log.d("HistoricoViewModel", "API retornou sucesso com " + (result != null ? result.size() : 0) + " registros");
-                        List<RegistroHistorico> registros = converterParaRegistroHistorico(result);
-                        dadosOriginais = registros; // Armazenar dados originais
-                        historicoData.setValue(registros);
+
+                        if (result == null || result.isEmpty()) {
+                            Log.d("HistoricoViewModel", "Nenhum registro retornado pela API");
+                            dadosOriginais = new ArrayList<>();
+                            historicoData.setValue(new ArrayList<>());
+                        } else {
+                            List<RegistroHistorico> registros = converterParaRegistroHistorico(result);
+                            dadosOriginais = registros; // Armazenar dados originais
+                            historicoData.setValue(registros);
+                        }
                         isLoading.setValue(false);
                     }
 
@@ -102,8 +93,8 @@ public class HistoricoViewModel extends ViewModel {
                         Log.e("HistoricoViewModel", "Erro na API: " + error);
                         errorMessage.setValue(error);
                         isLoading.setValue(false);
-                        // Em caso de erro, carregar dados mockados como fallback
-                        carregarDadosMockados();
+                        dadosOriginais = new ArrayList<>();
+                        historicoData.setValue(new ArrayList<>());
                     }
                 }
         );
@@ -180,7 +171,7 @@ public class HistoricoViewModel extends ViewModel {
         if ("MAIS_RECENTES".equals(sortOrder)) {
             dadosOrdenados.sort((a, b) -> Long.compare(b.getEpochMillis(), a.getEpochMillis()));
         } else if ("MAIS_ANTIGOS".equals(sortOrder)) {
-            dadosOrdenados.sort((a, b) -> Long.compare(a.getEpochMillis(), b.getEpochMillis()));
+            dadosOrdenados.sort(Comparator.comparingLong(RegistroHistorico::getEpochMillis));
         }
 
         historicoData.setValue(dadosOrdenados);
