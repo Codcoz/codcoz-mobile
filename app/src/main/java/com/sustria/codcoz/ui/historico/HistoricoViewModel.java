@@ -12,6 +12,7 @@ import com.sustria.codcoz.api.model.RegistroHistorico;
 import com.sustria.codcoz.api.service.HistoricoService;
 import com.sustria.codcoz.utils.UserDataManager;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,9 @@ public class HistoricoViewModel extends ViewModel {
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
     private final HistoricoService historicoService;
+
+    // Lista para armazenar os dados originais (sem filtros)
+    private List<RegistroHistorico> dadosOriginais = new ArrayList<>();
 
     public HistoricoViewModel() {
         historicoData = new MutableLiveData<>();
@@ -51,6 +55,7 @@ public class HistoricoViewModel extends ViewModel {
 
         try {
             List<RegistroHistorico> dados = MockDataProvider.getMockRegistrosHistorico();
+            dadosOriginais = dados; // Armazenar dados originais
             historicoData.setValue(dados);
         } catch (Exception e) {
             errorMessage.setValue("Erro ao carregar dados: " + e.getMessage());
@@ -67,7 +72,7 @@ public class HistoricoViewModel extends ViewModel {
         // Obter ID da empresa do usuário logado
         Integer empresaId = UserDataManager.getInstance().getEmpresaId();
         Log.d("HistoricoViewModel", "ID da empresa: " + empresaId);
-        
+
         if (empresaId == null) {
             Log.w("HistoricoViewModel", "ID da empresa não encontrado");
             errorMessage.setValue("ID da empresa não encontrado. Faça login novamente.");
@@ -87,6 +92,7 @@ public class HistoricoViewModel extends ViewModel {
                     public void onSuccess(List<HistoricoBaixaResponse> result) {
                         Log.d("HistoricoViewModel", "API retornou sucesso com " + (result != null ? result.size() : 0) + " registros");
                         List<RegistroHistorico> registros = converterParaRegistroHistorico(result);
+                        dadosOriginais = registros; // Armazenar dados originais
                         historicoData.setValue(registros);
                         isLoading.setValue(false);
                     }
@@ -104,8 +110,7 @@ public class HistoricoViewModel extends ViewModel {
     }
 
     public void filtrarDados(String busca, String tipoFiltro, String periodoFiltro) {
-        List<RegistroHistorico> dadosOriginais = historicoData.getValue();
-        if (dadosOriginais == null) {
+        if (dadosOriginais == null || dadosOriginais.isEmpty()) {
             return;
         }
 
@@ -135,14 +140,33 @@ public class HistoricoViewModel extends ViewModel {
         // Filtro por período
         if (periodoFiltro != null && !periodoFiltro.equals("TODOS")) {
             long agora = System.currentTimeMillis();
-            long limiteTempo = calcularLimiteTempo(periodoFiltro, agora);
-
             dadosFiltrados = dadosFiltrados.stream()
-                    .filter(registro -> registro.getEpochMillis() >= limiteTempo)
+                    .filter(registro -> passaFiltroPeriodo(periodoFiltro, registro.getEpochMillis(), agora))
                     .collect(java.util.stream.Collectors.toList());
         }
 
         historicoData.setValue(dadosFiltrados);
+    }
+
+    private boolean passaFiltroPeriodo(String periodoFiltro, long epoch, long agora) {
+        long umDia = 24L * 60 * 60 * 1000;
+        long diaEpoch = epoch / umDia;
+        long diaAgora = agora / umDia;
+
+        switch (periodoFiltro) {
+            case "HOJE":
+                return diaEpoch == diaAgora;
+            case "ONTEM":
+                return diaEpoch == (diaAgora - 1);
+            case "DIAS7":
+                return agora - epoch <= 7L * umDia;
+            case "DIAS15":
+                return agora - epoch <= 15L * umDia;
+            case "DIAS30":
+                return agora - epoch <= 30L * umDia;
+            default:
+                return true;
+        }
     }
 
     public void aplicarOrdenacao(String sortOrder) {
@@ -162,52 +186,28 @@ public class HistoricoViewModel extends ViewModel {
         historicoData.setValue(dadosOrdenados);
     }
 
-    /**
-     * Limpa todos os filtros e recarrega os dados originais
-     */
     public void limparFiltros() {
-        // Recarregar dados originais
-        carregarDadosReais();
+        // Restaurar dados originais sem filtros
+        historicoData.setValue(new ArrayList<>(dadosOriginais));
     }
 
-    private long calcularLimiteTempo(String periodoFiltro, long agora) {
-        switch (periodoFiltro) {
-            case "HOJE":
-                // Início do dia atual
-                return agora - (agora % (24 * 60 * 60 * 1000));
-            case "ONTEM":
-                // Início do dia anterior
-                return agora - (agora % (24 * 60 * 60 * 1000)) - (24 * 60 * 60 * 1000);
-            case "DIAS7":
-                return agora - (7L * 24 * 60 * 60 * 1000);
-            case "DIAS15":
-                return agora - (15L * 24 * 60 * 60 * 1000);
-            case "DIAS30":
-                return agora - (30L * 24 * 60 * 60 * 1000);
-            default:
-                return 0; // Todos os dados
-        }
-    }
-
-    /**
-     * Converte lista de HistoricoBaixaResponse para RegistroHistorico
-     */
     private List<RegistroHistorico> converterParaRegistroHistorico(List<HistoricoBaixaResponse> responses) {
         List<RegistroHistorico> registros = new ArrayList<>();
 
         for (HistoricoBaixaResponse response : responses) {
             RegistroHistorico registro = new RegistroHistorico();
-            registro.setId(response.getId() != null ? response.getId().toString() : "");
+            registro.setId(response.getId() != null ? response.getId() : "");
             registro.setNome(response.getNome_produto());
             registro.setUnidades(response.getQuantidade() != null ? response.getQuantidade() : 0);
             registro.setCodigo(response.getCodigo_produto());
             registro.setObservacoes(response.getObservacoes());
             registro.setProdutoId(response.getId_produto());
 
-            // Converter LocalDate para epochMillis
-            if (response.getData_acontecimento() != null) {
-                long epochMillis = response.getData_acontecimento()
-                        .atStartOfDay(ZoneId.systemDefault())
+            // Converter data mantendo o horário quando disponível
+            LocalDateTime dataAcontecimento = response.getDataAcontecimentoAsLocalDateTime();
+            if (dataAcontecimento != null) {
+                long epochMillis = dataAcontecimento
+                        .atZone(ZoneId.systemDefault())
                         .toInstant()
                         .toEpochMilli();
                 registro.setEpochMillis(epochMillis);
@@ -215,12 +215,19 @@ public class HistoricoViewModel extends ViewModel {
                 registro.setEpochMillis(System.currentTimeMillis());
             }
 
-            // Converter tipo de registro
+            // Converter tipo de registro (Entrada/Saída para ENTRADA/BAIXA)
             if (response.getTipo_registro() != null) {
-                try {
-                    registro.setTipo(RegistroHistorico.TipoMovimentacao.valueOf(response.getTipo_registro().toUpperCase()));
-                } catch (IllegalArgumentException e) {
+                String tipoStr = response.getTipo_registro();
+                if (tipoStr.equalsIgnoreCase("Entrada")) {
+                    registro.setTipo(RegistroHistorico.TipoMovimentacao.ENTRADA);
+                } else if (tipoStr.equalsIgnoreCase("Saída")) {
                     registro.setTipo(RegistroHistorico.TipoMovimentacao.BAIXA);
+                } else {
+                    try {
+                        registro.setTipo(RegistroHistorico.TipoMovimentacao.valueOf(tipoStr.toUpperCase()));
+                    } catch (IllegalArgumentException e) {
+                        registro.setTipo(RegistroHistorico.TipoMovimentacao.BAIXA);
+                    }
                 }
             } else {
                 registro.setTipo(RegistroHistorico.TipoMovimentacao.BAIXA);

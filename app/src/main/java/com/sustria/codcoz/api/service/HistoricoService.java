@@ -4,10 +4,13 @@ import android.util.Log;
 
 import com.sustria.codcoz.api.client.RetrofitClientRedis;
 import com.sustria.codcoz.api.endpoints.HistoricoApi;
+import com.sustria.codcoz.api.model.HistoricoBaixaListResponse;
 import com.sustria.codcoz.api.model.HistoricoBaixaRequest;
 import com.sustria.codcoz.api.model.HistoricoBaixaResponse;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,15 +35,19 @@ public class HistoricoService {
         Log.d("HistoricoService", "Fazendo requisição para listar histórico:");
         Log.d("HistoricoService", "- ID Empresa: " + idEmpresa);
 
-        historicoApi.listarHistoricoBaixas(idEmpresa)
+        // Body vazio conforme especificado na API
+        Map<String, Object> emptyBody = new HashMap<>();
+
+        historicoApi.listarHistoricoBaixas(idEmpresa, emptyBody)
                 .enqueue(new Callback<>() {
                     @Override
-                    public void onResponse(Call<List<HistoricoBaixaResponse>> call, Response<List<HistoricoBaixaResponse>> response) {
+                    public void onResponse(Call<HistoricoBaixaListResponse> call, Response<HistoricoBaixaListResponse> response) {
                         Log.d("HistoricoService", "Resposta recebida - Status: " + response.code());
 
-                        if (response.isSuccessful()) {
-                            Log.d("HistoricoService", "Sucesso! Dados: " + (response.body() != null ? response.body().size() + " registros" : "null"));
-                            callback.onSuccess(response.body());
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<HistoricoBaixaResponse> historicoList = response.body().getHistoricoBaixas();
+                            Log.d("HistoricoService", "Sucesso! Dados: " + (historicoList != null ? historicoList.size() + " registros" : "null"));
+                            callback.onSuccess(historicoList);
                         } else {
                             Log.e("HistoricoService", "Erro HTTP: " + response.code() + " - " + response.message());
                             callback.onError("Erro ao buscar histórico: " + response.code());
@@ -48,7 +55,7 @@ public class HistoricoService {
                     }
 
                     @Override
-                    public void onFailure(Call<List<HistoricoBaixaResponse>> call, Throwable t) {
+                    public void onFailure(Call<HistoricoBaixaListResponse> call, Throwable t) {
                         Log.e("HistoricoService", "Falha na requisição: " + t.getMessage());
                         Log.e("HistoricoService", "Stack trace: ", t);
                         callback.onError("Erro de conexão: " + t.getMessage());
