@@ -86,7 +86,7 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         binding.btnRegistrar.setOnClickListener(v -> {
             // Verificar se a tarefa já foi concluída
             if (situacao != null && situacao.toLowerCase().contains("concluída")) {
-                return; // Não fazer nada se já foi concluída
+                return;
             }
 
             // Finalizar a tarefa diretamente

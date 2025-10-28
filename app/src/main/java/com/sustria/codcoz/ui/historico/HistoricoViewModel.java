@@ -49,12 +49,12 @@ public class HistoricoViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public void carregarDadosReais() {
+    public void loadRealData() {
         Log.d("HistoricoViewModel", "Iniciando carregamento de dados reais");
         isLoading.setValue(true);
         errorMessage.setValue(null);
 
-        // Obter ID da empresa do usuário logado
+        // Obtendo o ID da empresa do usuário logado
         Integer empresaId = UserDataManager.getInstance().getEmpresaId();
         Log.d("HistoricoViewModel", "ID da empresa: " + empresaId);
 
@@ -81,8 +81,8 @@ public class HistoricoViewModel extends ViewModel {
                             dadosOriginais = new ArrayList<>();
                             historicoData.setValue(new ArrayList<>());
                         } else {
-                            List<RegistroHistorico> registros = converterParaRegistroHistorico(result);
-                            dadosOriginais = registros; // Armazenar dados originais
+                            List<RegistroHistorico> registros = convertHistorical(result);
+                            dadosOriginais = registros;
                             historicoData.setValue(registros);
                         }
                         isLoading.setValue(false);
@@ -100,7 +100,7 @@ public class HistoricoViewModel extends ViewModel {
         );
     }
 
-    public void filtrarDados(String busca, String tipoFiltro, String periodoFiltro) {
+    public void filterData(String busca, String tipoFiltro, String periodoFiltro) {
         if (dadosOriginais == null || dadosOriginais.isEmpty()) {
             return;
         }
@@ -132,14 +132,14 @@ public class HistoricoViewModel extends ViewModel {
         if (periodoFiltro != null && !periodoFiltro.equals("TODOS")) {
             long agora = System.currentTimeMillis();
             dadosFiltrados = dadosFiltrados.stream()
-                    .filter(registro -> passaFiltroPeriodo(periodoFiltro, registro.getEpochMillis(), agora))
+                    .filter(registro -> passPeriodFilter(periodoFiltro, registro.getEpochMillis(), agora))
                     .collect(java.util.stream.Collectors.toList());
         }
 
         historicoData.setValue(dadosFiltrados);
     }
 
-    private boolean passaFiltroPeriodo(String periodoFiltro, long epoch, long agora) {
+    private boolean passPeriodFilter(String periodoFiltro, long epoch, long agora) {
         long umDia = 24L * 60 * 60 * 1000;
         long diaEpoch = epoch / umDia;
         long diaAgora = agora / umDia;
@@ -160,7 +160,7 @@ public class HistoricoViewModel extends ViewModel {
         }
     }
 
-    public void aplicarOrdenacao(String sortOrder) {
+    public void applyOrder(String sortOrder) {
         List<RegistroHistorico> dadosAtuais = historicoData.getValue();
         if (dadosAtuais == null) {
             return;
@@ -177,12 +177,12 @@ public class HistoricoViewModel extends ViewModel {
         historicoData.setValue(dadosOrdenados);
     }
 
-    public void limparFiltros() {
+    public void cleanFilters() {
         // Restaurar dados originais sem filtros
         historicoData.setValue(new ArrayList<>(dadosOriginais));
     }
 
-    private List<RegistroHistorico> converterParaRegistroHistorico(List<HistoricoBaixaResponse> responses) {
+    private List<RegistroHistorico> convertHistorical(List<HistoricoBaixaResponse> responses) {
         List<RegistroHistorico> registros = new ArrayList<>();
 
         for (HistoricoBaixaResponse response : responses) {

@@ -92,15 +92,6 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
             );
         });
     }
-
-    public static AuditoriaQuantidadeBottomSheetDialogFragment newInstance(String titulo, String produto) {
-        AuditoriaQuantidadeBottomSheetDialogFragment f = new AuditoriaQuantidadeBottomSheetDialogFragment();
-        Bundle b = new Bundle();
-        b.putString(ARG_TITULO, titulo);
-        b.putString(ARG_PRODUTO, produto);
-        f.setArguments(b);
-        return f;
-    }
     
     @Override
     public void show(@NonNull androidx.fragment.app.FragmentManager manager, @Nullable String tag) {

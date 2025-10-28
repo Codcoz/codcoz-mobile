@@ -146,7 +146,6 @@ public class CardapioSemanal extends AppCompatActivity {
         emptyLayout.addView(tituloView);
         emptyLayout.addView(mensagemView);
         
-        // Adicionar o layout de estado vazio ao container principal
-        ((android.widget.LinearLayout) binding.getRoot()).addView(emptyLayout);
+        binding.getRoot().addView(emptyLayout);
     }
 }

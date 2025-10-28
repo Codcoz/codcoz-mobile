@@ -345,9 +345,9 @@ public class InicioFragment extends Fragment {
         UserDataManager userDataManager = UserDataManager.getInstance();
 
         if (userDataManager.isDataLoaded() && userDataManager.getEmail() != null) {
-            inicioViewModel.loadTarefas();
+            inicioViewModel.loadTasks();
         } else {
-            userDataManager.loadDataFromPreferences(requireContext(), () -> inicioViewModel.loadTarefas());
+            userDataManager.loadDataFromPreferences(requireContext(), () -> inicioViewModel.loadTasks());
         }
 
     }

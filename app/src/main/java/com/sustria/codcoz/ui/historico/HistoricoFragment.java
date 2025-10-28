@@ -49,8 +49,8 @@ public class HistoricoFragment extends Fragment {
 
         setupLista();
         setupObservers();
-        carregarDados();
-        setupBusca();
+        loadData();
+        searchSetup();
 
         binding.imageViewFiltro.setOnClickListener(v -> {
             int sort = (sortOrder == SortOrder.MAIS_RECENTES) ? 0 : 1;
@@ -81,13 +81,13 @@ public class HistoricoFragment extends Fragment {
                         tipoFiltro = TipoFiltro.TODOS;
                         periodoFiltro = PeriodoFiltro.TODOS;
                         binding.editTextBusca.setText("");
-                        historicoEstoquistaViewModel.limparFiltros();
+                        historicoEstoquistaViewModel.cleanFilters();
                     } else {
                         // Aplicar filtros normalmente
                         sortOrder = (sort == 0) ? SortOrder.MAIS_RECENTES : SortOrder.MAIS_ANTIGOS;
                         tipoFiltro = (tipo == 1) ? TipoFiltro.ENTRADA : (tipo == 2 ? TipoFiltro.BAIXA : TipoFiltro.TODOS);
                         periodoFiltro = mapIntToPeriodo(periodo);
-                        aplicarFiltrosEBusca();
+                        applyFilterSearch();
                     }
                 }
         );
@@ -160,18 +160,18 @@ public class HistoricoFragment extends Fragment {
             // Quando não há erro ou erro foi limpo, atualizar baseado nos dados
             if (errorMessage == null || errorMessage.isEmpty()) {
                 List<RegistroHistorico> registros = historicoEstoquistaViewModel.getHistoricoData().getValue();
-                atualizarListaComDados(registros, null);
+                updateDataList(registros, null);
             }
         });
 
         // Observar dados de histórico
         historicoEstoquistaViewModel.getHistoricoData().observe(getViewLifecycleOwner(), registros -> {
             String errorMessage = historicoEstoquistaViewModel.getErrorMessage().getValue();
-            atualizarListaComDados(registros, errorMessage);
+            updateDataList(registros, errorMessage);
         });
     }
 
-    private void atualizarListaComDados(List<RegistroHistorico> registros, String errorMessage) {
+    private void updateDataList(List<RegistroHistorico> registros, String errorMessage) {
         // Se houver erro e não houver dados, mostrar mensagem de erro
         if (errorMessage != null && !errorMessage.isEmpty() && (registros == null || registros.isEmpty())) {
             emptyStateAdapter.setEmptyState(true, "Erro ao carregar dados", errorMessage);
@@ -179,24 +179,24 @@ public class HistoricoFragment extends Fragment {
                 binding.progressBarHistorico.setVisibility(View.GONE);
             }
             binding.recyclerViewHistorico.setVisibility(View.VISIBLE);
-        } 
+        }
         // Se houver dados (mesmo com erro), mostrar os dados
         else if (registros != null && !registros.isEmpty()) {
             adapter.submit(registros);
             emptyStateAdapter.setEmptyState(false);
-        } 
+        }
         // Se não houver dados e não houver erro, mostrar empty state
         else {
             emptyStateAdapter.setEmptyState(true, "Nenhum histórico encontrado", "Não há registros de histórico disponíveis.");
         }
     }
 
-    private void carregarDados() {
+    private void loadData() {
         // Carregar dados reais da API
-        historicoEstoquistaViewModel.carregarDadosReais();
+        historicoEstoquistaViewModel.loadRealData();
     }
 
-    private void setupBusca() {
+    private void searchSetup() {
         binding.editTextBusca.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -208,20 +208,20 @@ public class HistoricoFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable s) {
-                aplicarFiltrosEBusca();
+                applyFilterSearch();
             }
         });
     }
 
-    private void aplicarFiltrosEBusca() {
+    private void applyFilterSearch() {
         String termo = binding.editTextBusca.getText() == null ? "" : binding.editTextBusca.getText().toString().trim();
         String tipoFiltroStr = tipoFiltro == TipoFiltro.TODOS ? "TODOS" : tipoFiltro.toString();
         String periodoFiltroStr = periodoFiltro == PeriodoFiltro.TODOS ? "TODOS" : periodoFiltro.toString();
         String sortOrderStr = sortOrder == SortOrder.MAIS_RECENTES ? "MAIS_RECENTES" : "MAIS_ANTIGOS";
 
-        historicoEstoquistaViewModel.filtrarDados(termo, tipoFiltroStr, periodoFiltroStr);
+        historicoEstoquistaViewModel.filterData(termo, tipoFiltroStr, periodoFiltroStr);
         // Aplicar ordenação
-        historicoEstoquistaViewModel.aplicarOrdenacao(sortOrderStr);
+        historicoEstoquistaViewModel.applyOrder(sortOrderStr);
     }
 
 

@@ -2,7 +2,6 @@ package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -32,10 +31,7 @@ public class BaixaManualActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
         EdgeToEdge.enable(this);
 
-        // Inicializar serviço
         produtoService = new ProdutoService();
-        
-        // Verificar se é entrada ou baixa
         isEntrada = getIntent().getBooleanExtra("is_entrada", false);
 
         // da a cor para a parte que fica de status(onde fica a bateria, rede, etc...)
@@ -54,7 +50,7 @@ public class BaixaManualActivity extends AppCompatActivity {
         binding.headerBaixaManual.headerActivityBackTitle.setText(titulo);
         binding.headerBaixaManual.headerActivityBackArrow.setOnClickListener(v -> finish());
     }
-    
+
     private void setupClickListeners() {
         binding.btnAvancar.setOnClickListener(v -> {
             String codigo = binding.etCodigoProduto.getText() != null ? binding.etCodigoProduto.getText().toString().trim() : "";
@@ -62,15 +58,15 @@ public class BaixaManualActivity extends AppCompatActivity {
                 binding.etCodigoProduto.setError("Informe o código do produto");
                 return;
             }
-            
+
             buscarProduto(codigo);
         });
     }
-    
+
     private void buscarProduto(String codigo) {
         setLoadingState(true);
-        
-        produtoService.buscarProdutoPorEan(codigo, new ProdutoService.ProdutoCallback<ProdutoResponse>() {
+
+        produtoService.buscarProdutoPorEan(codigo, new ProdutoService.ProdutoCallback<>() {
             @Override
             public void onSuccess(ProdutoResponse produto) {
                 runOnUiThread(() -> {
@@ -90,17 +86,15 @@ public class BaixaManualActivity extends AppCompatActivity {
             }
         });
     }
-    
+
     private void mostrarDetalhesProduto(ProdutoResponse produto) {
-        // Aqui você pode mostrar um dialog ou bottom sheet com os detalhes do produto
-        // e um campo para inserir a quantidade
         ProdutoBottomSheetDialogFragment.show(
-            getSupportFragmentManager(), 
-            produto.getCodigoEan(), 
-            isEntrada ? ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA : ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA
+                getSupportFragmentManager(),
+                produto.getCodigoEan(),
+                isEntrada ? ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA : ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA
         );
     }
-    
+
     private void setLoadingState(boolean loading) {
         binding.btnAvancar.setEnabled(!loading);
         binding.btnAvancar.setText(loading ? "Buscando..." : "Avançar");
