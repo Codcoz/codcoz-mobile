@@ -32,6 +32,7 @@ public class RetrofitClientRedis {
             Gson gson = new GsonBuilder()
                     .setDateFormat("yyyy-MM-dd HH:mm")
                     .serializeNulls()
+                    .disableHtmlEscaping()
                     .create();
 
             retrofit = new Retrofit.Builder()
