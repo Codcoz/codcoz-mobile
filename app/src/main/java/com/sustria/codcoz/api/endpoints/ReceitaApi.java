@@ -10,6 +10,6 @@ import retrofit2.http.Path;
 
 public interface ReceitaApi {
 
-    @GET("api/v1/{empresaId}/receita")
+    @GET("api/v1/empresa/{empresaId}/receita")
     Call<List<ReceitaResponse>> getReceitas(@Path("empresaId") String empresaId);
 }

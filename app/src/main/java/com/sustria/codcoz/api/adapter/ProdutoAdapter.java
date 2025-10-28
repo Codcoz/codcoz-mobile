@@ -76,8 +76,8 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ProdutoV
 
         public ProdutoViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNome = itemView.findViewById(R.id.tv_nome);
-            tvUnidades = itemView.findViewById(R.id.tv_unidades);
+            tvNome = itemView.findViewById(R.id.tvNome);
+            tvUnidades = itemView.findViewById(R.id.tvQuantidades);
 
             itemView.setOnClickListener(v -> {
                 if (onProdutoClickListener != null) {

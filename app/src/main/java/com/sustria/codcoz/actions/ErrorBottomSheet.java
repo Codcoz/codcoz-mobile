@@ -15,7 +15,7 @@ public class ErrorBottomSheet {
         binding.tvErrorTitle.setText(title);
         binding.tvErrorMessage.setText(message);
 
-        binding.btnErrorOk.setOnClickListener(v -> bottomSheetDialog.dismiss());
+        binding.btnFechar.setOnClickListener(v -> bottomSheetDialog.dismiss());
         bottomSheetDialog.setContentView(binding.getRoot());
         bottomSheetDialog.show();
     }

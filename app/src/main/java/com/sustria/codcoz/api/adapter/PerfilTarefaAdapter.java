@@ -68,8 +68,8 @@ public class PerfilTarefaAdapter extends RecyclerView.Adapter<PerfilTarefaAdapte
 
         TarefaViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvNome = itemView.findViewById(R.id.tv_nome);
-            tvCodigo = itemView.findViewById(R.id.tv_cod_produto);
+            tvNome = itemView.findViewById(R.id.tvNome);
+            tvCodigo = itemView.findViewById(R.id.tvCodProduto);
             tvData = itemView.findViewById(R.id.dataMovimentacao);
         }
     }

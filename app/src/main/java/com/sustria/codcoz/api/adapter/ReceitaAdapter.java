@@ -57,8 +57,8 @@ public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaV
 
         ReceitaViewHolder(View itemView) {
             super(itemView);
-            tvNomeReceita = itemView.findViewById(R.id.tv_nome);
-            tvPorcoes = itemView.findViewById(R.id.tv_unidades);
+            tvNomeReceita = itemView.findViewById(R.id.tvNome);
+            tvPorcoes = itemView.findViewById(R.id.tvQuantidades);
         }
     }
 }

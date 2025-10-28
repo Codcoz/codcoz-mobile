@@ -158,7 +158,9 @@ public class HistoricoFragment extends Fragment {
         // Observar estado de carregamento
         historicoEstoquistaViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
             if (isLoading != null) {
-                binding.progressBarHistorico.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                if (binding.progressBarHistorico != null) {
+                    binding.progressBarHistorico.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+                }
                 binding.recyclerViewHistorico.setVisibility(isLoading ? View.GONE : View.VISIBLE);
             }
         });
@@ -167,7 +169,9 @@ public class HistoricoFragment extends Fragment {
         historicoEstoquistaViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             if (errorMessage != null) {
                 emptyStateAdapter.setEmptyState(true, "Erro ao carregar dados", errorMessage);
-                binding.progressBarHistorico.setVisibility(View.GONE);
+                if (binding.progressBarHistorico != null) {
+                    binding.progressBarHistorico.setVisibility(View.GONE);
+                }
                 binding.recyclerViewHistorico.setVisibility(View.VISIBLE);
             }
         });
@@ -273,9 +277,9 @@ public class HistoricoFragment extends Fragment {
 
             VH(View itemView) {
                 super(itemView);
-                nome = itemView.findViewById(R.id.tv_nome);
-                unidades = itemView.findViewById(R.id.tv_unidades);
-                codigo = itemView.findViewById(R.id.tv_cod_produto);
+                nome = itemView.findViewById(R.id.tvNome);
+                unidades = itemView.findViewById(R.id.tvQuantidades);
+                codigo = itemView.findViewById(R.id.tvCodProduto);
                 data = itemView.findViewById(R.id.dataMovimentacao);
             }
         }

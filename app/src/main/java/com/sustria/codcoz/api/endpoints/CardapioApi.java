@@ -10,6 +10,6 @@ import retrofit2.http.Path;
 
 public interface CardapioApi {
 
-    @GET("api/v1/{empresaId}/cardapio")
+    @GET("api/v1/empresa/{empresaId}/cardapio")
     Call<List<CardapioResponse>> getCardapios(@Path("empresaId") String empresaId);
 }

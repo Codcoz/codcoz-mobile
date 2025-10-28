@@ -19,7 +19,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_nome"
+                android:id="@+id/tvNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/nunito_bold"
@@ -39,7 +39,7 @@
                     android:textSize="12sp" />
 
                 <TextView
-                    android:id="@+id/tv_unidades"
+                    android:id="@+id/tvQuantidades"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/nunito_semibold"
@@ -57,7 +57,7 @@
                 android:textSize="12sp" />
 
             <TextView
-                android:id="@+id/tv_cod_produto"
+                android:id="@+id/tvCodProduto"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="012345678910"
