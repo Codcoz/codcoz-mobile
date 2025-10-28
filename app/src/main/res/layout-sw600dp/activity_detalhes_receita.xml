@@ -23,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="32dp">
 
             <!-- Título da Receita -->
             <TextView
@@ -34,7 +34,7 @@
                 android:fontFamily="@font/nunito_bold"
                 android:text="Macarrão à Bolonhesa"
                 android:textColor="@color/colorPrimary"
-                android:textSize="34sp" />
+                android:textSize="28sp" />
 
             <!-- Seção de Ingredientes -->
             <androidx.cardview.widget.CardView
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="32dp"
                 app:cardCornerRadius="15dp">
 
                 <LinearLayout
@@ -66,7 +66,7 @@
                             android:fontFamily="@font/nunito_bold"
                             android:text="Ingrediente"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="26sp" />
+                            android:textSize="22sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -74,7 +74,7 @@
                             android:fontFamily="@font/nunito_bold"
                             android:text="Quantidade"
                             android:textColor="@color/colorPrimary"
-                            android:textSize="26sp" />
+                            android:textSize="22sp" />
 
                     </LinearLayout>
 
@@ -94,18 +94,18 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginBottom="24dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Modo de preparo"
                 android:textColor="@color/colorPrimary"
-                android:textSize="28sp" />
+                android:textSize="24sp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewInstrucoes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="16dp"
                 android:layout_marginBottom="24dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_instrucao" />
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="1dp"
                 android:layout_marginRight="1dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginBottom="24dp"
                 app:cardCornerRadius="15dp">
 
                 <LinearLayout
@@ -124,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_stroke"
                     android:orientation="vertical"
-                    android:padding="16dp">
+                    android:padding="24dp">
 
                     <TextView
                         android:layout_width="match_parent"
@@ -133,7 +133,17 @@
                         android:fontFamily="@font/nunito_bold"
                         android:text="Descrição"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="28sp" />
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/tvDescricaoReceita"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="8dp"
+                        android:fontFamily="@font/nunito_semibold"
+                        android:text="Descrição"
+                        android:textColor="@color/colorOnSurfaceVariant"
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvTempoPreparo"
@@ -143,7 +153,7 @@
                         android:fontFamily="@font/nunito_semibold"
                         android:text="Tempo de preparo: 15 minutos"
                         android:textColor="@color/colorOnSurfaceVariant"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvTempoCozimento"
@@ -153,7 +163,7 @@
                         android:fontFamily="@font/nunito_semibold"
                         android:text="Tempo de cozimento: 30 minutos"
                         android:textColor="@color/colorOnSurfaceVariant"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/tvPorcoes"
@@ -162,7 +172,7 @@
                         android:fontFamily="@font/nunito_semibold"
                         android:text="Rende 6 porções"
                         android:textColor="@color/colorOnSurfaceVariant"
-                        android:textSize="22sp" />
+                        android:textSize="20sp" />
 
                 </LinearLayout>
 

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="330dp"
+    android:layout_height="wrap_content"
     android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
-    android:padding="24dp">
+    android:padding="48dp">
 
     <ImageView
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="32dp"
         android:src="@drawable/ic_erro_popup" />
@@ -18,34 +18,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="16dp"
         android:fontFamily="@font/nunito_bold"
         android:text="Ops! Algo deu errado"
         android:textColor="@color/colorPrimary"
-        android:textSize="20sp" />
+        android:textSize="28sp" />
 
     <TextView
         android:id="@+id/tvErrorMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="64dp"
+        android:layout_marginBottom="96dp"
         android:fontFamily="@font/nunito_regular"
         android:text="Tente novamente em alguns instantes"
         android:textAlignment="center"
         android:textColor="@color/colorOnSurfaceVariant"
-        android:textSize="16sp" />
+        android:textSize="24sp" />
 
     <TextView
         android:id="@+id/btnFechar"
-        android:layout_width="245dp"
-        android:layout_height="60dp"
+        android:layout_width="345dp"
+        android:layout_height="70dp"
         android:layout_gravity="center"
         android:background="@drawable/bg_tab_selected_big"
         android:fontFamily="@font/nunito_bold"
         android:gravity="center"
         android:text="Fechar"
         android:textColor="@color/colorPrimary"
-        android:textSize="22sp" />
+        android:textSize="26sp" />
 
 </LinearLayout>

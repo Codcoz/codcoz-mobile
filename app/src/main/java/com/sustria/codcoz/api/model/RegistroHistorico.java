@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Model para representar um registro de histórico de baixas/entradas
- */
 public class RegistroHistorico {
     
     @SerializedName("id")

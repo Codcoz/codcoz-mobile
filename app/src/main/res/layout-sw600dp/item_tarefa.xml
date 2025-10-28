@@ -14,16 +14,16 @@
         android:padding="16dp">
 
         <LinearLayout
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
             android:layout_gravity="center"
             android:background="@drawable/bg_tag_status"
             android:backgroundTint="@color/custom_orange_opacity_44"
             android:gravity="center">
 
             <ImageView
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
                 android:scaleType="centerCrop"
                 app:srcCompat="@drawable/ic_check" />
@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:text="Auditoria"
                 android:textColor="#0B2239"
-                android:textSize="22sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:text="Arroz camil"
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tv_id_card"
@@ -60,7 +60,7 @@
                 android:layout_marginTop="2dp"
                 android:text="cod. 123456"
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="20sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <Button
@@ -73,7 +73,7 @@
             android:text="Registrar"
             android:textAllCaps="false"
             android:textColor="@color/colorPrimary"
-            android:textSize="22sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>

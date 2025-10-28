@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="24dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -33,12 +33,12 @@
                 <RelativeLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="20dp">
+                    android:layout_margin="24dp">
 
                     <LinearLayout
                         android:id="@+id/iv_avatar"
-                        android:layout_width="100dp"
-                        android:layout_height="100dp"
+                        android:layout_width="90dp"
+                        android:layout_height="90dp"
                         android:background="@drawable/bg_avatar_circle_full"
                         android:gravity="center"
                         android:padding="0dp">
@@ -60,12 +60,12 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/tv_nome"
+                        android:id="@+id/tvNome"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text=""
                         android:textColor="@color/colorPrimary"
-                        android:textSize="28sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -82,27 +82,27 @@
                         android:layout_height="wrap_content"
                         android:text="Estoquista desde 00/00/0000"
                         android:textColor="@color/colorOnSurfaceVariant"
-                        android:textSize="20sp" />
+                        android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
 
             <TextView
                 android:id="@+id/btn_edit_profile"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:layout_marginEnd="24dp"
-                android:background="@drawable/bg_tab_unselected"
+                android:layout_width="120dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_tab_unselected_big"
                 android:gravity="center"
                 android:text="Editar"
                 android:textColor="@color/colorPrimary"
-                android:textSize="18sp"
+                android:textSize="22sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:id="@+id/group_periodo_row1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginTop="24dp"
                 android:orientation="horizontal">
 
                 <LinearLayout
@@ -111,30 +111,31 @@
                     android:orientation="horizontal">
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:padding="6dp"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_gravity="center"
+                        android:padding="8dp"
                         android:src="@drawable/ic_calendario_periodo" />
 
                     <TextView
                         android:id="@+id/lbl_periodo"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="5dp"
+                        android:layout_marginEnd="8dp"
                         android:fontFamily="@font/nunito_semibold"
-                        android:padding="6dp"
+                        android:padding="8dp"
                         android:text="Período:"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="26sp" />
+                        android:textSize="22sp" />
                 </LinearLayout>
 
                 <TextView
                     android:id="@+id/op7dias"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="24dp"
-                    android:background="@drawable/bg_tab_selected"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_tab_selected_big"
                     android:gravity="center"
                     android:text="7 dias"
                     android:textColor="@color/colorPrimary"
@@ -143,11 +144,11 @@
 
                 <TextView
                     android:id="@+id/op90dias"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:layout_marginEnd="24dp"
-                    android:background="@drawable/bg_tab_unselected"
+                    android:layout_marginEnd="16dp"
+                    android:background="@drawable/bg_tab_unselected_big"
                     android:gravity="center"
                     android:text="90 dias"
                     android:textColor="@color/colorPrimary"
@@ -156,10 +157,10 @@
 
                 <TextView
                     android:id="@+id/op30dias"
-                    android:layout_width="150dp"
-                    android:layout_height="40dp"
+                    android:layout_width="120dp"
+                    android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:background="@drawable/bg_tab_unselected"
+                    android:background="@drawable/bg_tab_unselected_big"
                     android:gravity="center"
                     android:text="30 dias"
                     android:textColor="@color/colorPrimary"
@@ -177,10 +178,10 @@
 
                 <TextView
                     android:id="@+id/tabAtividades"
-                    android:layout_width="175dp"
-                    android:layout_height="40dp"
+                    android:layout_width="180dp"
+                    android:layout_height="50dp"
                     android:layout_marginEnd="24dp"
-                    android:background="@drawable/bg_tab_selected"
+                    android:background="@drawable/bg_tab_selected_big"
                     android:gravity="center"
                     android:text="Atividades"
                     android:textColor="@color/colorPrimary"
@@ -189,9 +190,9 @@
 
                 <TextView
                     android:id="@+id/tabAuditorias"
-                    android:layout_width="175dp"
-                    android:layout_height="40dp"
-                    android:background="@drawable/bg_tab_unselected"
+                    android:layout_width="180dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/bg_tab_unselected_big"
                     android:gravity="center"
                     android:text="Auditorias"
                     android:textColor="@color/colorPrimary"
@@ -203,7 +204,7 @@
                 android:id="@+id/recyclerViewHistoricoPerfil"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="24dp"
                 android:nestedScrollingEnabled="false"
                 tools:listitem="@layout/item_historicos_perfil" />
 

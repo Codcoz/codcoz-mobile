@@ -58,7 +58,6 @@
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
                         android:gravity="center_vertical"
                         android:orientation="horizontal">
 
@@ -135,14 +134,16 @@
 
             </LinearLayout>
 
+            <!--Calendário-->
             <LinearLayout
                 android:id="@+id/cards_resumo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="24dp"
                 android:orientation="horizontal"
                 android:weightSum="3"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/card_estoque_geral">
 
@@ -150,7 +151,7 @@
                     android:id="@+id/produtos"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_summary_card"
                     android:gravity="center"
@@ -161,7 +162,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
-                        android:text="247"
+                        android:text="0"
                         android:textColor="@color/colorOnPrimaryContainer"
                         android:textSize="20sp" />
 
@@ -180,7 +181,7 @@
                     android:id="@+id/produtosBaixoEstoque"
                     android:layout_width="0dp"
                     android:layout_height="100dp"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="16dp"
                     android:layout_weight="1"
                     android:background="@drawable/bg_summary_card"
                     android:gravity="center"
@@ -191,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
-                        android:text="12"
+                        android:text="0"
                         android:textColor="@color/colorOnPrimaryContainer"
                         android:textSize="20sp" />
 
@@ -220,7 +221,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/nunito_bold"
-                        android:text="10"
+                        android:text="0"
                         android:textColor="@color/colorOnPrimaryContainer"
                         android:textSize="20sp" />
 
@@ -236,14 +237,13 @@
 
             </LinearLayout>
 
-            <!--Calendário-->
             <TextView
                 android:id="@+id/txtPlanejamento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="16dp"
                 android:text="Planejamento Mensal"
-                android:textSize="21sp"
+                android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -253,13 +253,13 @@
                 android:id="@+id/linearLayout"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="372dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/bg_summary_card"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/txtPlanejamento">
 
                 <LinearLayout
                     android:id="@+id/calendarHeader"
@@ -319,7 +319,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="25dp"
                 android:text="Tarefas a serem realizadas"
-                android:textSize="21sp"
+                android:textSize="22sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"

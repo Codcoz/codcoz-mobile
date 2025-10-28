@@ -10,12 +10,9 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public final class RetrofitClientNoSql {
-    private static final String BASE_URL = "https://codcoz-api-mongo.koyeb.app/";
+public class RetrofitClientRedis {
+    private static final String BASE_URL = "https://codcoz-api-redis.onrender.com/";
     private static Retrofit retrofit;
-
-    private RetrofitClientNoSql() {
-    }
 
     public static Retrofit getInstance() {
         if (retrofit == null) {
@@ -33,7 +30,7 @@ public final class RetrofitClientNoSql {
                     .build();
 
             Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd")
+                    .setDateFormat("yyyy-MM-dd HH:mm")
                     .serializeNulls()
                     .create();
 

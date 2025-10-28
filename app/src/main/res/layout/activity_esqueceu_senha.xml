@@ -79,7 +79,7 @@
             android:layout_marginTop="64dp"
             android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_semibold"
-            android:text="Enviar E-mail"
+            android:text="Enviar e-mail"
             android:textColor="@color/colorPrimary"
             android:textSize="20sp"
             app:cornerRadius="30dp" />

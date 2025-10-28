@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="10dp"
-    app:cardCornerRadius="1dp">
+    app:cardCornerRadius="16dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,7 @@
         android:background="@drawable/bg_card_border"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="28dp">
+        android:padding="16dp">
 
         <LinearLayout
             android:layout_width="0dp"
@@ -22,7 +22,7 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_nome"
+                android:id="@+id/tvNome"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
@@ -32,7 +32,7 @@
                 android:textSize="24sp" />
 
             <TextView
-                android:id="@+id/tv_unidades"
+                android:id="@+id/tvQuantidades"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -43,6 +43,7 @@
                 android:paddingTop="4dp"
                 android:paddingEnd="8dp"
                 android:paddingBottom="4dp"
+                android:layout_marginBottom="8dp"
                 android:text="122 porções possíveis"
                 android:textColor="@color/custom_blue_link"
                 android:textSize="20sp" />

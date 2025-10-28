@@ -23,22 +23,19 @@
             android:layout_width="200dp"
             android:layout_height="200dp"
             android:layout_marginStart="139dp"
-            android:layout_marginTop="168dp"
+            android:layout_marginTop="200dp"
             android:layout_marginEnd="139dp"
             android:src="@drawable/logo_vazada_azul"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/textInputLayout"
-            android:layout_width="750dp"
+            android:layout_width="match_parent"
             android:layout_height="80dp"
             android:layout_marginTop="150dp"
-            app:boxCornerRadiusBottomEnd="15dp"
-            app:boxCornerRadiusBottomStart="15dp"
-            app:boxCornerRadiusTopEnd="15dp"
-            app:boxCornerRadiusTopStart="15dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.405"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,13 +45,13 @@
                 android:id="@+id/etCodigoProduto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textSize="24sp"
-                android:hint="Insira o código do produto" />
+                android:hint="Insira o código do produto"
+                android:textSize="22sp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnAvancar"
-            android:layout_width="500dp"
+            android:layout_width="345dp"
             android:layout_height="70dp"
             android:layout_marginStart="123dp"
             android:layout_marginTop="50dp"
@@ -63,7 +60,7 @@
             android:fontFamily="@font/nunito_semibold"
             android:text="Avançar"
             android:textColor="@color/colorPrimary"
-            android:textSize="28sp"
+            android:textSize="26sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />

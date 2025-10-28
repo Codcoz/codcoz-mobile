@@ -9,13 +9,13 @@ android:gravity="center">
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:gravity="center"
-        android:textSize="20sp"
+        android:textSize="18sp"
         />
 
     <View
         android:id="@+id/calendarDayTask"
-        android:layout_width="10dp"
-        android:layout_height="10dp"
+        android:layout_width="9dp"
+        android:layout_height="9dp"
         android:layout_marginTop="2dp"
         android:background="@drawable/bolinha_tarefa"
         android:visibility="gone"/>

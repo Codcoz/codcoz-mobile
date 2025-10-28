@@ -17,11 +17,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="24dp">
 
+        <!-- Header com seta e título -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -37,7 +39,7 @@
                 android:id="@+id/tvNomeProduto"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Carregando..."
@@ -45,116 +47,118 @@
                 android:textSize="20sp" />
         </LinearLayout>
 
+        <!-- Informações do produto -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="24dp"
+            android:layout_marginBottom="6dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="Código:"
+                android:fontFamily="@font/nunito_regular"
+                android:text="Código: "
                 android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/tvCodigoProduto"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_regular"
                 android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="Fornecedor:"
-                android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvFornecedorProduto"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="36dp"
-            android:layout_marginTop="12dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/nunito_bold"
-                android:text="Estoque atual:"
-                android:textColor="@color/colorOnSurfaceVariant"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tvEstoqueAtual"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorPrimary"
-                android:textSize="14sp" />
+                android:textSize="16sp" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginBottom="6dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:text="Fornecedor: "
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvFornecedorProduto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:text="Estoque atual: "
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvEstoqueAtual"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Seletor de quantidade -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
             android:gravity="center"
             android:orientation="horizontal">
 
             <ImageButton
                 android:id="@+id/btnMenos"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Diminuir quantidade"
                 android:src="@drawable/ic_barra"
                 app:tint="@color/colorPrimary" />
 
-
             <EditText
                 android:id="@+id/etQuantidade"
-                android:layout_width="80dp"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:layout_marginEnd="24dp"
-                android:backgroundTint="@android:color/transparent"
+                android:background="@drawable/bg_stroke"
+                android:fontFamily="@font/nunito_bold"
                 android:gravity="center"
                 android:imeOptions="actionDone"
                 android:importantForAutofill="no"
                 android:inputType="number"
                 android:maxLength="5"
-                android:text="1"
+                android:padding="12dp"
+                android:text="0"
                 android:textColor="@color/colorPrimary"
-                android:textSize="24sp"
-                android:textStyle="bold" />
+                android:textSize="20sp" />
 
             <ImageButton
                 android:id="@+id/btnMais"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Aumentar quantidade"
                 android:src="@drawable/ic_add"
@@ -162,19 +166,18 @@
 
         </LinearLayout>
 
-
-        <Button
+        <!-- Botão Confirmar -->
+        <TextView
             android:id="@+id/btnConfirmar"
-            android:layout_width="275dp"
+            android:layout_width="245dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/custom_green_success"
+            android:background="@drawable/bg_tab_selected_big"
+            android:fontFamily="@font/nunito_bold"
+            android:gravity="center"
             android:text="Confirmar"
-            android:textAllCaps="false"
-            android:textColor="@color/colorOnPrimary"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textColor="@color/colorPrimary"
+            android:textSize="22sp" />
 
     </LinearLayout>
 

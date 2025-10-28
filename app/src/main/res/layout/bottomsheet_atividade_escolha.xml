@@ -1,63 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="330dp"
     android:background="@drawable/bg_bottomsheet"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp">
 
+    <!-- Título centralizado -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:fontFamily="@font/nunito_bold"
         android:text="Como deseja registrar?"
         android:textColor="@color/colorPrimary"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/btnScanner"
+    <!-- Opções de entrada -->
+    <LinearLayout
+        android:id="@+id/content_entrada"
         android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_tab_selected"
-        android:fontFamily="@font/nunito_bold"
-        android:gravity="center"
-        android:text="Entrada por Scanner"
-        android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp" />
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/btnManual"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_tab_unselected"
-        android:fontFamily="@font/nunito_bold"
-        android:gravity="center"
-        android:text="Entrada Manual"
-        android:textAllCaps="false"
-        android:textColor="@color/colorPrimary"
-        android:textSize="14sp" />
+        <!-- Botão Escanear -->
+        <LinearLayout
+            android:id="@+id/btnScanner"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_summary_card"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
 
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_barcode_scan" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Escanear produto"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:gravity="center"
+                android:text="Escanear código de barras"
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+        <!-- Botão Manual -->
+        <LinearLayout
+            android:id="@+id/btnManual"
+            android:layout_width="0dp"
+            android:layout_height="125dp"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_summary_card"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:src="@drawable/ic_entrada_manual" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:fontFamily="@font/nunito_bold"
+                android:text="Entrada manual"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:gravity="center"
+                android:text="Cadastrar produtos manualmente"
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="12sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Botão Fechar -->
     <TextView
         android:id="@+id/btnCancelar"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/bg_tab_unselected"
+        android:layout_width="245dp"
+        android:layout_height="60dp"
+        android:layout_gravity="center"
+        android:background="@drawable/bg_tab_selected_big"
         android:fontFamily="@font/nunito_bold"
         android:gravity="center"
-        android:text="Cancelar"
-        android:textAllCaps="false"
+        android:text="Fechar"
         android:textColor="@color/colorPrimary"
-        android:textSize="14sp" />
+        android:textSize="22sp" />
 
 </LinearLayout>
 

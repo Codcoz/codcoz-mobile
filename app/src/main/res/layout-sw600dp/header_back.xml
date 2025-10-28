@@ -2,25 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header_activity_back_container"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="100dp"
     android:background="@color/colorPrimary"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="30dp"
-    android:paddingTop="32dp"
-    android:paddingEnd="30dp"
-    android:paddingBottom="32dp">
+    android:padding="24dp">
 
     <ImageView
         android:id="@+id/header_activity_back_arrow"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_marginEnd="16dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:clickable="true"
         android:contentDescription="Voltar"
         android:focusable="true"
-        android:padding="8dp"
+        android:padding="4dp"
         android:src="@drawable/ic_voltar" />
 
     <TextView
@@ -31,6 +28,6 @@
         android:fontFamily="@font/nunito_bold"
         android:text="Título da Activity"
         android:textColor="@color/colorOnPrimary"
-        android:textSize="30sp" />
+        android:textSize="24sp" />
 
 </LinearLayout>

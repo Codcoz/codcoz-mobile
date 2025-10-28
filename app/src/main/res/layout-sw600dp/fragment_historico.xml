@@ -21,7 +21,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="32dp">
+            android:padding="16dp">
 
             <LinearLayout
                 android:id="@+id/barra_busca"
@@ -47,9 +47,9 @@
                     android:paddingEnd="16dp">
 
                     <ImageView
-                        android:layout_width="30dp"
-                        android:layout_height="30dp"
-                        android:layout_marginEnd="10dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_marginEnd="12dp"
                         android:src="@drawable/ic_search" />
 
                     <EditText
@@ -64,7 +64,7 @@
                         android:inputType="text"
                         android:textColor="@color/colorPrimary"
                         android:textColorHint="@color/colorOnSurfaceVariant"
-                        android:textSize="24sp" />
+                        android:textSize="18sp" />
 
                 </LinearLayout>
 
@@ -83,12 +83,22 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewHistorico"
                 android:layout_width="0dp"
-                android:layout_height="900dp"
+                android:layout_height="600dp"
                 android:layout_marginTop="25dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/barra_busca"
                 tools:listitem="@layout/item_historico_de_baixas" />
+
+            <ProgressBar
+                android:id="@+id/progressBarHistorico"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="50dp"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/barra_busca" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,6 +1,8 @@
 package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.ProdutoResponse;
+import com.sustria.codcoz.api.service.HistoricoService;
 import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.BottomsheetProdutoEscaneadoBinding;
 
@@ -28,8 +31,10 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
     private static final String ARG_TIPO_MOV = "arg_tipo_mov";
 
     private ProdutoService produtoService;
+    private HistoricoService historicoService;
     private ProdutoResponse produto;
     private Integer quantidade = 1;
+    private boolean isUpdatingQuantidade = false;
 
     public static void show(@NonNull FragmentManager fm, @NonNull String codigo, @NonNull TipoMovimento tipoMov) {
         dismissExistingBottomSheets(fm);
@@ -89,6 +94,7 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         super.onViewCreated(view, savedInstanceState);
 
         produtoService = new ProdutoService();
+        historicoService = new HistoricoService();
         Bundle args = getArguments();
         if (args == null) {
             showErrorAndDismiss("Argumentos inválidos.");
@@ -96,7 +102,6 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         }
 
         String codigoEan = args.getString(ARG_CODIGO);
-        fetchProductData(codigoEan);
         TipoMovimento tipoMov = (TipoMovimento) args.getSerializable(ARG_TIPO_MOV);
 
         if (tipoMov == null) {
@@ -105,10 +110,9 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         }
 
         setupClickListeners(tipoMov);
-        fetchProductData(codigoEan);
-        setupFragmentResultListener(tipoMov);
+        fetchProductData(codigoEan, tipoMov);
 
-        binding.etQuantidade.addTextChangedListener(new android.text.TextWatcher() {
+        binding.etQuantidade.addTextChangedListener(new TextWatcher() {
             private boolean isUpdating = false;
 
             @Override
@@ -120,13 +124,12 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
             }
 
             @Override
-            public void afterTextChanged(android.text.Editable s) {
-                if (isUpdating) return;
+            public void afterTextChanged(Editable s) {
+                if (isUpdating || isUpdatingQuantidade) return;
 
                 String texto = s.toString().trim();
 
                 if (texto.isEmpty()) {
-                    // não altera a variável quantidade ainda, permite que o usuário digite
                     return;
                 }
 
@@ -141,7 +144,6 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
                     quantidade = 1;
                 }
 
-                // atualiza os botões sem recursão
                 isUpdating = true;
                 binding.btnMenos.setEnabled(quantidade > 1);
                 binding.btnMais.setEnabled(true);
@@ -149,9 +151,10 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
             }
         });
 
+
     }
 
-    private void fetchProductData(String codigoEan) {
+    private void fetchProductData(String codigoEan, TipoMovimento tipoMov) {
         setLoadingState(true);
         produtoService.buscarProdutoPorEan(codigoEan, new ProdutoService.ProdutoCallback<>() {
             @Override
@@ -196,7 +199,6 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
 
         binding.btnConfirmar.setOnClickListener(v -> {
             if (produto == null || produto.getQuantidade() == null) {
-
                 ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Dados do produto indisponíveis.");
                 return;
             }
@@ -210,54 +212,19 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
                 estoqueAtualizado = estoqueAntigo + quantidade;
             }
 
+            // Mostrar confirmação com todos os dados necessários
             ConfirmarRegistroBottomSheetDialogFragment.show(
                     getParentFragmentManager(),
                     produto.getNome(),
                     estoqueAntigo,
-                    estoqueAtualizado
+                    estoqueAtualizado,
+                    produto.getCodigoEan(),
+                    quantidade,
+                    tipoMov,
+                    produto.getId() != null ? produto.getId().toString() : null
             );
         });
     }
-
-    private void setupFragmentResultListener(TipoMovimento tipoMov) {
-        getParentFragmentManager().setFragmentResultListener(
-                ConfirmarRegistroBottomSheetDialogFragment.REQUEST_KEY,
-                this,
-                (requestKey, result) -> {
-                    try {
-                        boolean confirmed = result.getBoolean(ConfirmarRegistroBottomSheetDialogFragment.RESULT_CONFIRMED, false);
-                        if (!confirmed || produto == null) {
-                            return;
-                        }
-
-                        ProdutoService.ProdutoCallback<Void> callback = new ProdutoService.ProdutoCallback<>() {
-                            @Override
-                            public void onSuccess(Void res) {
-                                dismiss();
-                                ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
-                            }
-
-                            @Override
-                            public void onError(String error) {
-                                dismiss();
-                                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), error);
-                            }
-                        };
-
-                        if (tipoMov == TipoMovimento.BAIXA) {
-                            produtoService.baixaEstoque(produto.getCodigoEan(), quantidade, callback);
-                        } else { // ENTRADA
-                            produtoService.entradaEstoque(produto.getCodigoEan(), quantidade, callback);
-                        }
-                    } catch (Exception e) {
-                        String message = e.getMessage() != null ? e.getMessage() : "Falha ao processar a operação.";
-                        dismiss();
-                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), message);
-                    }
-                }
-        );
-    }
-
 
     private void setLoadingState(boolean isLoading) {
         if (isLoading) {
@@ -288,13 +255,16 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         atualizarQuantidade();
     }
 
+
     private void atualizarQuantidade() {
         binding.btnMenos.setEnabled(quantidade > 1);
         binding.btnMais.setEnabled(true);
         String atual = binding.etQuantidade.getText().toString();
         String nova = String.valueOf(quantidade);
         if (!atual.equals(nova)) {
+            isUpdatingQuantidade = true;
             binding.etQuantidade.setText(nova);
+            isUpdatingQuantidade = false;
         }
     }
 }

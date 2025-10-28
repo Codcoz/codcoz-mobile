@@ -18,7 +18,7 @@
         android:minHeight="44dp"
         android:text="1"
         android:textColor="@color/colorOnPrimary"
-        android:textSize="22sp" />
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tvTextoInstrucao"
@@ -28,6 +28,6 @@
         android:fontFamily="@font/nunito_semibold"
         android:text="Pique a cebola, refogue por alguns minutos em uma panela com óleo quente até dourar a cebola, mexendo para não queimar."
         android:textColor="@color/colorOnSurfaceVariant"
-        android:textSize="20sp" />
+        android:textSize="18sp" />
 
 </LinearLayout>

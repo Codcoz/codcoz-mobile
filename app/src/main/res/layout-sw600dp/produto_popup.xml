@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="2dp"
     android:layout_marginRight="2dp"
-    android:layout_marginBottom="24dp"
     app:cardCornerRadius="16dp">
 
     <LinearLayout
@@ -13,7 +12,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/bg_stroke"
         android:orientation="vertical"
-        android:padding="32dp">
+        android:padding="24dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -24,24 +23,24 @@
 
             <ImageButton
                 android:id="@+id/btnSair"
-                android:layout_width="60dp"
-                android:layout_height="60dp"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_gravity="center"
-                android:scaleType="centerCrop"
                 android:backgroundTint="@color/colorBackground"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_voltar" />
 
             <TextView
                 android:id="@+id/nome_produto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginEnd="100dp"
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="24dp"
                 android:text="Arroz Branco - 1 kg"
                 android:textColor="@color/colorPrimary"
-                android:textSize="38sp" />
+                android:textSize="26sp" />
 
         </LinearLayout>
 
@@ -64,7 +63,7 @@
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Código EAN"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_codigoEan"
@@ -73,14 +72,14 @@
                     android:layout_weight="1"
                     android:text="3216549874561"
                     android:textAlignment="viewEnd"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#DDDDDD" />
+                android:background="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -95,7 +94,7 @@
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Quantidade"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_quantidade"
@@ -104,14 +103,14 @@
                     android:layout_weight="1"
                     android:text="100 kg"
                     android:textAlignment="viewEnd"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#DDDDDD" />
+                android:background="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -126,7 +125,7 @@
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Marca"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_marca"
@@ -135,14 +134,14 @@
                     android:layout_weight="1"
                     android:text="Camil"
                     android:textAlignment="viewEnd"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#DDDDDD" />
+                android:background="@color/colorOnSurfaceVariant" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,7 +156,7 @@
                     android:fontFamily="@font/nunito_semibold"
                     android:text="Validade"
                     android:textColor="@color/colorPrimary"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
                 <TextView
                     android:id="@+id/tv_validade"
@@ -166,7 +165,7 @@
                     android:layout_weight="1"
                     android:text="15/10/2025"
                     android:textAlignment="viewEnd"
-                    android:textSize="26sp" />
+                    android:textSize="22sp" />
 
             </LinearLayout>
         </LinearLayout>
@@ -180,7 +179,7 @@
             android:fontFamily="@font/nunito_semibold"
             android:text="Descrição"
             android:textColor="@color/colorPrimary"
-            android:textSize="26sp" />
+            android:textSize="24sp" />
 
         <TextView
             android:id="@+id/tv_descricao"
@@ -194,7 +193,7 @@
             android:paddingBottom="60dp"
             android:text="Arroz tipo 1"
             android:textColor="@color/colorPrimary"
-            android:textSize="26sp" />
+            android:textSize="22sp" />
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

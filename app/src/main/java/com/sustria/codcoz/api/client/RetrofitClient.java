@@ -13,13 +13,13 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public final class RetrofitClient {
 
     private static final String BASE_URL = "https://codcoz-api-postgres.koyeb.app/";
-    private static Retrofit retrofitInstance;
+    private static Retrofit retrofit;
 
     private RetrofitClient() {
     }
 
     public static Retrofit getInstance() {
-        if (retrofitInstance == null) {
+        if (retrofit == null) {
 
             // Configurar logging para debug
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
@@ -38,12 +38,12 @@ public final class RetrofitClient {
                     .serializeNulls()
                     .create();
 
-            retrofitInstance = new Retrofit.Builder()
+            retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create(gson))
                     .build();
         }
-        return retrofitInstance;
+        return retrofit;
     }
 }

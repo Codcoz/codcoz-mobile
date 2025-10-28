@@ -2,19 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/header_activity_back_container"
     android:layout_width="match_parent"
-    android:layout_height="120dp"
+    android:layout_height="100dp"
     android:background="@color/colorPrimary"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingStart="30dp"
-    android:paddingTop="32dp"
-    android:paddingEnd="30dp"
-    android:paddingBottom="32dp">
+    android:padding="24dp">
 
     <ImageView
         android:id="@+id/header_icon"
-        android:layout_width="60dp"
-        android:layout_height="55dp"
+        android:layout_width="45dp"
+        android:layout_height="50dp"
         android:layout_marginEnd="20dp"
         android:src="@drawable/logo_vazada_codcoz" />
 
@@ -32,7 +29,7 @@
             android:fontFamily="@font/nunito_regular"
             android:text="Olá, !"
             android:textColor="@color/colorOnPrimary"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:textStyle="bold" />
 
         <TextView
@@ -42,14 +39,14 @@
             android:fontFamily="@font/nunito_regular"
             android:text="Estoquista"
             android:textColor="@color/colorOnPrimary"
-            android:textSize="20sp" />
+            android:textSize="18sp" />
 
     </LinearLayout>
 
     <ImageView
         android:id="@+id/header_perfil"
-        android:layout_width="55dp"
-        android:layout_height="55dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@drawable/ic_imagem_perfil" />
 
 

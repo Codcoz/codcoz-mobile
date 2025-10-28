@@ -5,6 +5,9 @@ import com.google.gson.annotations.SerializedName;
 import java.time.LocalDate;
 
 public class ProdutoResponse {
+    @SerializedName("id")
+    private Long id;
+
     @SerializedName("codigoEan")
     private String codigoEan;
 
@@ -29,7 +32,8 @@ public class ProdutoResponse {
     }
 
     // Construtor principal
-    public ProdutoResponse(String codigoEan, String nome, String descricao, Integer quantidade, String marca, String validadeString) {
+    public ProdutoResponse(Long id, String codigoEan, String nome, String descricao, Integer quantidade, String marca, String validadeString) {
+        this.id = id;
         this.codigoEan = codigoEan;
         this.nome = nome;
         this.descricao = descricao;
@@ -39,13 +43,12 @@ public class ProdutoResponse {
     }
 
     // Getters e Setters
+    public Long getId() {
+        return id;
+    }
 
     public String getCodigoEan() {
         return codigoEan;
-    }
-
-    public void setCodigoEan(String codigoEan) {
-        this.codigoEan = codigoEan;
     }
 
     public String getNome() {
@@ -60,10 +63,6 @@ public class ProdutoResponse {
         return descricao;
     }
 
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
     public Integer getQuantidade() {
         return quantidade;
     }
@@ -74,18 +73,6 @@ public class ProdutoResponse {
 
     public String getMarca() {
         return marca;
-    }
-
-    public void setMarca(String marca) {
-        this.marca = marca;
-    }
-
-    public String getValidadeString() {
-        return validadeString;
-    }
-
-    public void setValidadeString(String validadeString) {
-        this.validadeString = validadeString;
     }
 
     public LocalDate getValidade() {
@@ -99,7 +86,4 @@ public class ProdutoResponse {
         }
     }
 
-    public void setValidade(LocalDate validade) {
-        this.validadeString = validade != null ? validade.toString() : null;
-    }
 }

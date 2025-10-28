@@ -307,11 +307,11 @@ public class InicioFragment extends Fragment {
                             } else {
                                 // Se há múltiplas tarefas, mostra uma mensagem
                                 ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(),
-                                        "Há " + tarefasDoDia.size() + " tarefas para este dia. Use a lista de tarefas para visualizá-las.");
+                                        "Há " + tarefasDoDia.size() + " tarefas para este dia. Use a lista de tarefas para visualizá-las.", false);
                             }
                         }
                     } else {
-                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Nenhuma tarefa para este dia.");
+                        ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Nenhuma tarefa para este dia.", false);
                     }
                 });
             }

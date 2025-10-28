@@ -1,72 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="250dp"
+    android:layout_height="330dp"
     android:background="@drawable/bg_bottomsheet"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/txtTitulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="24dp"
         android:fontFamily="@font/nunito_bold"
         android:text="Auditoria"
         android:textColor="@color/colorPrimary"
-        android:textSize="18sp" />
+        android:textSize="20sp" />
 
-    <TextView
-        android:id="@+id/txtProduto"
+    <View
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="Produto"
-        android:textColor="@color/colorPrimary"
-        android:textSize="16sp" />
-
-    <EditText
-        android:id="@+id/inputQuantidade"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/bg_stroke"
-        android:gravity="center_vertical|start"
-        android:hint="Quantidade contada"
-        android:inputType="number"
-        android:padding="12dp" />
+        android:layout_height="1dp"
+        android:background="@color/colorOnSurfaceVariant" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
-        android:gravity="end"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        android:padding="24dp">
 
-        <TextView
-            android:id="@+id/btnCancelar"
-            android:layout_width="110dp"
+        <!-- Informações do produto -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_tab_unselected"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="center"
-            android:text="Cancelar"
-            android:textColor="@color/colorPrimary"
-            android:textSize="14sp" />
+            android:layout_marginBottom="24dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/btnConfirmar"
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/bg_tab_selected"
-            android:fontFamily="@font/nunito_bold"
-            android:gravity="center"
-            android:text="Confirmar"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/nunito_regular"
+                android:text="Produto: "
+                android:textColor="@color/colorOnSurfaceVariant"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/txtProduto"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/nunito_regular"
+                android:textColor="@color/colorPrimary"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <!-- Campo de quantidade -->
+        <EditText
+            android:id="@+id/inputQuantidade"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="48dp"
+            android:background="@drawable/bg_stroke"
+            android:fontFamily="@font/nunito_regular"
+            android:gravity="center_vertical|start"
+            android:hint="Quantidade contada"
+            android:inputType="number"
+            android:padding="16dp"
             android:textColor="@color/colorPrimary"
-            android:textSize="14sp" />
+            android:textColorHint="@color/colorOnSurfaceVariant"
+            android:textSize="16sp" />
+
+        <!-- Botões -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnCancelar"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_tab_unselected"
+                android:fontFamily="@font/nunito_bold"
+                android:gravity="center"
+                android:text="Cancelar"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/btnConfirmar"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_tab_selected"
+                android:fontFamily="@font/nunito_bold"
+                android:gravity="center"
+                android:text="Confirmar"
+                android:textColor="#333333"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
-
 </LinearLayout>
-
-

@@ -5,7 +5,6 @@
     android:layout_height="wrap_content"
     android:layout_marginLeft="1dp"
     android:layout_marginRight="1dp"
-    android:layout_marginBottom="24dp"
     app:cardCornerRadius="16dp">
 
     <LinearLayout
@@ -33,10 +32,10 @@
                 android:id="@+id/nome_produto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
+                android:layout_marginEnd="48dp"
                 android:fontFamily="@font/nunito_bold"
                 android:gravity="center"
-                android:padding="8dp"
+                android:padding="16dp"
                 android:text="Arroz Branco - 1 kg"
                 android:textColor="@color/colorPrimary"
                 android:textSize="21sp" />
