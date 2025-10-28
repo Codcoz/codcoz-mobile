@@ -1,20 +1,26 @@
 package com.sustria.codcoz.api.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class HistoricoBaixaRequest {
     private String id_produto;
     private String nome_produto;
     private String codigo_produto;
     private String data_acontecimento;
+    @SerializedName("quantidade_movimentada")
+    private Integer quantidade;
     private String tipo_registro;
 
-    public HistoricoBaixaRequest() {}
+    public HistoricoBaixaRequest() {
+    }
 
-    public HistoricoBaixaRequest(String id_produto, String nome_produto, String codigo_produto, 
-                               String data_acontecimento, String tipo_registro) {
+    public HistoricoBaixaRequest(String id_produto, String nome_produto, String codigo_produto,
+                                 String data_acontecimento, Integer quantidade, String tipo_registro) {
         this.id_produto = id_produto;
         this.nome_produto = nome_produto;
         this.codigo_produto = codigo_produto;
         this.data_acontecimento = data_acontecimento;
+        this.quantidade = quantidade;
         this.tipo_registro = tipo_registro;
     }
 
@@ -49,6 +55,14 @@ public class HistoricoBaixaRequest {
 
     public void setData_acontecimento(String data_acontecimento) {
         this.data_acontecimento = data_acontecimento;
+    }
+
+    public Integer getQuantidade() {
+        return quantidade;
+    }
+
+    public void setQuantidade(Integer quantidade) {
+        this.quantidade = quantidade;
     }
 
     public String getTipo_registro() {

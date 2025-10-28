@@ -13,13 +13,12 @@ import androidx.fragment.app.FragmentManager;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.HistoricoBaixaRequest;
-import com.sustria.codcoz.api.model.ProdutoResponse;
 import com.sustria.codcoz.api.service.HistoricoService;
 import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.BottomsheetProdutoRegistroConfirmacaoBinding;
 import com.sustria.codcoz.utils.UserDataManager;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialogFragment {
@@ -59,10 +58,10 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        
+
         produtoService = new ProdutoService();
         historicoService = new HistoricoService();
-        
+
         Bundle args = getArguments();
         String nome = args != null ? args.getString(ARG_NOME) : null;
         Integer estoqueAntigo = args != null && args.containsKey(ARG_ESTOQUE_ANTIGO) ? args.getInt(ARG_ESTOQUE_ANTIGO, -1) : null;
@@ -96,8 +95,8 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
 
         String codigoEan = args.getString(ARG_CODIGO_EAN);
         Integer quantidade = args.containsKey(ARG_QUANTIDADE) ? args.getInt(ARG_QUANTIDADE, 1) : null;
-        ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov = 
-            (ProdutoBottomSheetDialogFragment.TipoMovimento) args.getSerializable(ARG_TIPO_MOVIMENTO);
+        ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov =
+                (ProdutoBottomSheetDialogFragment.TipoMovimento) args.getSerializable(ARG_TIPO_MOVIMENTO);
 
         // Se os dados não estiverem disponíveis (por exemplo, na auditoria), apenas fechar
         if (codigoEan == null || tipoMov == null || quantidade == null) {
@@ -144,7 +143,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         String nomeProduto = args.getString(ARG_NOME);
         String idProduto = args.getString(ARG_ID_PRODUTO);
         Long idEmpresa = Long.valueOf(UserDataManager.getInstance().getEmpresaId());
-        
+
         android.util.Log.d("ConfirmarRegistro", "Registrando histórico - Empresa: " + idEmpresa + ", Produto: " + nomeProduto + ", ID: " + idProduto);
 
         // Criar request para o histórico
@@ -152,7 +151,8 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
                 idProduto != null ? idProduto : "",
                 nomeProduto != null ? nomeProduto : "",
                 codigoEan,
-                LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd")),
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                quantidade,
                 tipoMov == ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA ? "Saída" : "Entrada"
         );
 
@@ -180,15 +180,15 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
     }
 
     public static void show(FragmentManager fm, String nome, Integer estoqueAntigo, Integer estoqueAtualizado,
-                           String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov) {
+                            String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov) {
         show(fm, nome, estoqueAntigo, estoqueAtualizado, codigoEan, quantidade, tipoMov, null);
     }
-    
+
     public static void show(FragmentManager fm, String nome, Integer estoqueAntigo, Integer estoqueAtualizado,
-                           String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov, String idProduto) {
+                            String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov, String idProduto) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(fm);
-        
+
         ConfirmarRegistroBottomSheetDialogFragment fragment = new ConfirmarRegistroBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_NOME, nome);
@@ -201,7 +201,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         fragment.setArguments(args);
         fragment.show(fm, "ConfirmarRegistroBottomSheetDialogFragment");
     }
-    
+
     private static void dismissExistingBottomSheets(@NonNull FragmentManager fm) {
         // Fechar todos os bottom sheets existentes
         if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {

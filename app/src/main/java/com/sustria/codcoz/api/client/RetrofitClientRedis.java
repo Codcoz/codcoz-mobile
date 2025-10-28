@@ -3,13 +3,9 @@ package com.sustria.codcoz.api.client;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -34,7 +30,7 @@ public class RetrofitClientRedis {
                     .build();
 
             Gson gson = new GsonBuilder()
-                    .setDateFormat("yyyy-MM-dd")
+                    .setDateFormat("yyyy-MM-dd HH:mm")
                     .serializeNulls()
                     .create();
 

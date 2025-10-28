@@ -18,11 +18,13 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
     private static final String ARG_IS_ERRO = "arg_is_erro";
     private static final String ARG_MSG_ERRO = "arg_msg_erro";
+    private static final String ARG_SHOULD_FINISH_ACTIVITY = "arg_should_finish_activity";
 
     private BottomsheetProdutoConfirmadoBinding bindingSucesso;
     private BottomSheetErrorBinding bindingErro;
     private boolean isErro;
     private String mensagemErro;
+    private boolean shouldFinishActivity = true;
 
     @Nullable
     @Override
@@ -30,6 +32,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
         Bundle args = getArguments();
         isErro = args != null && args.getBoolean(ARG_IS_ERRO, false);
         mensagemErro = args != null ? args.getString(ARG_MSG_ERRO) : null;
+        shouldFinishActivity = args != null && args.getBoolean(ARG_SHOULD_FINISH_ACTIVITY, true);
         if (isErro) {
             bindingErro = BottomSheetErrorBinding.inflate(inflater, container, false);
             return bindingErro.getRoot();
@@ -60,14 +63,14 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
             }
             bindingErro.btnFechar.setOnClickListener(v -> {
                 dismiss();
-                if (getActivity() != null) {
+                if (shouldFinishActivity && getActivity() != null) {
                     getActivity().finish();
                 }
             });
         } else if (bindingSucesso != null) {
             bindingSucesso.btnFechar.setOnClickListener(v -> {
                 dismiss();
-                if (getActivity() != null) {
+                if (shouldFinishActivity && getActivity() != null) {
                     getActivity().finish();
                 }
             });
@@ -76,17 +79,26 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
 
 
     public static void showSucesso(androidx.fragment.app.FragmentManager fm) {
+        showSucesso(fm, true);
+    }
+
+    public static void showSucesso(androidx.fragment.app.FragmentManager fm, boolean shouldFinishActivity) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(fm);
         
         ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_ERRO, false);
+        args.putBoolean(ARG_SHOULD_FINISH_ACTIVITY, shouldFinishActivity);
         fragment.setArguments(args);
         fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
     }
 
     public static void showErro(androidx.fragment.app.FragmentManager fm, String mensagem) {
+        showErro(fm, mensagem, true);
+    }
+
+    public static void showErro(androidx.fragment.app.FragmentManager fm, String mensagem, boolean shouldFinishActivity) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(fm);
         
@@ -94,6 +106,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_ERRO, true);
         args.putString(ARG_MSG_ERRO, mensagem);
+        args.putBoolean(ARG_SHOULD_FINISH_ACTIVITY, shouldFinishActivity);
         fragment.setArguments(args);
         fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
     }
