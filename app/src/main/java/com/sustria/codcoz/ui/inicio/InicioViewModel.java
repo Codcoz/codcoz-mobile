@@ -1,13 +1,12 @@
 package com.sustria.codcoz.ui.inicio;
 
-import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sustria.codcoz.api.service.TarefaService;
-import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.api.model.TarefaResponse;
+import com.sustria.codcoz.api.service.ProdutoService;
+import com.sustria.codcoz.api.service.TarefaService;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.LocalDate;
@@ -47,7 +46,7 @@ public class InicioViewModel extends ViewModel {
 
         // Inicializar com os dados padrão
         loadDefaultData();
-        loadQuantidadeDados();
+        loadDataNumber();
     }
 
     private void loadDefaultData() {
@@ -58,10 +57,10 @@ public class InicioViewModel extends ViewModel {
         estoqueStatusAnterior.setValue("bom");
     }
 
-    private void loadQuantidadeDados() {
+    private void loadDataNumber() {
         UserDataManager userDataManager = UserDataManager.getInstance();
         Integer empresaId = userDataManager.getEmpresaId();
-        
+
         if (empresaId != null) {
             produtoService.getQuantidadeEstoque(Long.valueOf(empresaId), new ProdutoService.ProdutoCallback<Integer>() {
                 @Override
@@ -152,7 +151,7 @@ public class InicioViewModel extends ViewModel {
     }
 
     // Metodo para carregar tarefas da API
-    public void loadTarefas() {
+    public void loadTasks() {
         UserDataManager userDataManager = UserDataManager.getInstance();
         String email = userDataManager.getEmail();
 
@@ -164,20 +163,21 @@ public class InicioViewModel extends ViewModel {
         LocalDate dataInicio = hoje.minusMonths(3);
         LocalDate dataFim = hoje.plusMonths(3);
 
-        tarefaService.buscarPorPeriodo(email, dataInicio.toString(), dataFim.toString(), new TarefaService.TarefaCallback<List<TarefaResponse>>() {
-            @Override
-            public void onSuccess(List<TarefaResponse> result) {
-                isLoading.setValue(false);
-                tarefas.setValue(result);
-            }
+        tarefaService.buscarPorPeriodo(email, dataInicio.toString(), dataFim.toString(),
+                new TarefaService.TarefaCallback<>() {
+                    @Override
+                    public void onSuccess(List<TarefaResponse> result) {
+                        isLoading.setValue(false);
+                        tarefas.setValue(result);
+                    }
 
-            @Override
-            public void onError(String error) {
-                isLoading.setValue(false);
-                errorMessage.setValue(error);
-                tarefas.setValue(new ArrayList<>());
-            }
-        });
+                    @Override
+                    public void onError(String error) {
+                        isLoading.setValue(false);
+                        errorMessage.setValue(error);
+                        tarefas.setValue(new ArrayList<>());
+                    }
+                });
     }
 
     // Metodo para finalizar uma tarefa
@@ -188,13 +188,13 @@ public class InicioViewModel extends ViewModel {
         }
 
         isLoading.setValue(true);
-        
-        tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<TarefaResponse>() {
+
+        tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<>() {
             @Override
             public void onSuccess(TarefaResponse result) {
                 isLoading.setValue(false);
                 // Recarregar a lista de tarefas após finalizar
-                loadTarefas();
+                loadTasks();
             }
 
             @Override

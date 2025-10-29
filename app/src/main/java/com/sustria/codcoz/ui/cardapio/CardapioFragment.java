@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.sustria.codcoz.actions.CardapioSemanal;
@@ -35,23 +34,19 @@ public class CardapioFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        CardapioViewModel cardapioViewModel =
-                new ViewModelProvider(this).get(CardapioViewModel.class);
 
         binding = FragmentCardapioBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
-        // Inicializa o serviço
         receitaService = new ReceitaService();
 
-        // Configura o header do fragment
         setupHeader();
         setupRecyclerView();
         botao();
         setupBusca();
         carregarReceitas();
 
-        return root;        
+        return root;
     }
 
     private void setupHeader() {
@@ -79,7 +74,7 @@ public class CardapioFragment extends Fragment {
             Log.e("Cardapio", "EmpresaId não encontrado");
             return;
         }
-        
+
         receitaService.getReceitas(empresaId.toString(), new ReceitaService.ReceitaCallback<List<ReceitaResponse>>() {
             @Override
             public void onSuccess(List<ReceitaResponse> receitasApi) {
@@ -87,7 +82,7 @@ public class CardapioFragment extends Fragment {
                     getActivity().runOnUiThread(() -> {
                         receitas = receitasApi;
                         receitaAdapter.setReceitas(receitas);
-                        
+
                         // Controla o estado vazio
                         if (receitas.isEmpty()) {
                             emptyStateAdapter.setEmptyState(true, "Nenhuma receita encontrada",
@@ -152,7 +147,7 @@ public class CardapioFragment extends Fragment {
             }
         }
         receitaAdapter.setReceitas(filtrados);
-        
+
         // Controla o estado vazio para os resultados da busca
         if (filtrados.isEmpty()) {
             emptyStateAdapter.setEmptyState(true, "Nenhuma receita encontrada",

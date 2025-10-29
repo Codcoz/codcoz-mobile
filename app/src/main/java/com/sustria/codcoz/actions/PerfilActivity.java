@@ -2,6 +2,7 @@ package com.sustria.codcoz.actions;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,13 +23,14 @@ import com.bumptech.glide.Glide;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.sustria.codcoz.R;
-import com.sustria.codcoz.databinding.ActivityPerfilBinding;
 import com.sustria.codcoz.api.adapter.PerfilTarefaAdapter;
+import com.sustria.codcoz.auth.LoginActivity;
+import com.sustria.codcoz.databinding.ActivityPerfilBinding;
 import com.sustria.codcoz.ui.perfil.PerfilViewModel;
-import com.sustria.codcoz.utils.UserDataManager;
-import com.sustria.codcoz.utils.EmptyStateAdapter;
 import com.sustria.codcoz.utils.CloudinaryManager;
+import com.sustria.codcoz.utils.EmptyStateAdapter;
 import com.sustria.codcoz.utils.ImagePickerManager;
+import com.sustria.codcoz.utils.UserDataManager;
 
 public class PerfilActivity extends AppCompatActivity {
 
@@ -111,6 +113,9 @@ public class PerfilActivity extends AppCompatActivity {
             periodoSelecionado = 90;
             loadTasks();
         });
+
+        // Botão de logout
+        binding.btnLogout.setOnClickListener(v -> confirmarLogout());
     }
 
     private void selectTab(boolean atividades) {
@@ -191,14 +196,10 @@ public class PerfilActivity extends AppCompatActivity {
 
         // Observa estado de carregamento
         perfilViewModel.getIsLoading().observe(this, isLoading -> {
-            // Aqui você pode mostrar/ocultar um indicador de carregamento se necessário
         });
 
         // Observar mensagens de erro
         perfilViewModel.getErrorMessage().observe(this, errorMessage -> {
-            if (errorMessage != null && !errorMessage.isEmpty()) {
-
-            }
         });
     }
 
@@ -230,7 +231,7 @@ public class PerfilActivity extends AppCompatActivity {
                 Toast.makeText(this, "ImagePicker não inicializado", Toast.LENGTH_SHORT).show();
             }
         });
-        
+
         binding.ivAvatar.setOnClickListener(v -> {
             showFullScreenImage();
         });
@@ -266,7 +267,7 @@ public class PerfilActivity extends AppCompatActivity {
             return;
         }
 
-        String userId = auth.getCurrentUser().getUid()  ;
+        String userId = auth.getCurrentUser().getUid();
 
         db.collection("usuarios").document(userId)
                 .update("imagemPerfil", imageUrl)
@@ -278,7 +279,7 @@ public class PerfilActivity extends AppCompatActivity {
                         userDataManager.setUserData(userDataManager.getUserData(), PerfilActivity.this);
                     }
 
-                        loadProfileImage();
+                    loadProfileImage();
                     hideProgressDialog();
                     Toast.makeText(PerfilActivity.this, "Imagem atualizada com sucesso!", Toast.LENGTH_SHORT).show();
                 })
@@ -299,7 +300,7 @@ public class PerfilActivity extends AppCompatActivity {
                     .into(binding.ivProfileImage);
         }
     }
-    
+
     private void showProgressDialog(String message) {
         if (progressDialog == null) {
             progressDialog = new ProgressDialog(this);
@@ -308,44 +309,62 @@ public class PerfilActivity extends AppCompatActivity {
         progressDialog.setMessage(message);
         progressDialog.show();
     }
-    
+
     private void hideProgressDialog() {
         if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.dismiss();
         }
     }
-    
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         hideProgressDialog();
     }
-    
+
     private void showFullScreenImage() {
         String imageUrl = UserDataManager.getInstance().getImagemPerfil();
         if (imageUrl == null || imageUrl.isEmpty()) {
             return;
         }
-        
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_fullscreen_image, null);
-        
+
         ImageView fullScreenImageView = dialogView.findViewById(R.id.iv_fullscreen_image);
-        
+
         Glide.with(this)
                 .load(imageUrl)
                 .placeholder(R.drawable.ic_imagem_perfil)
                 .error(R.drawable.ic_imagem_perfil)
                 .into(fullScreenImageView);
-        
+
         builder.setView(dialogView);
         builder.setCancelable(true);
-        
+
         AlertDialog dialog = builder.create();
-        
+
         // Configurar clique na imagem para fechar
         fullScreenImageView.setOnClickListener(v -> dialog.dismiss());
-        
+
         dialog.show();
+    }
+
+    private void confirmarLogout() {
+        LogoutBottomSheet.show(this, this::realizarLogout);
+    }
+
+    private void realizarLogout() {
+        if (auth != null) {
+            auth.signOut();
+        }
+
+        // Limpar cache do usuário
+        UserDataManager.getInstance().clearCache(this);
+
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 }

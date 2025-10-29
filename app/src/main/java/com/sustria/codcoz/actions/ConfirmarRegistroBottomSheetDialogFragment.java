@@ -1,6 +1,7 @@
 package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,7 +80,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
 
         binding.btnCancelar.setOnClickListener(v -> dismiss());
         binding.btnConfirmar.setOnClickListener(v -> {
-            android.util.Log.d("ConfirmarRegistro", "Botão confirmar clicado");
+            Log.d("ConfirmarRegistro", "Botão confirmar clicado");
             executarOperacoes();
         });
     }
@@ -87,7 +88,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
     private void executarOperacoes() {
         Bundle args = getArguments();
         if (args == null) {
-            android.util.Log.e("ConfirmarRegistro", "Argumentos não disponíveis");
+            Log.e("ConfirmarRegistro", "Argumentos não disponíveis");
             dismiss();
             ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Dados inválidos");
             return;
@@ -100,35 +101,35 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
 
         // Se os dados não estiverem disponíveis (por exemplo, na auditoria), apenas fechar
         if (codigoEan == null || tipoMov == null || quantidade == null) {
-            android.util.Log.d("ConfirmarRegistro", "Dados não disponíveis - apenas confirmando (auditoria)");
+            Log.d("ConfirmarRegistro", "Dados não disponíveis - apenas confirmando (auditoria)");
             dismiss();
             ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
             return;
         }
 
-        android.util.Log.d("ConfirmarRegistro", "Executando operação de estoque - Tipo: " + tipoMov + ", Quantidade: " + quantidade);
+        Log.d("ConfirmarRegistro", "Executando operação de estoque - Tipo: " + tipoMov + ", Quantidade: " + quantidade);
 
         // Executar operação de estoque (entrada ou baixa)
         ProdutoService.ProdutoCallback<Void> callbackProduto = new ProdutoService.ProdutoCallback<>() {
             @Override
             public void onSuccess(Void result) {
-                android.util.Log.d("ConfirmarRegistro", "Operação de estoque realizada com sucesso");
+                Log.d("ConfirmarRegistro", "Operação de estoque realizada com sucesso");
                 registrarHistorico(codigoEan, quantidade, tipoMov);
             }
 
             @Override
             public void onError(String error) {
-                android.util.Log.e("ConfirmarRegistro", "Erro na operação de estoque: " + error);
+                Log.e("ConfirmarRegistro", "Erro na operação de estoque: " + error);
                 dismiss();
                 ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Erro ao atualizar estoque: " + error);
             }
         };
 
         if (tipoMov == ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA) {
-            android.util.Log.d("ConfirmarRegistro", "Chamando API de baixa de estoque");
+            Log.d("ConfirmarRegistro", "Chamando API de baixa de estoque");
             produtoService.baixaEstoque(codigoEan, quantidade, callbackProduto);
         } else {
-            android.util.Log.d("ConfirmarRegistro", "Chamando API de entrada de estoque");
+            Log.d("ConfirmarRegistro", "Chamando API de entrada de estoque");
             produtoService.entradaEstoque(codigoEan, quantidade, callbackProduto);
         }
     }
@@ -136,7 +137,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
     private void registrarHistorico(String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov) {
         Bundle args = getArguments();
         if (args == null) {
-            android.util.Log.e("ConfirmarRegistro", "Argumentos não disponíveis para histórico");
+            Log.e("ConfirmarRegistro", "Argumentos não disponíveis para histórico");
             return;
         }
 
@@ -144,7 +145,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         String idProduto = args.getString(ARG_ID_PRODUTO);
         Long idEmpresa = Long.valueOf(UserDataManager.getInstance().getEmpresaId());
 
-        android.util.Log.d("ConfirmarRegistro", "Registrando histórico - Empresa: " + idEmpresa + ", Produto: " + nomeProduto + ", ID: " + idProduto);
+        Log.d("ConfirmarRegistro", "Registrando histórico - Empresa: " + idEmpresa + ", Produto: " + nomeProduto + ", ID: " + idProduto);
 
         // Criar request para o histórico
         HistoricoBaixaRequest request = new HistoricoBaixaRequest(
@@ -161,7 +162,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
             @Override
             public void onSuccess(Void result) {
                 android.util.Log.d("ConfirmarRegistro", "Histórico registrado com sucesso");
-                if (isAdded() && getParentFragmentManager() != null) {
+                if (isAdded()) {
                     dismiss();
                     ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
                 }
@@ -171,7 +172,7 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
             public void onError(String error) {
                 android.util.Log.e("ConfirmarRegistro", "Erro ao registrar histórico: " + error);
                 // Mesmo se o histórico falhar, a operação de estoque foi bem-sucedida
-                if (isAdded() && getParentFragmentManager() != null) {
+                if (isAdded()) {
                     dismiss();
                     ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
                 }

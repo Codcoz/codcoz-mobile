@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.sustria.codcoz.api.service.TarefaService;
 import com.sustria.codcoz.api.model.TarefaResponse;
+import com.sustria.codcoz.api.service.TarefaService;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.time.LocalDate;
@@ -44,9 +44,6 @@ public class PerfilViewModel extends ViewModel {
         return errorMessage;
     }
 
-    public LiveData<String> getTipoFiltro() {
-        return tipoFiltro;
-    }
 
     public void loadTarefasPorTipo(String tipo, int dias) {
         UserDataManager userDataManager = UserDataManager.getInstance();
