@@ -8,7 +8,7 @@
 
 **Aplicativo mobile para gerenciamento de estoque em cozinhas industriais**
 
-[Funcionalidades](#-funcionalidades) • [Instalação](#-instalação) • [Arquitetura](#-arquitetura) • [Tecnologias](#-tecnologias)
+[Funcionalidades](#-funcionalidades) • [Instalação](#-instalação) • [Arquitetura](#-arquitetura)
 
 </div>
 
