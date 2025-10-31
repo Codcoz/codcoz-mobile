@@ -602,7 +602,7 @@ O filtro de período usa a **data de conclusão** (`dataConclusao`) para filtrar
 **Cálculo**:
 ```java
 LocalDate hoje = LocalDate.now();
-LocalDate dataInicio = hoje.minusDays(dias - 1); // Inclui hoje + (dias-1) anteriores
+LocalDate dataInicio = hoje.minusDays(dias - 1);
 ```
 
 #### Cores no Calendário
@@ -618,13 +618,6 @@ Cada cardápio contém:
 - **Informações Gerais**: Período, empresa, nome
 - **Cardápio Semanal**: Array de dias
   - Cada dia tem: `diaSemana`, `data`, `almoco`, `lanche_manha`, `lanche_tarde`
-
-#### Fallback Automático
-
-Quando a API retorna 200 mas com dados vazios, o app automaticamente:
-1. Detecta dados vazios
-2. Usa dados mockados (`CardapioMockData`)
-3. Exibe cardápio de exemplo para não deixar tela vazia
 
 ### 🎨 Estados de Loading
 
@@ -649,41 +642,12 @@ Todas as RecyclerViews implementam estados:
 
 ---
 
-## 🧪 Dados Mockados
-
-O projeto inclui dados mockados para desenvolvimento e testes:
-
-### CardapioMockData
-
-Classe utilitária com cardápios completos:
-- 2 cardápios semanais completos
-- 5 dias por semana (Segunda a Sexta)
-- Todas as refeições estruturadas
-- IDs mockados similares aos reais
-
-**Uso**:
-```java
-// No CardapioSemanal.java
-// Descomente para usar dados mockados:
-// carregarCardapiosMockados();
-```
-
-### Porções Aleatórias
-
-Quando `porcoes` é `null` em receitas:
-- Gera número aleatório entre 0 e 10
-- Valor persistido para consistência
-- Exibido automaticamente na UI
-
----
-
 ## 🎨 Design e UX
 
 ### Temas e Cores
 
 - **Material Design 3**: Componentes modernos
 - **Cores Dinâmicas**: Cores que mudam baseado no status
-- **Dark Mode**: Suporte (se configurado)
 - **Edge-to-Edge**: Experiência imersiva
 
 ### Componentes Reutilizáveis
@@ -749,8 +713,6 @@ Quando `porcoes` é `null` em receitas:
 ### Firebase
 - **Authentication**: Login e autenticação
 - **Firestore**: Armazenamento de dados do usuário
-- **Analytics**: Análise de uso (se habilitado)
-- **Cloud Messaging**: Notificações push (se configurado)
 
 ### Cloudinary
 - **Upload de Imagens**: Fotos de perfil
@@ -781,25 +743,12 @@ Quando `porcoes` é `null` em receitas:
 ### 🔄 Em Desenvolvimento
 - ⏳ Melhorias de UX
 - ⏳ Otimizações de performance
-- ⏳ Testes automatizados
 
 ### 📋 Planejado
-- 📌 Notificações push
+- 📌 Notificações push (mas não faz sentido para nós, pois o app desloga toda vez que o usuario sai. Então nao teria como fazer assim)
 - 📌 Modo offline completo
-- 📌 Exportação de relatórios
-- 📌 Sincronização em tempo real
-
+  
 ---
-
-## 👥 Contribuindo
-
-### Processo de Contribuição
-
-1. **Fork** o projeto
-2. **Crie** uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
-3. **Commit** suas mudanças (`git commit -m 'feat: Adiciona nova funcionalidade'`)
-4. **Push** para a branch (`git push origin feature/AmazingFeature`)
-5. **Abra** um Pull Request
 
 ### Convenções de Commit
 
@@ -808,41 +757,14 @@ Seguimos [Conventional Commits](https://www.conventionalcommits.org/):
 - `feat:` Nova funcionalidade
 - `fix:` Correção de bug
 - `docs:` Documentação
-- `style:` Formatação
 - `refactor:` Refatoração
-- `test:` Testes
 - `chore:` Manutenção
-
-### Checklist de Pull Request
-
-- [ ] Código segue o padrão do projeto
-- [ ] Comentários adicionados onde necessário
-- [ ] Documentação atualizada
-- [ ] Testes realizados
-- [ ] Sem erros de lint
-- [ ] Funciona em diferentes dispositivos
 
 ---
 
 ## 📄 Licença
 
 Este projeto é proprietário. Todos os direitos reservados.
-
----
-
-## 📞 Suporte
-
-Para suporte e dúvidas:
-- Abra uma **Issue** no repositório
-- Entre em contato com a equipe de desenvolvimento
-
----
-
-## 🙏 Agradecimentos
-
-- Equipe de desenvolvimento Sustria
-- Comunidade Android
-- Mantenedores das bibliotecas open-source utilizadas
 
 ---
 
