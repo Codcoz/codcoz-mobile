@@ -100,6 +100,12 @@ public class ReceitaResponse implements Serializable {
     }
 
     public Integer getPorcoes() {
+        // Se porções for null, retorna um número aleatório entre 0 e 10
+        if (porcoes == null) {
+            // Gera um número aleatório entre 0 e 10 (inclusive)
+            porcoes = (int) (Math.random() * 11);
+            // Salva o valor gerado para manter consistência
+        }
         return porcoes;
     }
 

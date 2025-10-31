@@ -59,16 +59,47 @@ public class PerfilViewModel extends ViewModel {
         tipoFiltro.setValue(tipo);
 
         // Calcular datas baseado no período selecionado
-        LocalDate dataFim = LocalDate.now();
-        LocalDate dataInicio = dataFim.minusDays(dias);
-        String inicio = dataInicio.toString();
+        // Para 30 dias: queremos tarefas dos últimos 30 dias incluindo hoje
+        // Exemplo: hoje 31/10, 30 dias = de 02/10 até 31/10 (30 dias incluindo hoje)
+        // IMPORTANTE: Buscamos um período maior na API (dias+1) porque ela pode estar
+        // filtrando por outra data (dataLimite, dataCriacao), não dataConclusao
+        LocalDate hoje = LocalDate.now();
+        LocalDate dataFim = hoje;
+        LocalDate dataInicioAPI = hoje.minusDays(dias); // Busca dias dias atrás para garantir que não perca nada
+        
+        String inicio = dataInicioAPI.toString();
         String fim = dataFim.toString();
 
         tarefaService.buscarPorTipo(email, inicio, fim, tipo, new TarefaService.TarefaCallback<>() {
             @Override
             public void onSuccess(List<TarefaResponse> result) {
                 isLoading.setValue(false);
-                tarefas.setValue(result);
+                
+                // Filtro no cliente para garantir que está usando dataConclusao
+                // A API pode estar filtrando por outra data (dataLimite, dataCriacao)
+                // então filtramos aqui usando dataConclusao para garantir o período correto
+                // Para 30 dias: de (hoje - 29 dias) até hoje = 30 dias incluindo hoje
+                LocalDate hoje = LocalDate.now();
+                LocalDate dataInicioFiltro = hoje.minusDays(dias - 1); // (dias-1) para ter dias dias total incluindo hoje
+                
+                List<TarefaResponse> tarefasFiltradas = new ArrayList<>();
+                for (TarefaResponse tarefa : result) {
+                    LocalDate dataConclusao = tarefa.getDataConclusao();
+                    
+                    // Só inclui tarefas que tenham dataConclusao válida
+                    // e que esteja dentro do período selecionado (usando dataConclusao)
+                    if (dataConclusao != null) {
+                        // Verifica se a data de conclusão está no período (inclusive)
+                        // dataConclusao >= dataInicioFiltro && dataConclusao <= hoje
+                        boolean dentroDoPeriodo = !dataConclusao.isBefore(dataInicioFiltro) && !dataConclusao.isAfter(hoje);
+                        
+                        if (dentroDoPeriodo) {
+                            tarefasFiltradas.add(tarefa);
+                        }
+                    }
+                }
+                
+                tarefas.setValue(tarefasFiltradas);
             }
 
             @Override
