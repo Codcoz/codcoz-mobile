@@ -13,13 +13,15 @@ import com.sustria.codcoz.R;
 public class EmptyStateAdapter<VH extends RecyclerView.ViewHolder>
         extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-private static final int TYPE_EMPTY = 0;
+    private static final int TYPE_EMPTY = 0;
     private static final int TYPE_CONTENT = 1;
+    private static final int TYPE_LOADING = 2;
 
     private RecyclerView.Adapter<VH> originalAdapter;
     private String emptyTitle;
     private String emptyMessage;
     private boolean showEmptyState = false;
+    private boolean showLoadingState = false;
 
     public EmptyStateAdapter(RecyclerView.Adapter<VH> originalAdapter) {
         this.originalAdapter = originalAdapter;
@@ -29,6 +31,7 @@ private static final int TYPE_EMPTY = 0;
 
     public void setEmptyState(boolean showEmpty, String title, String message) {
         this.showEmptyState = showEmpty;
+        this.showLoadingState = false; // Desativa loading quando mostra empty
         this.emptyTitle = title != null ? title : "Nenhum item encontrado";
         this.emptyMessage = message != null ? message : "Não há dados para exibir no momento.\nTente novamente mais tarde.";
         notifyDataSetChanged();
@@ -38,8 +41,17 @@ private static final int TYPE_EMPTY = 0;
         setEmptyState(showEmpty, null, null);
     }
 
+    public void setLoadingState(boolean isLoading) {
+        this.showLoadingState = isLoading;
+        this.showEmptyState = false; // Desativa empty quando mostra loading
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemViewType(int position) {
+        if (showLoadingState) {
+            return TYPE_LOADING;
+        }
         if (showEmptyState) {
             return TYPE_EMPTY;
         }
@@ -50,7 +62,11 @@ private static final int TYPE_EMPTY = 0;
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (viewType == TYPE_EMPTY) {
+        if (viewType == TYPE_LOADING) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.loading_state_layout, parent, false);
+            return new LoadingStateViewHolder(view);
+        } else if (viewType == TYPE_EMPTY) {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.empty_state_layout, parent, false);
             return new EmptyStateViewHolder(view);
@@ -61,7 +77,9 @@ private static final int TYPE_EMPTY = 0;
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        if (holder instanceof EmptyStateViewHolder) {
+        if (holder instanceof LoadingStateViewHolder) {
+            // Não precisa fazer nada, o layout já tem o ProgressBar
+        } else if (holder instanceof EmptyStateViewHolder) {
             EmptyStateViewHolder emptyHolder = (EmptyStateViewHolder) holder;
             emptyHolder.bind(emptyTitle, emptyMessage);
         } else {
@@ -71,10 +89,16 @@ private static final int TYPE_EMPTY = 0;
 
     @Override
     public int getItemCount() {
-        if (showEmptyState) {
+        if (showLoadingState || showEmptyState) {
             return 1;
         }
         return originalAdapter.getItemCount();
+    }
+
+    static class LoadingStateViewHolder extends RecyclerView.ViewHolder {
+        LoadingStateViewHolder(@NonNull View itemView) {
+            super(itemView);
+        }
     }
 
     static class EmptyStateViewHolder extends RecyclerView.ViewHolder {

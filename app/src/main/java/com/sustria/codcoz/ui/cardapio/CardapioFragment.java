@@ -75,11 +75,17 @@ public class CardapioFragment extends Fragment {
             return;
         }
 
+        // Mostra loading ao iniciar
+        emptyStateAdapter.setLoadingState(true);
+
         receitaService.getReceitas(empresaId.toString(), new ReceitaService.ReceitaCallback<List<ReceitaResponse>>() {
             @Override
             public void onSuccess(List<ReceitaResponse> receitasApi) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
+                        // Remove loading
+                        emptyStateAdapter.setLoadingState(false);
+                        
                         receitas = receitasApi;
                         receitaAdapter.setReceitas(receitas);
 
@@ -98,7 +104,8 @@ public class CardapioFragment extends Fragment {
             public void onError(String error) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        // Em caso de erro, mostrar estado vazio
+                        // Remove loading e mostra estado vazio em caso de erro
+                        emptyStateAdapter.setLoadingState(false);
                         Log.e("Cardapio", "Erro ao carregar receitas: " + error);
                         emptyStateAdapter.setEmptyState(true, "Erro ao carregar receitas",
                                 "Não foi possível carregar as receitas.\nVerifique sua conexão e tente novamente.");
