@@ -21,7 +21,7 @@
         android:theme="@style/AppTheme">
         <activity android:name=".actions.BaixaScanActivity" />
         <activity android:name=".actions.EntradaScanActivity" />
-        <activity android:name=".actions.BaixaManualActivity" />
+        <activity android:name=".actions.ManualActivity" />
         <activity android:name=".actions.ProdutosActivity" />
         <activity
             android:name=".MainActivity"

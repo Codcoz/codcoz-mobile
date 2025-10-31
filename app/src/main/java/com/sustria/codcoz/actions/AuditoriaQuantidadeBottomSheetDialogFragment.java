@@ -3,6 +3,7 @@ package com.sustria.codcoz.actions;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,17 +12,27 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
+import com.sustria.codcoz.api.model.ProdutoResponse;
+import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.BottomsheetAuditoriaQuantidadeBinding;
+import com.sustria.codcoz.utils.UserDataManager;
+
+import java.util.List;
 
 public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
     private static final String ARG_TITULO = "arg_titulo";
     private static final String ARG_PRODUTO = "arg_produto";
+    private static final String ARG_TAREFA_ID = "arg_tarefa_id";
 
     private BottomsheetAuditoriaQuantidadeBinding binding;
+    private Long tarefaId;
+    private ProdutoService produtoService;
+    private Integer estoqueAntigo = null;
 
     @Nullable
     @Override
@@ -45,12 +56,21 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        String titulo = getArguments() != null ? getArguments().getString(ARG_TITULO) : "Auditoria";
-        String produto = getArguments() != null ? getArguments().getString(ARG_PRODUTO) : null;
+        produtoService = new ProdutoService();
+
+        Bundle args = getArguments();
+        String titulo = args != null ? args.getString(ARG_TITULO) : "Auditoria";
+        String produto = args != null ? args.getString(ARG_PRODUTO) : null;
+        tarefaId = args != null && args.containsKey(ARG_TAREFA_ID) ? args.getLong(ARG_TAREFA_ID, -1) : null;
+        if (tarefaId != null && tarefaId <= 0) {
+            tarefaId = null;
+        }
 
         binding.txtTitulo.setText(titulo);
         if (produto != null) {
             binding.txtProduto.setText(produto);
+            // Buscar o produto para obter o estoque antigo
+            buscarProdutoPorNome(produto);
         }
 
         EditText edt = binding.inputQuantidade;
@@ -72,7 +92,6 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
         binding.btnConfirmar.setOnClickListener(v -> {
             // Após informar a quantidade, abre o bottomsheet de confirmação
             String nome = produto != null ? produto : titulo;
-            Integer estoqueAntigo = null;
             Integer estoqueAtualizado = null;
             try {
                 String qtdStr = edt.getText() != null ? edt.getText().toString().trim() : null;
@@ -84,23 +103,42 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
             ConfirmarRegistroBottomSheetDialogFragment.show(
                     getParentFragmentManager(),
                     nome,
-                    estoqueAntigo,
+                    estoqueAntigo, // Usar estoque antigo obtido da busca
                     estoqueAtualizado,
                     null, // codigoEan - não disponível na auditoria
                     null, // quantidade - não disponível na auditoria
-                    null  // tipoMovimento - não disponível na auditoria
+                    null, // tipoMovimento - não disponível na auditoria
+                    null, // idProduto - não disponível na auditoria
+                    tarefaId // tarefaId para finalizar após auditoria
             );
         });
     }
     
+    public static void show(@NonNull FragmentManager manager, @Nullable String titulo, @Nullable String produto, @Nullable Long tarefaId) {
+        show(manager, titulo, produto, tarefaId, "AuditoriaQuantidadeBottomSheetDialog");
+    }
+
+    public static void show(@NonNull FragmentManager manager, @Nullable String titulo, @Nullable String produto, @Nullable Long tarefaId, @Nullable String tag) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(manager);
+        
+        AuditoriaQuantidadeBottomSheetDialogFragment fragment = new AuditoriaQuantidadeBottomSheetDialogFragment();
+        Bundle args = new Bundle();
+        if (titulo != null) args.putString(ARG_TITULO, titulo);
+        if (produto != null) args.putString(ARG_PRODUTO, produto);
+        if (tarefaId != null && tarefaId > 0) args.putLong(ARG_TAREFA_ID, tarefaId);
+        fragment.setArguments(args);
+        fragment.show(manager, tag);
+    }
+
     @Override
-    public void show(@NonNull androidx.fragment.app.FragmentManager manager, @Nullable String tag) {
+    public void show(@NonNull FragmentManager manager, @Nullable String tag) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(manager);
         super.show(manager, tag);
     }
     
-    private static void dismissExistingBottomSheets(@NonNull androidx.fragment.app.FragmentManager fm) {
+    private static void dismissExistingBottomSheets(@NonNull FragmentManager fm) {
         // Fechar todos os bottom sheets existentes
         if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
             ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();
@@ -123,6 +161,33 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
         if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
             ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
         }
+    }
+
+    private void buscarProdutoPorNome(String nomeProduto) {
+        if (nomeProduto == null || nomeProduto.trim().isEmpty()) {
+            return;
+        }
+
+        Long idEmpresa = Long.valueOf(UserDataManager.getInstance().getEmpresaId());
+        produtoService.listarEstoque(idEmpresa, new ProdutoService.ProdutoCallback<>() {
+            @Override
+            public void onSuccess(List<ProdutoResponse> produtos) {
+                if (produtos != null) {
+                    // Procurar produto pelo nome (case-insensitive)
+                    for (ProdutoResponse p : produtos) {
+                        if (p.getNome() != null && p.getNome().equalsIgnoreCase(nomeProduto.trim())) {
+                            estoqueAntigo = p.getQuantidade();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.d("Auditoria", "Erro ao buscar produto: " + error);
+            }
+        });
     }
 }
 

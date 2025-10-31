@@ -4,6 +4,7 @@ import com.sustria.codcoz.api.model.TarefaResponse;
 
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.PUT;
@@ -33,8 +34,8 @@ public interface TarefaApi {
             @Query("tipo") String tipo
     );
 
-    @PUT("tarefa/finalizar/{id}")
-    Call<TarefaResponse> finalizarTarefa(
+    @PUT("tarefa/finalizar-tarefa/{id}")
+    Call<ResponseBody> finalizarTarefa(
             @Path(value = "id", encoded = true) Long id
     );
 }

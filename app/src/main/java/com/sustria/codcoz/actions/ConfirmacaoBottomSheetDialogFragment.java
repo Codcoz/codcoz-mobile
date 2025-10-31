@@ -1,6 +1,7 @@
 package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
@@ -78,27 +80,36 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
     }
 
 
-    public static void showSucesso(androidx.fragment.app.FragmentManager fm) {
+    public static void showSucesso(FragmentManager fm) {
         showSucesso(fm, true);
     }
 
-    public static void showSucesso(androidx.fragment.app.FragmentManager fm, boolean shouldFinishActivity) {
-        // Fechar qualquer bottom sheet existente antes de abrir um novo
-        dismissExistingBottomSheets(fm);
+    public static void showSucesso(FragmentManager fm, boolean shouldFinishActivity) {
+        if (fm == null || fm.isStateSaved()) {
+            Log.e("ConfirmacaoBottomSheet", "FragmentManager é null ou estado já foi salvo, não é possível mostrar sucesso");
+            return;
+        }
         
-        ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
-        Bundle args = new Bundle();
-        args.putBoolean(ARG_IS_ERRO, false);
-        args.putBoolean(ARG_SHOULD_FINISH_ACTIVITY, shouldFinishActivity);
-        fragment.setArguments(args);
-        fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
+        try {
+            // Fechar qualquer bottom sheet existente antes de abrir um novo
+            dismissExistingBottomSheets(fm);
+            
+            ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
+            Bundle args = new Bundle();
+            args.putBoolean(ARG_IS_ERRO, false);
+            args.putBoolean(ARG_SHOULD_FINISH_ACTIVITY, shouldFinishActivity);
+            fragment.setArguments(args);
+            fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
+        } catch (Exception e) {
+            Log.e("ConfirmacaoBottomSheet", "Erro ao mostrar sucesso: " + e.getMessage(), e);
+        }
     }
 
-    public static void showErro(androidx.fragment.app.FragmentManager fm, String mensagem) {
+    public static void showErro(FragmentManager fm, String mensagem) {
         showErro(fm, mensagem, true);
     }
 
-    public static void showErro(androidx.fragment.app.FragmentManager fm, String mensagem, boolean shouldFinishActivity) {
+    public static void showErro(FragmentManager fm, String mensagem, boolean shouldFinishActivity) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(fm);
         
@@ -111,7 +122,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
         fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
     }
     
-    private static void dismissExistingBottomSheets(@NonNull androidx.fragment.app.FragmentManager fm) {
+    private static void dismissExistingBottomSheets(@NonNull FragmentManager fm) {
         // Fechar todos os bottom sheets existentes
         if (fm.findFragmentByTag("ProdutoBottomSheetDialogFragment") != null) {
             ((BottomSheetDialogFragment) fm.findFragmentByTag("ProdutoBottomSheetDialogFragment")).dismiss();

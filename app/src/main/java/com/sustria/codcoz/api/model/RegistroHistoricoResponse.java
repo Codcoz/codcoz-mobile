@@ -2,9 +2,7 @@ package com.sustria.codcoz.api.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
-public class RegistroHistorico {
+public class RegistroHistoricoResponse {
 
     @SerializedName("id")
     private String id;
@@ -34,13 +32,13 @@ public class RegistroHistorico {
     private String produtoId;
 
     // Construtor padrão
-    public RegistroHistorico() {
+    public RegistroHistoricoResponse() {
     }
 
     // Construtor completo
-    public RegistroHistorico(String id, String nome, int unidades, String codigo,
-                             long epochMillis, TipoMovimentacao tipo, String observacoes,
-                             String usuarioId, String produtoId) {
+    public RegistroHistoricoResponse(String id, String nome, int unidades, String codigo,
+                                     long epochMillis, TipoMovimentacao tipo, String observacoes,
+                                     String usuarioId, String produtoId) {
         this.id = id;
         this.nome = nome;
         this.unidades = unidades;
@@ -53,8 +51,8 @@ public class RegistroHistorico {
     }
 
     // Construtor simplificado para compatibilidade
-    public RegistroHistorico(String nome, int unidades, String codigo,
-                             long epochMillis, TipoMovimentacao tipo) {
+    public RegistroHistoricoResponse(String nome, int unidades, String codigo,
+                                     long epochMillis, TipoMovimentacao tipo) {
         this.nome = nome;
         this.unidades = unidades;
         this.codigo = codigo;

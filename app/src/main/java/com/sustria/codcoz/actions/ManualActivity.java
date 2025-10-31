@@ -17,12 +17,14 @@ import com.sustria.codcoz.api.model.ProdutoResponse;
 import com.sustria.codcoz.api.service.ProdutoService;
 import com.sustria.codcoz.databinding.ActivityBaixaManualBinding;
 
-public class BaixaManualActivity extends AppCompatActivity {
+public class ManualActivity extends AppCompatActivity {
 
     private ActivityBaixaManualBinding binding;
     private ProdutoService produtoService;
     private ProdutoResponse produtoEncontrado;
     private boolean isEntrada; // true para entrada, false para baixa
+    private Long tarefaId;
+    private String ingredienteEsperado;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +35,17 @@ public class BaixaManualActivity extends AppCompatActivity {
 
         produtoService = new ProdutoService();
         isEntrada = getIntent().getBooleanExtra("is_entrada", false);
+        
+        // Verificar se há tarefaId e ingrediente esperado (para validação de atividade)
+        if (getIntent().hasExtra("tarefa_id")) {
+            long id = getIntent().getLongExtra("tarefa_id", -1);
+            if (id > 0) {
+                tarefaId = id;
+            }
+        }
+        if (getIntent().hasExtra("ingrediente_esperado")) {
+            ingredienteEsperado = getIntent().getStringExtra("ingrediente_esperado");
+        }
 
         // da a cor para a parte que fica de status(onde fica a bateria, rede, etc...)
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
@@ -81,7 +94,7 @@ public class BaixaManualActivity extends AppCompatActivity {
                 runOnUiThread(() -> {
                     setLoadingState(false);
                     Log.e("BaixaManual", "Erro ao buscar produto: " + error);
-                    Toast.makeText(BaixaManualActivity.this, "Erro ao buscar produto: " + error, Toast.LENGTH_LONG).show();
+                    Toast.makeText(ManualActivity.this, "Erro ao buscar produto: " + error, Toast.LENGTH_LONG).show();
                 });
             }
         });
@@ -91,7 +104,9 @@ public class BaixaManualActivity extends AppCompatActivity {
         ProdutoBottomSheetDialogFragment.show(
                 getSupportFragmentManager(),
                 produto.getCodigoEan(),
-                isEntrada ? ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA : ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA
+                isEntrada ? ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA : ProdutoBottomSheetDialogFragment.TipoMovimento.BAIXA,
+                tarefaId,
+                ingredienteEsperado
         );
     }
 

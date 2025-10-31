@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorOnPrimary"
-    tools:context=".actions.BaixaManualActivity">
+    tools:context=".actions.ManualActivity">
 
     <include
         android:id="@+id/header_baixa_manual"

@@ -64,17 +64,6 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
 
         if (receita != null) {
             displayReceita(receita);
-        } else {
-            String receitaId = intent.getStringExtra("RECEITA_ID");
-            if (receitaId != null) {
-//                List<Receita> receitas = MockDataProvider.getMockReceitas();
-//                for (Receita r : receitas) {
-//                    if (r.getId().equals(receitaId)) {
-//                        displayReceita(r);
-//                        break;
-//                    }
-//                }
-            }
         }
     }
 

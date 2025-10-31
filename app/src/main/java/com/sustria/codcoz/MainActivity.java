@@ -15,9 +15,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
 
-import com.sustria.codcoz.actions.BaixaManualActivity;
 import com.sustria.codcoz.actions.BaixaScanActivity;
 import com.sustria.codcoz.actions.EntradaScanActivity;
+import com.sustria.codcoz.actions.ManualActivity;
 import com.sustria.codcoz.databinding.ActivityMainBinding;
 
 
@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
         binding.optionEntradaManual.setOnClickListener(v -> {
             hidePopup();
-            Intent intent = new Intent(this, BaixaManualActivity.class);
+            Intent intent = new Intent(this, ManualActivity.class);
             intent.putExtra("is_entrada", true);
             startActivity(intent);
         });
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
         });
         binding.optionBaixaManual.setOnClickListener(v -> {
             hidePopup();
-            Intent intent = new Intent(this, BaixaManualActivity.class);
+            Intent intent = new Intent(this, ManualActivity.class);
             intent.putExtra("is_entrada", false);
             startActivity(intent);
         });

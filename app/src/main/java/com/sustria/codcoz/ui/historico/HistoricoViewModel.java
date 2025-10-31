@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.sustria.codcoz.api.model.HistoricoBaixaResponse;
-import com.sustria.codcoz.api.model.RegistroHistorico;
+import com.sustria.codcoz.api.model.RegistroHistoricoResponse;
 import com.sustria.codcoz.api.service.HistoricoService;
 import com.sustria.codcoz.utils.UserDataManager;
 
@@ -19,13 +19,13 @@ import java.util.List;
 
 public class HistoricoViewModel extends ViewModel {
 
-    private final MutableLiveData<List<RegistroHistorico>> historicoData;
+    private final MutableLiveData<List<RegistroHistoricoResponse>> historicoData;
     private final MutableLiveData<Boolean> isLoading;
     private final MutableLiveData<String> errorMessage;
     private final HistoricoService historicoService;
 
     // Lista para armazenar os dados originais (sem filtros)
-    private List<RegistroHistorico> dadosOriginais = new ArrayList<>();
+    private List<RegistroHistoricoResponse> dadosOriginais = new ArrayList<>();
 
     public HistoricoViewModel() {
         historicoData = new MutableLiveData<>();
@@ -37,7 +37,7 @@ public class HistoricoViewModel extends ViewModel {
         isLoading.setValue(false);
     }
 
-    public LiveData<List<RegistroHistorico>> getHistoricoData() {
+    public LiveData<List<RegistroHistoricoResponse>> getHistoricoData() {
         return historicoData;
     }
 
@@ -81,7 +81,7 @@ public class HistoricoViewModel extends ViewModel {
                             dadosOriginais = new ArrayList<>();
                             historicoData.setValue(new ArrayList<>());
                         } else {
-                            List<RegistroHistorico> registros = convertHistorical(result);
+                            List<RegistroHistoricoResponse> registros = convertHistorical(result);
                             dadosOriginais = registros;
                             historicoData.setValue(registros);
                         }
@@ -105,7 +105,7 @@ public class HistoricoViewModel extends ViewModel {
             return;
         }
 
-        List<RegistroHistorico> dadosFiltrados = new ArrayList<>(dadosOriginais);
+        List<RegistroHistoricoResponse> dadosFiltrados = new ArrayList<>(dadosOriginais);
 
         // Filtro por busca (nome do produto)
         if (busca != null && !busca.trim().isEmpty()) {
@@ -119,7 +119,7 @@ public class HistoricoViewModel extends ViewModel {
         // Filtro por tipo de movimentação
         if (tipoFiltro != null && !tipoFiltro.equals("TODOS")) {
             try {
-                RegistroHistorico.TipoMovimentacao tipo = RegistroHistorico.TipoMovimentacao.valueOf(tipoFiltro);
+                RegistroHistoricoResponse.TipoMovimentacao tipo = RegistroHistoricoResponse.TipoMovimentacao.valueOf(tipoFiltro);
                 dadosFiltrados = dadosFiltrados.stream()
                         .filter(registro -> registro.getTipo() == tipo)
                         .collect(java.util.stream.Collectors.toList());
@@ -161,17 +161,17 @@ public class HistoricoViewModel extends ViewModel {
     }
 
     public void applyOrder(String sortOrder) {
-        List<RegistroHistorico> dadosAtuais = historicoData.getValue();
+        List<RegistroHistoricoResponse> dadosAtuais = historicoData.getValue();
         if (dadosAtuais == null) {
             return;
         }
 
-        List<RegistroHistorico> dadosOrdenados = new ArrayList<>(dadosAtuais);
+        List<RegistroHistoricoResponse> dadosOrdenados = new ArrayList<>(dadosAtuais);
 
         if ("MAIS_RECENTES".equals(sortOrder)) {
             dadosOrdenados.sort((a, b) -> Long.compare(b.getEpochMillis(), a.getEpochMillis()));
         } else if ("MAIS_ANTIGOS".equals(sortOrder)) {
-            dadosOrdenados.sort(Comparator.comparingLong(RegistroHistorico::getEpochMillis));
+            dadosOrdenados.sort(Comparator.comparingLong(RegistroHistoricoResponse::getEpochMillis));
         }
 
         historicoData.setValue(dadosOrdenados);
@@ -182,11 +182,11 @@ public class HistoricoViewModel extends ViewModel {
         historicoData.setValue(new ArrayList<>(dadosOriginais));
     }
 
-    private List<RegistroHistorico> convertHistorical(List<HistoricoBaixaResponse> responses) {
-        List<RegistroHistorico> registros = new ArrayList<>();
+    private List<RegistroHistoricoResponse> convertHistorical(List<HistoricoBaixaResponse> responses) {
+        List<RegistroHistoricoResponse> registros = new ArrayList<>();
 
         for (HistoricoBaixaResponse response : responses) {
-            RegistroHistorico registro = new RegistroHistorico();
+            RegistroHistoricoResponse registro = new RegistroHistoricoResponse();
             registro.setId(response.getId() != null ? response.getId() : "");
             registro.setNome(response.getNome_produto());
             registro.setUnidades(response.getQuantidade() != null ? response.getQuantidade() : 0);
@@ -210,18 +210,18 @@ public class HistoricoViewModel extends ViewModel {
             if (response.getTipo_registro() != null) {
                 String tipoStr = response.getTipo_registro();
                 if (tipoStr.equalsIgnoreCase("Entrada")) {
-                    registro.setTipo(RegistroHistorico.TipoMovimentacao.ENTRADA);
+                    registro.setTipo(RegistroHistoricoResponse.TipoMovimentacao.ENTRADA);
                 } else if (tipoStr.equalsIgnoreCase("Saída")) {
-                    registro.setTipo(RegistroHistorico.TipoMovimentacao.BAIXA);
+                    registro.setTipo(RegistroHistoricoResponse.TipoMovimentacao.BAIXA);
                 } else {
                     try {
-                        registro.setTipo(RegistroHistorico.TipoMovimentacao.valueOf(tipoStr.toUpperCase()));
+                        registro.setTipo(RegistroHistoricoResponse.TipoMovimentacao.valueOf(tipoStr.toUpperCase()));
                     } catch (IllegalArgumentException e) {
-                        registro.setTipo(RegistroHistorico.TipoMovimentacao.BAIXA);
+                        registro.setTipo(RegistroHistoricoResponse.TipoMovimentacao.BAIXA);
                     }
                 }
             } else {
-                registro.setTipo(RegistroHistorico.TipoMovimentacao.BAIXA);
+                registro.setTipo(RegistroHistoricoResponse.TipoMovimentacao.BAIXA);
             }
 
             registros.add(registro);
