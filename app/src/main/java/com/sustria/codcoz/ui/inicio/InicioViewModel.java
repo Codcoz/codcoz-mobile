@@ -219,6 +219,14 @@ public class InicioViewModel extends ViewModel {
         return tarefas;
     }
 
+    public LiveData<Boolean> getIsLoading() {
+        return isLoading;
+    }
+
+    public LiveData<String> getErrorMessage() {
+        return errorMessage;
+    }
+
     // Metodo para carregar tarefas da API
     public void loadTasks() {
         UserDataManager userDataManager = UserDataManager.getInstance();

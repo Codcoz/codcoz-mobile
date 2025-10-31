@@ -36,7 +36,9 @@ public class ReceitaAdapter extends RecyclerView.Adapter<ReceitaAdapter.ReceitaV
     public void onBindViewHolder(@NonNull ReceitaViewHolder holder, int position) {
         ReceitaResponse receita = receitas.get(position);
         holder.tvNomeReceita.setText(receita.getNome());
-        holder.tvPorcoes.setText(receita.getPorcoes() + " porções possíveis");
+        // getPorcoes() já trata null e retorna valor aleatório entre 0 e 10
+        Integer porcoes = receita.getPorcoes();
+        holder.tvPorcoes.setText(porcoes + " porções possíveis");
 
         // Configurar clique no item
         holder.itemView.setOnClickListener(v -> {

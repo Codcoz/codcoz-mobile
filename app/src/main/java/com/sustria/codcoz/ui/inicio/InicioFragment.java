@@ -405,7 +405,19 @@ public class InicioFragment extends Fragment {
     }
 
     private void watchTasks() {
+        // Observa o estado de loading
+        inicioViewModel.getIsLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading != null && isLoading) {
+                // Mostra loading quando está carregando
+                emptyStateAdapter.setLoadingState(true);
+            }
+        });
+
+        // Observa as tarefas
         inicioViewModel.getTarefas().observe(getViewLifecycleOwner(), tarefas -> {
+            // Remove loading quando os dados chegam
+            emptyStateAdapter.setLoadingState(false);
+            
             if (tarefas != null) {
                 // Filtrar tarefas concluídas para o RecyclerView
                 List<TarefaResponse> tarefasPendentes = new ArrayList<>();

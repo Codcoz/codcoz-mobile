@@ -17,7 +17,16 @@ public class CardapioResponse {
     private String dataFim;
 
     @SerializedName("empresa_id")
-    private String empresaId;
+    private Object empresaId; // Aceita tanto String quanto Integer/Number
+
+    @SerializedName("nomeCardapio")
+    private String nomeCardapio; // camelCase do MongoDB
+
+    @SerializedName("nome_cardapio")
+    private String nomeCardapioSnakeCase; // snake_case da API
+
+    @SerializedName("periodicidade")
+    private String periodicidade;
 
     @SerializedName("cardapio_semanal")
     private List<DiaSemanaResponse> cardapioSemanal;
@@ -61,11 +70,41 @@ public class CardapioResponse {
     }
 
     public String getEmpresaId() {
-        return empresaId;
+        // Converte empresaId para String se for número
+        if (empresaId == null) {
+            return null;
+        }
+        if (empresaId instanceof String) {
+            return (String) empresaId;
+        }
+        if (empresaId instanceof Number) {
+            return String.valueOf(((Number) empresaId).intValue());
+        }
+        return empresaId.toString();
     }
 
     public void setEmpresaId(String empresaId) {
         this.empresaId = empresaId;
+    }
+
+    public String getNomeCardapio() {
+        // Retorna nomeCardapio (camelCase) se disponível, caso contrário retorna nome_cardapio (snake_case)
+        if (nomeCardapio != null && !nomeCardapio.isEmpty()) {
+            return nomeCardapio;
+        }
+        return nomeCardapioSnakeCase != null ? nomeCardapioSnakeCase : "";
+    }
+
+    public void setNomeCardapio(String nomeCardapio) {
+        this.nomeCardapio = nomeCardapio;
+    }
+
+    public String getPeriodicidade() {
+        return periodicidade;
+    }
+
+    public void setPeriodicidade(String periodicidade) {
+        this.periodicidade = periodicidade;
     }
 
     public List<DiaSemanaResponse> getCardapioSemanal() {

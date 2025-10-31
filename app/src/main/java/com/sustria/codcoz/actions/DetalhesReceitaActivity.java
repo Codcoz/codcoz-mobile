@@ -83,9 +83,9 @@ public class DetalhesReceitaActivity extends AppCompatActivity {
         if (receita.getTempoCozimentoMinutos() != null) {
             binding.tvTempoCozimento.setText("Tempo de cozimento: " + receita.getTempoCozimentoMinutos() + " minutos");
         }
-        if (receita.getPorcoes() != null) {
-            binding.tvPorcoes.setText("Rende " + receita.getPorcoes() + " porções");
-        }
+        // getPorcoes() já trata null e retorna valor aleatório entre 0 e 10
+        Integer porcoes = receita.getPorcoes();
+        binding.tvPorcoes.setText("Rende " + porcoes + " porções");
 
         // Ingredientes
         if (receita.getIngredientes() != null) {
