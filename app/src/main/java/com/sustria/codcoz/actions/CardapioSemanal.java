@@ -66,7 +66,7 @@ public class CardapioSemanal extends AppCompatActivity {
             return;
         }
         
-        cardapioService.getCardapios(empresaId.toString(), new CardapioService.CardapioCallback<List<CardapioResponse>>() {
+        cardapioService.getCardapios(empresaId.toString(), new CardapioService.CardapioCallback<>() {
             @Override
             public void onSuccess(List<CardapioResponse> cardapios) {
                 runOnUiThread(() -> {

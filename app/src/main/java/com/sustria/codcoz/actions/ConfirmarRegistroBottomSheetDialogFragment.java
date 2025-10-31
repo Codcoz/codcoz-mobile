@@ -9,13 +9,20 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.HistoricoBaixaRequest;
+import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.api.service.HistoricoService;
 import com.sustria.codcoz.api.service.ProdutoService;
+import com.sustria.codcoz.api.service.TarefaService;
+import com.sustria.codcoz.ui.inicio.InicioViewModel;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.appcompat.app.AppCompatActivity;
 import com.sustria.codcoz.databinding.BottomsheetProdutoRegistroConfirmacaoBinding;
 import com.sustria.codcoz.utils.UserDataManager;
 
@@ -34,10 +41,15 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
     private static final String ARG_QUANTIDADE = "arg_quantidade";
     private static final String ARG_TIPO_MOVIMENTO = "arg_tipo_movimento";
     private static final String ARG_ID_PRODUTO = "arg_id_produto";
+    private static final String ARG_TAREFA_ID = "arg_tarefa_id";
+    private static final String ARG_INGREDIENTE_ESPERADO = "arg_ingrediente_esperado";
 
     private BottomsheetProdutoRegistroConfirmacaoBinding binding;
     private ProdutoService produtoService;
     private HistoricoService historicoService;
+    private TarefaService tarefaService;
+    private Long tarefaId;
+    private String ingredienteEsperado;
 
     @Nullable
     @Override
@@ -62,20 +74,48 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
 
         produtoService = new ProdutoService();
         historicoService = new HistoricoService();
-
+        tarefaService = new TarefaService();
+        
         Bundle args = getArguments();
+        if (args != null && args.containsKey(ARG_TAREFA_ID)) {
+            tarefaId = args.getLong(ARG_TAREFA_ID, -1);
+            if (tarefaId <= 0) {
+                tarefaId = null;
+            }
+        }
+        ingredienteEsperado = args != null ? args.getString(ARG_INGREDIENTE_ESPERADO) : null;
+
         String nome = args != null ? args.getString(ARG_NOME) : null;
-        Integer estoqueAntigo = args != null && args.containsKey(ARG_ESTOQUE_ANTIGO) ? args.getInt(ARG_ESTOQUE_ANTIGO, -1) : null;
-        Integer estoqueAtualizado = args != null && args.containsKey(ARG_ESTOQUE_ATUALIZADO) ? args.getInt(ARG_ESTOQUE_ATUALIZADO, -1) : null;
+        Integer estoqueAntigo = null;
+        Integer estoqueAtualizado = null;
+        
+        if (args != null) {
+            if (args.containsKey(ARG_ESTOQUE_ANTIGO)) {
+                int valorAntigo = args.getInt(ARG_ESTOQUE_ANTIGO, -1);
+                if (valorAntigo >= 0) {
+                    estoqueAntigo = valorAntigo;
+                }
+            }
+            if (args.containsKey(ARG_ESTOQUE_ATUALIZADO)) {
+                int valorAtualizado = args.getInt(ARG_ESTOQUE_ATUALIZADO, -1);
+                if (valorAtualizado >= 0) {
+                    estoqueAtualizado = valorAtualizado;
+                }
+            }
+        }
 
         if (nome != null) {
             binding.txtNomeProduto.setText(nome);
         }
-        if (estoqueAntigo != null && estoqueAntigo >= 0) {
+        if (estoqueAntigo != null) {
             binding.txtEstoqueAntigo.setText(String.valueOf(estoqueAntigo));
+        } else {
+            binding.txtEstoqueAntigo.setText("--");
         }
-        if (estoqueAtualizado != null && estoqueAtualizado >= 0) {
+        if (estoqueAtualizado != null) {
             binding.txtEstoqueAtualizado.setText(String.valueOf(estoqueAtualizado));
+        } else {
+            binding.txtEstoqueAtualizado.setText("--");
         }
 
         binding.btnCancelar.setOnClickListener(v -> dismiss());
@@ -102,8 +142,13 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         // Se os dados não estiverem disponíveis (por exemplo, na auditoria), apenas fechar
         if (codigoEan == null || tipoMov == null || quantidade == null) {
             Log.d("ConfirmarRegistro", "Dados não disponíveis - apenas confirmando (auditoria)");
-            dismiss();
-            ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+            // Se for auditoria e houver tarefaId, finalizar a tarefa
+            if (tarefaId != null && tarefaId > 0) {
+                finalizarTarefaAtividade();
+            } else {
+                dismiss();
+                ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+            }
             return;
         }
 
@@ -161,20 +206,43 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         historicoService.registrarHistoricoBaixa(idEmpresa, request, new HistoricoService.HistoricoCallback<>() {
             @Override
             public void onSuccess(Void result) {
-                android.util.Log.d("ConfirmarRegistro", "Histórico registrado com sucesso");
-                if (isAdded()) {
-                    dismiss();
-                    ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                Log.d("ConfirmarRegistro", "Histórico registrado com sucesso");
+                // Se houver tarefaId, finalizar a tarefa (pode ser atividade com entrada ou auditoria)
+                if (tarefaId != null && tipoMov == ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA) {
+                    // Entrada de atividade
+                    finalizarTarefaAtividade();
+                } else if (tarefaId != null) {
+                    // Outros casos com tarefaId (não deveria acontecer com auditoria aqui, mas por segurança)
+                    if (isAdded()) {
+                        dismiss();
+                        ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                    }
+                } else {
+                    if (isAdded()) {
+                        dismiss();
+                        ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                    }
                 }
             }
 
             @Override
             public void onError(String error) {
-                android.util.Log.e("ConfirmarRegistro", "Erro ao registrar histórico: " + error);
+                Log.e("ConfirmarRegistro", "Erro ao registrar histórico: " + error);
                 // Mesmo se o histórico falhar, a operação de estoque foi bem-sucedida
-                if (isAdded()) {
-                    dismiss();
-                    ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                // Se for uma entrada de atividade, ainda assim finalizar a tarefa
+                if (tarefaId != null && tipoMov == ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA) {
+                    finalizarTarefaAtividade();
+                } else if (tarefaId != null) {
+                    // Outros casos com tarefaId
+                    if (isAdded()) {
+                        dismiss();
+                        ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                    }
+                } else {
+                    if (isAdded()) {
+                        dismiss();
+                        ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                    }
                 }
             }
         });
@@ -182,11 +250,21 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
 
     public static void show(FragmentManager fm, String nome, Integer estoqueAntigo, Integer estoqueAtualizado,
                             String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov) {
-        show(fm, nome, estoqueAntigo, estoqueAtualizado, codigoEan, quantidade, tipoMov, null);
+        show(fm, nome, estoqueAntigo, estoqueAtualizado, codigoEan, quantidade, tipoMov, null, null);
     }
 
     public static void show(FragmentManager fm, String nome, Integer estoqueAntigo, Integer estoqueAtualizado,
                             String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov, String idProduto) {
+        show(fm, nome, estoqueAntigo, estoqueAtualizado, codigoEan, quantidade, tipoMov, idProduto, null);
+    }
+
+    public static void show(FragmentManager fm, String nome, Integer estoqueAntigo, Integer estoqueAtualizado,
+                            String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov, String idProduto, Long tarefaId) {
+        show(fm, nome, estoqueAntigo, estoqueAtualizado, codigoEan, quantidade, tipoMov, idProduto, tarefaId, null);
+    }
+
+    public static void show(FragmentManager fm, String nome, Integer estoqueAntigo, Integer estoqueAtualizado,
+                            String codigoEan, Integer quantidade, ProdutoBottomSheetDialogFragment.TipoMovimento tipoMov, String idProduto, Long tarefaId, String ingredienteEsperado) {
         // Fechar qualquer bottom sheet existente antes de abrir um novo
         dismissExistingBottomSheets(fm);
 
@@ -199,6 +277,8 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         if (quantidade != null) args.putInt(ARG_QUANTIDADE, quantidade);
         if (tipoMov != null) args.putSerializable(ARG_TIPO_MOVIMENTO, tipoMov);
         if (idProduto != null) args.putString(ARG_ID_PRODUTO, idProduto);
+        if (tarefaId != null && tarefaId > 0) args.putLong(ARG_TAREFA_ID, tarefaId);
+        if (ingredienteEsperado != null) args.putString(ARG_INGREDIENTE_ESPERADO, ingredienteEsperado);
         fragment.setArguments(args);
         fragment.show(fm, "ConfirmarRegistroBottomSheetDialogFragment");
     }
@@ -225,6 +305,129 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         }
         if (fm.findFragmentByTag("TarefaDetalheBottomSheetDialog") != null) {
             ((BottomSheetDialogFragment) fm.findFragmentByTag("TarefaDetalheBottomSheetDialog")).dismiss();
+        }
+    }
+
+    private void finalizarTarefaAtividade() {
+        if (tarefaId == null || tarefaId <= 0 || tarefaService == null) {
+            Log.e("ConfirmarRegistro", "Não é possível finalizar tarefa: tarefaId inválido ou serviço não disponível");
+            mostrarSucessoFinalizacao();
+            return;
+        }
+
+        // Validar se o produto corresponde ao ingrediente esperado antes de finalizar
+        if (ingredienteEsperado != null && !ingredienteEsperado.trim().isEmpty()) {
+            Bundle args = getArguments();
+            String nomeProduto = args != null ? args.getString(ARG_NOME) : null;
+            if (nomeProduto == null || !nomeProduto.equalsIgnoreCase(ingredienteEsperado.trim())) {
+                Log.e("ConfirmarRegistro", "Produto não corresponde ao esperado. Esperado: " + ingredienteEsperado + ", Encontrado: " + nomeProduto);
+                if (isAdded() && getActivity() != null) {
+                    getActivity().runOnUiThread(() -> {
+                        if (isAdded()) {
+                            dismiss();
+                            ConfirmacaoBottomSheetDialogFragment.showErro(
+                                    getParentFragmentManager(),
+                                    "Produto incorreto! A tarefa não foi finalizada.\nEsperado: " + ingredienteEsperado + "\nRegistrado: " + (nomeProduto != null ? nomeProduto : "N/A"),
+                                    false
+                            );
+                        }
+                    });
+                }
+                return;
+            }
+        }
+
+        Log.d("ConfirmarRegistro", "Finalizando tarefa de atividade: " + tarefaId);
+        tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<>() {
+            @Override
+            public void onSuccess(TarefaResponse result) {
+                Log.d("ConfirmarRegistro", "Tarefa finalizada com sucesso");
+                
+                // Notificar que a tarefa foi finalizada através de FragmentResult
+                Bundle resultBundle = new Bundle();
+                resultBundle.putBoolean("tarefa_finalizada", true);
+                resultBundle.putLong("tarefa_id", tarefaId);
+                getParentFragmentManager().setFragmentResult("tarefa_finalizada", resultBundle);
+
+                // Recarregar tarefas na página de início
+                recarregarTarefasInicio();
+                
+                // Fechar este bottom sheet e qualquer TarefaDetalheBottomSheetDialogFragment aberto
+                fecharBottomSheetsRelacionados();
+                
+                mostrarSucessoFinalizacao();
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("ConfirmarRegistro", "Erro ao finalizar tarefa: " + error);
+                // Mesmo se a finalização falhar, a auditoria foi bem-sucedida
+                mostrarSucessoFinalizacao();
+            }
+        });
+    }
+
+    private void mostrarSucessoFinalizacao() {
+        if (getActivity() == null) {
+            Log.e("ConfirmarRegistro", "Activity é null, não é possível mostrar sucesso");
+            return;
+        }
+
+        // Salvar FragmentManager e Activity antes de fazer qualquer coisa
+        final androidx.fragment.app.FragmentManager fragmentManager = getParentFragmentManager();
+        final android.app.Activity activity = getActivity();
+        
+        getActivity().runOnUiThread(() -> {
+            try {
+                // Fechar este bottom sheet primeiro
+                if (isAdded() && isVisible()) {
+                    dismiss();
+                }
+                
+                // Usar Handler para adicionar um pequeno delay e garantir que o dismiss foi processado
+                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                    try {
+                        if (activity != null && !activity.isFinishing() && !fragmentManager.isStateSaved()) {
+                            // Usar shouldFinishActivity = false para não fechar a Activity
+                            ConfirmacaoBottomSheetDialogFragment.showSucesso(fragmentManager, false);
+                        }
+                    } catch (Exception e) {
+                        Log.e("ConfirmarRegistro", "Erro ao mostrar sucesso após delay: " + e.getMessage(), e);
+                    }
+                }, 300); // 300ms de delay
+            } catch (Exception e) {
+                Log.e("ConfirmarRegistro", "Erro ao mostrar sucesso: " + e.getMessage(), e);
+            }
+        });
+    }
+
+    private void recarregarTarefasInicio() {
+        // Tentar recarregar as tarefas na página de início
+        // Obtém o InicioViewModel através da Activity (se disponível)
+        if (getActivity() != null && getActivity() instanceof AppCompatActivity) {
+            try {
+                // Usar Handler para garantir que está na thread principal
+                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                    try {
+                        InicioViewModel inicioViewModel = new ViewModelProvider(getActivity()).get(InicioViewModel.class);
+                        inicioViewModel.loadTasks();
+                        Log.d("ConfirmarRegistro", "Tarefas recarregadas na página de início");
+                    } catch (Exception e) {
+                        Log.e("ConfirmarRegistro", "Erro ao recarregar tarefas: " + e.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Log.e("ConfirmarRegistro", "Erro ao agendar recarregamento de tarefas: " + e.getMessage());
+            }
+        }
+    }
+
+    private void fecharBottomSheetsRelacionados() {
+        // Fechar TarefaDetalheBottomSheetDialogFragment se estiver aberto
+        Log.d("ConfirmarRegistro", "Fechando bottom sheets relacionados");
+        Fragment tarefaDetalheFragment = getParentFragmentManager().findFragmentByTag("TarefaDetalheBottomSheetDialog");
+        if (tarefaDetalheFragment instanceof BottomSheetDialogFragment) {
+            ((BottomSheetDialogFragment) tarefaDetalheFragment).dismiss();
         }
     }
 }

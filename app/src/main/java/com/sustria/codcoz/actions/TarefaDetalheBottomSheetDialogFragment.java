@@ -1,6 +1,7 @@
 package com.sustria.codcoz.actions;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,10 @@ import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.TarefaResponse;
 import com.sustria.codcoz.api.service.TarefaService;
 import com.sustria.codcoz.databinding.BottomsheetTarefaDetalheBinding;
+import com.sustria.codcoz.ui.inicio.InicioViewModel;
+
+import androidx.lifecycle.ViewModelProvider;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -27,6 +32,7 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
     private BottomsheetTarefaDetalheBinding binding;
     private TarefaService tarefaService;
     private Long tarefaId;
+    private boolean tarefaConcluida = false;
 
     @Nullable
     @Override
@@ -83,17 +89,76 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
                 }
         );
 
+        // Listener para quando uma tarefa for finalizada (para atualizar o bottom sheet)
+        getParentFragmentManager().setFragmentResultListener(
+                "tarefa_finalizada",
+                this,
+                (requestKey, result) -> {
+                    boolean tarefaFinalizada = result.getBoolean("tarefa_finalizada", false);
+                    Long idTarefaFinalizada = result.getLong("tarefa_id", -1);
+                    
+                    // Se a tarefa finalizada é esta tarefa, atualizar a UI e fechar
+                    if (tarefaFinalizada && idTarefaFinalizada > 0 && idTarefaFinalizada.equals(tarefaId)) {
+                        // Marcar como concluída para evitar tentativas futuras
+                        tarefaConcluida = true;
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(() -> {
+                                // Atualizar situação para "Concluída"
+                                configurarTarefaConcluida();
+                                // Recarregar tarefas no início
+                                recarregarTarefasInicio();
+                                // Fechar após um pequeno delay para mostrar a atualização
+                                new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                                    if (isAdded()) {
+                                        dismiss();
+                                    }
+                                }, 500);
+                            });
+                        }
+                    }
+                }
+        );
+
+        // Armazenar situação inicial
+        if (situacao != null && situacao.toLowerCase().contains("concluída")) {
+            tarefaConcluida = true;
+        }
+
         binding.btnRegistrar.setOnClickListener(v -> {
-            // Verificar se a tarefa já foi concluída
-            if (situacao != null && situacao.toLowerCase().contains("concluída")) {
+            // Verificar se a tarefa já foi concluída (verificação dinâmica)
+            if (tarefaConcluida || (situacao != null && situacao.toLowerCase().contains("concluída"))) {
                 return;
             }
 
-            // Finalizar a tarefa diretamente
-            if (tarefaId != null && tarefaId > 0) {
-                finalizarTarefa();
+            // Verificar o tipo de tarefa e seguir o fluxo apropriado
+            if (tipo != null && tipo.equalsIgnoreCase("Atividade")) {
+                // Se for atividade, abrir bottomsheet de escolha (entrada/saída)
+                if (tarefaId != null && tarefaId > 0) {
+                    // Passar ingrediente esperado para validar se o produto está correto
+                    String ingredienteEsperado = produto != null ? produto : null;
+                    AtividadeEscolhaEntradaBottomSheetDialogFragment.show(getParentFragmentManager(), tarefaId, ingredienteEsperado);
+                } else {
+                    ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "ID da tarefa inválido");
+                }
+            } else if (tipo != null && tipo.equalsIgnoreCase("Conferência de Estoque")) {
+                // Se for conferência de estoque, abrir bottomsheet de auditoria de quantidade
+                if (tarefaId != null && tarefaId > 0) {
+                    AuditoriaQuantidadeBottomSheetDialogFragment.show(
+                            getParentFragmentManager(),
+                            tipo,
+                            produto,
+                            tarefaId
+                    );
+                } else {
+                    ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "ID da tarefa inválido");
+                }
             } else {
-                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "ID da tarefa inválido");
+                // Para outros tipos de tarefa, finalizar diretamente
+                if (tarefaId != null && tarefaId > 0) {
+                    finalizarTarefa();
+                } else {
+                    ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "ID da tarefa inválido");
+                }
             }
         });
     }
@@ -202,13 +267,29 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
         binding.btnRegistrar.setText("Finalizando...");
         binding.btnRegistrar.setEnabled(false);
 
-        tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<TarefaResponse>() {
+        tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<>() {
             @Override
             public void onSuccess(TarefaResponse result) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(() -> {
-                        dismiss();
-                        ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                        // Notificar que a tarefa foi finalizada através de FragmentResult
+                        Bundle resultBundle = new Bundle();
+                        resultBundle.putBoolean("tarefa_finalizada", true);
+                        resultBundle.putLong("tarefa_id", tarefaId);
+                        getParentFragmentManager().setFragmentResult("tarefa_finalizada", resultBundle);
+
+                        // Recarregar tarefas no início
+                        recarregarTarefasInicio();
+                        
+                        // Marcar como concluída e atualizar UI
+                        tarefaConcluida = true;
+                        configurarTarefaConcluida();
+                        new android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(() -> {
+                            if (isAdded()) {
+                                dismiss();
+                                ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
+                            }
+                        }, 500);
                     });
                 }
             }
@@ -224,6 +305,27 @@ public class TarefaDetalheBottomSheetDialogFragment extends BottomSheetDialogFra
                 }
             }
         });
+    }
+
+    private void recarregarTarefasInicio() {
+        // Tentar recarregar as tarefas na página de início
+        // Obtém o InicioViewModel através da Activity (se disponível)
+        if (getActivity() != null && getActivity() instanceof AppCompatActivity) {
+            try {
+                // Usar Handler para garantir que está na thread principal
+                new android.os.Handler(android.os.Looper.getMainLooper()).post(() -> {
+                    try {
+                        InicioViewModel inicioViewModel = new ViewModelProvider((AppCompatActivity) getActivity()).get(InicioViewModel.class);
+                        inicioViewModel.loadTasks();
+                        Log.d("TarefaDetalhe", "Tarefas recarregadas na página de início");
+                    } catch (Exception e) {
+                        Log.e("TarefaDetalhe", "Erro ao recarregar tarefas: " + e.getMessage());
+                    }
+                });
+            } catch (Exception e) {
+                Log.e("TarefaDetalhe", "Erro ao agendar recarregamento de tarefas: " + e.getMessage());
+            }
+        }
     }
 }
 

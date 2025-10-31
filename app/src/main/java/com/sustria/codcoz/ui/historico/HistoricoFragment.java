@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.actions.FiltrosBottomSheetDialogFragment;
-import com.sustria.codcoz.api.model.RegistroHistorico;
+import com.sustria.codcoz.api.model.RegistroHistoricoResponse;
 import com.sustria.codcoz.databinding.FragmentHistoricoBinding;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
 
@@ -159,7 +159,7 @@ public class HistoricoFragment extends Fragment {
         historicoEstoquistaViewModel.getErrorMessage().observe(getViewLifecycleOwner(), errorMessage -> {
             // Quando não há erro ou erro foi limpo, atualizar baseado nos dados
             if (errorMessage == null || errorMessage.isEmpty()) {
-                List<RegistroHistorico> registros = historicoEstoquistaViewModel.getHistoricoData().getValue();
+                List<RegistroHistoricoResponse> registros = historicoEstoquistaViewModel.getHistoricoData().getValue();
                 updateDataList(registros, null);
             }
         });
@@ -171,7 +171,7 @@ public class HistoricoFragment extends Fragment {
         });
     }
 
-    private void updateDataList(List<RegistroHistorico> registros, String errorMessage) {
+    private void updateDataList(List<RegistroHistoricoResponse> registros, String errorMessage) {
         // Se houver erro e não houver dados, mostrar mensagem de erro
         if (errorMessage != null && !errorMessage.isEmpty() && (registros == null || registros.isEmpty())) {
             emptyStateAdapter.setEmptyState(true, "Erro ao carregar dados", errorMessage);
@@ -254,7 +254,7 @@ public class HistoricoFragment extends Fragment {
 
 
     static class HistoricoListAdapter extends RecyclerView.Adapter<HistoricoListAdapter.VH> {
-        private final List<RegistroHistorico> itens = new ArrayList<>();
+        private final List<RegistroHistoricoResponse> itens = new ArrayList<>();
 
         @Override
         public VH onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -264,7 +264,7 @@ public class HistoricoFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(VH h, int position) {
-            RegistroHistorico r = itens.get(position);
+            RegistroHistoricoResponse r = itens.get(position);
             h.nome.setText(r.getNome());
             h.unidades.setText(String.valueOf(r.getUnidades()));
             h.codigo.setText(r.getCodigo());
@@ -277,7 +277,7 @@ public class HistoricoFragment extends Fragment {
             return itens.size();
         }
 
-        void submit(List<RegistroHistorico> novos) {
+        void submit(List<RegistroHistoricoResponse> novos) {
             itens.clear();
             itens.addAll(novos);
             notifyDataSetChanged();

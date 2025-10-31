@@ -66,8 +66,22 @@ public class EntradaScanActivity extends AppCompatActivity implements BarcodeCal
             String scannedCode = result.getText();
             // Pausa scanner para evitar múltiplas leituras enquanto o bottom sheet está aberto
             barcodeView.pause();
+            
+            // Verificar se há tarefaId e ingrediente esperado vindo do Intent
+            Long tarefaId = null;
+            String ingredienteEsperado = null;
+            if (getIntent().hasExtra("tarefa_id")) {
+                long id = getIntent().getLongExtra("tarefa_id", -1);
+                if (id > 0) {
+                    tarefaId = id;
+                }
+            }
+            if (getIntent().hasExtra("ingrediente_esperado")) {
+                ingredienteEsperado = getIntent().getStringExtra("ingrediente_esperado");
+            }
+            
             // Abre o bottom sheet para confirmar entrada, apenas se existir no repositório
-            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA);
+            ProdutoBottomSheetDialogFragment.show(getSupportFragmentManager(), scannedCode, ProdutoBottomSheetDialogFragment.TipoMovimento.ENTRADA, tarefaId, ingredienteEsperado);
         }
     }
 

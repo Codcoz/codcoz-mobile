@@ -29,20 +29,38 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
     private BottomsheetProdutoEscaneadoBinding binding;
     private static final String ARG_CODIGO = "arg_codigo";
     private static final String ARG_TIPO_MOV = "arg_tipo_mov";
+    private static final String ARG_TAREFA_ID = "arg_tarefa_id";
+    private static final String ARG_INGREDIENTE_ESPERADO = "arg_ingrediente_esperado";
 
     private ProdutoService produtoService;
     private HistoricoService historicoService;
     private ProdutoResponse produto;
     private Integer quantidade = 1;
     private boolean isUpdatingQuantidade = false;
+    private Long tarefaId;
+    private String ingredienteEsperado;
 
     public static void show(@NonNull FragmentManager fm, @NonNull String codigo, @NonNull TipoMovimento tipoMov) {
+        show(fm, codigo, tipoMov, null);
+    }
+
+    public static void show(@NonNull FragmentManager fm, @NonNull String codigo, @NonNull TipoMovimento tipoMov, @Nullable Long tarefaId) {
+        show(fm, codigo, tipoMov, tarefaId, null);
+    }
+
+    public static void show(@NonNull FragmentManager fm, @NonNull String codigo, @NonNull TipoMovimento tipoMov, @Nullable Long tarefaId, @Nullable String ingredienteEsperado) {
         dismissExistingBottomSheets(fm);
 
         ProdutoBottomSheetDialogFragment fragment = new ProdutoBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putString(ARG_CODIGO, codigo);
         args.putSerializable(ARG_TIPO_MOV, tipoMov);
+        if (tarefaId != null && tarefaId > 0) {
+            args.putLong(ARG_TAREFA_ID, tarefaId);
+        }
+        if (ingredienteEsperado != null) {
+            args.putString(ARG_INGREDIENTE_ESPERADO, ingredienteEsperado);
+        }
         fragment.setArguments(args);
         fragment.show(fm, "ProdutoBottomSheetDialogFragment");
     }
@@ -103,6 +121,11 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
 
         String codigoEan = args.getString(ARG_CODIGO);
         TipoMovimento tipoMov = (TipoMovimento) args.getSerializable(ARG_TIPO_MOV);
+        tarefaId = args.containsKey(ARG_TAREFA_ID) ? args.getLong(ARG_TAREFA_ID, -1) : null;
+        if (tarefaId != null && tarefaId <= 0) {
+            tarefaId = null;
+        }
+        ingredienteEsperado = args.getString(ARG_INGREDIENTE_ESPERADO);
 
         if (tipoMov == null) {
             showErrorAndDismiss("Código ou tipo de movimento não informado.");
@@ -110,7 +133,20 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         }
 
         setupClickListeners(tipoMov);
-        fetchProductData(codigoEan, tipoMov);
+        
+        // Só buscar produto se o código não estiver vazio
+        // Se estiver vazio, aguardar o usuário digitar e clicar em buscar/confirmar
+        if (codigoEan != null && !codigoEan.trim().isEmpty()) {
+            fetchProductData(codigoEan, tipoMov);
+        } else {
+            // Modo manual: mostrar campos vazios e aguardar usuário preencher
+            setLoadingState(false);
+            // Mostrar mensagem ou deixar em branco para entrada manual
+            binding.tvNomeProduto.setText("Digite o código do produto");
+            binding.tvCodigoProduto.setText("");
+            binding.tvFornecedorProduto.setText("");
+            binding.tvEstoqueAtual.setText("--");
+        }
 
         binding.etQuantidade.addTextChangedListener(new TextWatcher() {
             private boolean isUpdating = false;
@@ -198,9 +234,35 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
         });
 
         binding.btnConfirmar.setOnClickListener(v -> {
-            if (produto == null || produto.getQuantidade() == null) {
+            // Se produto ainda não foi carregado, tentar buscar pelo código (modo manual)
+            if (produto == null) {
+                Bundle args = getArguments();
+                String codigoEan = args != null ? args.getString(ARG_CODIGO) : null;
+                if (codigoEan != null && !codigoEan.trim().isEmpty()) {
+                    // Buscar produto primeiro
+                    fetchProductData(codigoEan, tipoMov);
+                    return;
+                } else {
+                    ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Digite o código do produto primeiro.");
+                    return;
+                }
+            }
+
+            if (produto.getQuantidade() == null) {
                 ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(), "Dados do produto indisponíveis.");
                 return;
+            }
+
+            // Validar se é o produto correto (quando há tarefaId e ingrediente esperado)
+            if (tarefaId != null && ingredienteEsperado != null && !ingredienteEsperado.trim().isEmpty()) {
+                String nomeProduto = produto.getNome();
+                if (nomeProduto == null || !nomeProduto.equalsIgnoreCase(ingredienteEsperado.trim())) {
+                    ConfirmacaoBottomSheetDialogFragment.showErro(
+                            getParentFragmentManager(),
+                            "Produto incorreto! Esperado: " + ingredienteEsperado + "\nEncontrado: " + (nomeProduto != null ? nomeProduto : "N/A")
+                    );
+                    return;
+                }
             }
 
             Integer estoqueAntigo = produto.getQuantidade();
@@ -212,7 +274,7 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
                 estoqueAtualizado = estoqueAntigo + quantidade;
             }
 
-            // Mostrar confirmação com todos os dados necessários
+            // Passar ingrediente esperado para validação final
             ConfirmarRegistroBottomSheetDialogFragment.show(
                     getParentFragmentManager(),
                     produto.getNome(),
@@ -221,7 +283,9 @@ public class ProdutoBottomSheetDialogFragment extends BottomSheetDialogFragment 
                     produto.getCodigoEan(),
                     quantidade,
                     tipoMov,
-                    produto.getId() != null ? produto.getId().toString() : null
+                    produto.getId() != null ? produto.getId().toString() : null,
+                    tarefaId,
+                    ingredienteEsperado
             );
         });
     }

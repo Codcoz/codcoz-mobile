@@ -3,6 +3,7 @@ package com.sustria.codcoz.ui.inicio;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -75,31 +76,46 @@ public class InicioFragment extends Fragment {
 
         // Observa os dados do estoque
         inicioViewModel.getEstoquePercentual().observe(getViewLifecycleOwner(), percentual -> {
+            // Esconder o ProgressBar quando os dados chegarem
+            if (binding.progressBarChartEstoque != null) {
+                binding.progressBarChartEstoque.setVisibility(View.GONE);
+            }
+            
             binding.txtPercentualAtual.setText(percentual + "%");
             PieChart pieChart = binding.chartEstoque;
             List<PieEntry> entries = new ArrayList<>();
             entries.add(new PieEntry(percentual, ""));
             entries.add(new PieEntry(100f - percentual, ""));
             PieDataSet dataSet = new PieDataSet(entries, "");
-            dataSet.setColors(ContextCompat.getColor(requireContext(), R.color.custom_green_success),
-                    ContextCompat.getColor(requireContext(), R.color.colorOnSurfaceVariant));
+            
+            // Definir cores baseado na porcentagem
+            int corPercentual;
+            int corStatus;
+            if (percentual >= 70) {
+                corPercentual = ContextCompat.getColor(requireContext(), R.color.custom_green_success);
+                corStatus = getResources().getColor(android.R.color.holo_green_dark, null);
+            } else if (percentual >= 40) {
+                corPercentual = ContextCompat.getColor(requireContext(), R.color.custom_orange_link);
+                corStatus = getResources().getColor(android.R.color.holo_orange_dark, null);
+            } else {
+                corPercentual = ContextCompat.getColor(requireContext(), R.color.custom_red_link);
+                corStatus = getResources().getColor(android.R.color.holo_red_dark, null);
+            }
+            
+            dataSet.setColors(corPercentual, ContextCompat.getColor(requireContext(), R.color.colorOnSecondary));
             dataSet.setDrawValues(false);
+            dataSet.setSliceSpace(2f);
             PieData data = new PieData(dataSet);
             pieChart.setData(data);
             pieChart.getDescription().setEnabled(false);
             pieChart.getLegend().setEnabled(false);
             pieChart.setRotationEnabled(false);
             pieChart.setHoleRadius(75f);
+            pieChart.setTransparentCircleRadius(75f);
             pieChart.invalidate();
 
             // Atualizar cor do status
-            if (percentual >= 70) {
-                binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_green_dark, null));
-            } else if (percentual >= 40) {
-                binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
-            } else {
-                binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
-            }
+            binding.tvStatusEstoque.setTextColor(corStatus);
         });
 
         binding.headerHome.headerPerfil.setOnClickListener(v -> startActivity(new Intent(getContext(), PerfilActivity.class)));
@@ -112,7 +128,7 @@ public class InicioFragment extends Fragment {
         inicioViewModel.getEstoqueStatusAnterior().observe(getViewLifecycleOwner(),
                 statusAnterior -> binding.tvStatusAnterior.setText("Status: " + statusAnterior));
 
-        // Observa os dados reais da API para os cards
+        // Observa os dados da API para os cards
         inicioViewModel.getQuantidadeEstoque().observe(getViewLifecycleOwner(),
                 quantidade -> {
                     if (quantidade != null) {
@@ -136,26 +152,12 @@ public class InicioFragment extends Fragment {
 
         // Configura RecyclerView de tarefas
         setupRecyclerViewTask();
-
-        // Observa oa dados das tarefas
         watchTasks();
 
+        // Listener para quando uma tarefa for finalizada recarregar
+        setupTarefaFinalizadaListener();
+
         return root;
-    }
-
-    private void loadEstoqueData() {
-        binding.tvStatusEstoque.setText("Ótimo!");
-        binding.tvDiaAnterior.setText("Dia anterior: Percentual: 62%");
-        binding.tvStatusAnterior.setText("Status: bom");
-
-        float percentualAtual = 78;
-        if (percentualAtual >= 70) {
-            binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_green_dark, null));
-        } else if (percentualAtual >= 40) {
-            binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_orange_dark, null));
-        } else {
-            binding.tvStatusEstoque.setTextColor(getResources().getColor(android.R.color.holo_red_dark, null));
-        }
     }
 
     // Calendário
@@ -426,6 +428,24 @@ public class InicioFragment extends Fragment {
                 }
             }
         });
+    }
+
+    private void setupTarefaFinalizadaListener() {
+        // Listener para recarregar tarefas quando uma for finalizada
+        getParentFragmentManager().setFragmentResultListener(
+                "tarefa_finalizada",
+                this,
+                (requestKey, result) -> {
+                    boolean tarefaFinalizada = result.getBoolean("tarefa_finalizada", false);
+                    if (tarefaFinalizada) {
+                        // Recarregar tarefas automaticamente
+                        if (inicioViewModel != null) {
+                            inicioViewModel.loadTasks();
+                            Log.d("InicioFragment", "Tarefas recarregadas após finalização");
+                        }
+                    }
+                }
+        );
     }
 
     private void stageTasksByDay(List<TarefaResponse> tarefas) {
