@@ -27,7 +27,7 @@ public interface ProdutoApi {
     @GET("produto/listar/estoque-baixo/{id_empresa}")
     Call<List<ProdutoResponse>> listarEstoqueBaixo(@Path("id_empresa") Long idEmpresa);
 
-    @GET("produto/listar/estoque/{id_empresa}")
+    @GET("produto/listar/{id_empresa}")
     Call<List<ProdutoResponse>> listarEstoque(@Path("id_empresa") Long idEmpresa);
 
     @GET("produto/buscar/{cod_ean}")

@@ -81,6 +81,11 @@ public class PerfilActivity extends AppCompatActivity {
     private void setupHeader() {
         binding.headerPerfil.headerActivityBackTitle.setText("Perfil");
         binding.headerPerfil.headerActivityBackArrow.setOnClickListener(v -> finish());
+        binding.headerPerfil.headerActivityReportsIcon.setVisibility(View.VISIBLE);
+        binding.headerPerfil.headerActivityReportsIcon.setOnClickListener(v -> {
+            Intent intent = new Intent(this, PowerBIActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupUi() {

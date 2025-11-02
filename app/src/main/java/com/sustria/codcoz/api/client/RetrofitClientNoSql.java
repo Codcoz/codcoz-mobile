@@ -11,11 +11,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public final class RetrofitClientNoSql {
-    private static final String BASE_URL = "https://codcoz-api-mongo.onrender.com/";
+    private static final String BASE_URL = "https://codcoz-api-mongo-eemr.onrender.com/";
     private static Retrofit retrofit;
 
     private RetrofitClientNoSql() {
-    }
+    }   
 
     public static Retrofit getInstance() {
         if (retrofit == null) {

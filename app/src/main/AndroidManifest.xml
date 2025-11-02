@@ -19,22 +19,47 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".actions.BaixaScanActivity" />
-        <activity android:name=".actions.EntradaScanActivity" />
-        <activity android:name=".actions.ManualActivity" />
-        <activity android:name=".actions.ProdutosActivity" />
+        <activity 
+            android:name=".actions.BaixaScanActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.EntradaScanActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.ManualActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.ProdutosActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MainActivity"
-            android:windowSoftInputMode="adjustPan|stateHidden" />
-        <activity android:name=".auth.EsqueceuSenhaActivity" />
-        <activity android:name=".auth.LoginActivity" />
-        <activity android:name=".auth.CadastroActivity" />
-        <activity android:name=".actions.PerfilActivity" />
-        <activity android:name=".actions.DetalhesReceitaActivity" />
-        <activity android:name=".actions.CardapioSemanal" />
+            android:windowSoftInputMode="adjustPan|stateHidden"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".auth.EsqueceuSenhaActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".auth.LoginActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".auth.CadastroActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.PerfilActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.DetalhesReceitaActivity"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.CardapioSemanal"
+            android:screenOrientation="portrait" />
+        <activity 
+            android:name=".actions.PowerBIActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".auth.SplashScreenActivity"
-            android:exported="true">
+            android:exported="true"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

@@ -1,0 +1,30 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="40dp"
+    android:height="40dp"
+    android:viewportWidth="32"
+    android:viewportHeight="32">
+  <!-- Eixo X (horizontal) -->
+  <path
+      android:pathData="M6,24L26,24"
+      android:strokeWidth="3"
+      android:fillColor="#00000000"
+      android:strokeColor="#FFCC00"
+      android:strokeLineCap="round"/>
+  
+  <!-- Eixo Y (vertical) -->
+  <path
+      android:pathData="M6,24L6,8"
+      android:strokeWidth="3"
+      android:fillColor="#00000000"
+      android:strokeColor="#FFCC00"
+      android:strokeLineCap="round"/>
+  
+  <!-- Linha do gráfico (tendência ascendente) -->
+  <path
+      android:pathData="M10,20L14,14L20,16L22,14L26,10"
+      android:strokeWidth="3"
+      android:fillColor="#00000000"
+      android:strokeColor="#FFCC00"
+      android:strokeLineCap="round"
+      android:strokeLineJoin="round"/>
+</vector>

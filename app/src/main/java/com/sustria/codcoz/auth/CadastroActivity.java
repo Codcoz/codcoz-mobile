@@ -12,9 +12,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.sustria.codcoz.MainActivity;
+import com.sustria.codcoz.actions.ErrorBottomSheet;
 import com.sustria.codcoz.api.model.EstoquistaResponse;
 import com.sustria.codcoz.databinding.ActivityCadastroBinding;
-import com.sustria.codcoz.actions.ErrorBottomSheet;
 import com.sustria.codcoz.utils.UserDataManager;
 
 import java.util.HashMap;
@@ -133,6 +133,7 @@ public class CadastroActivity extends AppCompatActivity {
         usuario.put("dataContratacao", estoquista.getDataContratacao());
         usuario.put("status", estoquista.getStatus());
         usuario.put("empresaId", estoquista.getEmpresaId());
+        usuario.put("funcaoId", estoquista.getFuncaoId());
         usuario.put("imagemPerfil", "https://res.cloudinary.com/dixacuf51/image/upload/v1/default_profile_avatar");
 
         // Vi que é boa prática colocar o uid do firebase no documento do usuário

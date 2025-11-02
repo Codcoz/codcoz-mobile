@@ -30,4 +30,16 @@
         android:textColor="@color/colorOnPrimary"
         android:textSize="24sp" />
 
+    <ImageView
+        android:id="@+id/header_activity_reports_icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:clickable="true"
+        android:contentDescription="Relatórios"
+        android:focusable="true"
+        android:padding="8dp"
+        android:src="@drawable/ic_relatorios"
+        android:visibility="gone" />
+
 </LinearLayout>

@@ -121,4 +121,22 @@ public class TarefaService {
             }
         });
     }
+
+    public void buscarConcluidas(Long empresaId, int dias, TarefaCallback<List<TarefaResponse>> callback) {
+        tarefaApi.buscarConcluidas(empresaId, dias).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<List<TarefaResponse>> call, Response<List<TarefaResponse>> response) {
+                if (response.isSuccessful()) {
+                    callback.onSuccess(response.body());
+                } else {
+                    callback.onError("Erro ao buscar tarefas concluídas: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TarefaResponse>> call, Throwable t) {
+                callback.onError("Erro de conexão: " + t.getMessage());
+            }
+        });
+    }
 }
