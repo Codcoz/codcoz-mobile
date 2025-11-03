@@ -50,9 +50,9 @@ public class PowerBIActivity extends AppCompatActivity {
 
         // Define a cor da status bar
         getWindow().setStatusBarColor(ContextCompat.getColor(this, R.color.colorPrimary));
-        ViewCompat.setOnApplyWindowInsetsListener(binding.headerPowerBi.getRoot(), (v, windowInsets) -> {
+        ViewCompat.setOnApplyWindowInsetsListener(binding.getRoot(), (v, windowInsets) -> {
             Insets systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(v.getPaddingLeft(), systemBars.top, v.getPaddingRight(), v.getPaddingBottom());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return WindowInsetsCompat.CONSUMED;
         });
 

@@ -67,9 +67,9 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
                 bindingErro.tvErrorTitle.setText(mensagemErro);
             }
             
-            // Se for info, deixa o ícone laranja
+            // Se for info, usa o ícone laranja
             if (isInfo && bindingErro.ivErrorIcon != null) {
-                bindingErro.ivErrorIcon.setColorFilter(ContextCompat.getColor(requireContext(), R.color.custom_orange_link));
+                bindingErro.ivErrorIcon.setImageResource(R.drawable.ic_info_popup);
             }
             
             bindingErro.btnFechar.setOnClickListener(v -> {
