@@ -142,9 +142,15 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
         // Se os dados não estiverem disponíveis (por exemplo, na auditoria), apenas fechar
         if (codigoEan == null || tipoMov == null || quantidade == null) {
             Log.d("ConfirmarRegistro", "Dados não disponíveis - apenas confirmando (auditoria)");
-            // Se for auditoria e houver tarefaId, finalizar a tarefa
+            // Se for auditoria e houver tarefaId, finalizar a auditoria com a contagem
             if (tarefaId != null && tarefaId > 0) {
-                finalizarTarefaAtividade();
+                Integer estoqueAtualizado = args.containsKey(ARG_ESTOQUE_ATUALIZADO) ? args.getInt(ARG_ESTOQUE_ATUALIZADO, -1) : null;
+                if (estoqueAtualizado != null && estoqueAtualizado >= 0) {
+                    finalizarAuditoria(estoqueAtualizado);
+                } else {
+                    // Se não houver estoqueAtualizado, usar o método antigo
+                    finalizarTarefaAtividade();
+                }
             } else {
                 dismiss();
                 ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager());
@@ -362,6 +368,57 @@ public class ConfirmarRegistroBottomSheetDialogFragment extends BottomSheetDialo
             public void onError(String error) {
                 Log.e("ConfirmarRegistro", "Erro ao finalizar tarefa: " + error);
                 // Mesmo se a finalização falhar, a auditoria foi bem-sucedida
+                mostrarSucessoFinalizacao();
+            }
+        });
+    }
+
+    private void finalizarAuditoria(Integer contagem) {
+        if (tarefaId == null || tarefaId <= 0 || tarefaService == null) {
+            Log.e("ConfirmarRegistro", "Não é possível finalizar auditoria: tarefaId inválido ou serviço não disponível");
+            mostrarSucessoFinalizacao();
+            return;
+        }
+
+        Log.d("ConfirmarRegistro", "Finalizando auditoria: " + tarefaId + " com contagem: " + contagem);
+        tarefaService.finalizarAuditoria(tarefaId, contagem, new TarefaService.TarefaCallback<>() {
+            @Override
+            public void onSuccess(TarefaResponse result) {
+                Log.d("ConfirmarRegistro", "Auditoria finalizada com sucesso. Chamando finalizar tarefa para atualizar status.");
+                // Após finalizar a auditoria, precisa chamar finalizar-tarefa para atualizar o status
+                tarefaService.finalizarTarefa(tarefaId, new TarefaService.TarefaCallback<>() {
+                    @Override
+                    public void onSuccess(TarefaResponse tarefaResult) {
+                        Log.d("ConfirmarRegistro", "Tarefa finalizada com sucesso");
+                        
+                        // Notificar que a tarefa foi finalizada através de FragmentResult
+                        Bundle resultBundle = new Bundle();
+                        resultBundle.putBoolean("tarefa_finalizada", true);
+                        resultBundle.putLong("tarefa_id", tarefaId);
+                        getParentFragmentManager().setFragmentResult("tarefa_finalizada", resultBundle);
+
+                        // Recarregar tarefas na página de início
+                        recarregarTarefasInicio();
+                        
+                        // Fechar este bottom sheet e qualquer TarefaDetalheBottomSheetDialogFragment aberto
+                        fecharBottomSheetsRelacionados();
+                        
+                        mostrarSucessoFinalizacao();
+                    }
+
+                    @Override
+                    public void onError(String error) {
+                        Log.e("ConfirmarRegistro", "Erro ao finalizar tarefa após auditoria: " + error);
+                        // Mesmo se a finalização da tarefa falhar, a auditoria foi bem-sucedida
+                        mostrarSucessoFinalizacao();
+                    }
+                });
+            }
+
+            @Override
+            public void onError(String error) {
+                Log.e("ConfirmarRegistro", "Erro ao finalizar auditoria: " + error);
+                // Se a auditoria falhar, não tenta finalizar a tarefa
                 mostrarSucessoFinalizacao();
             }
         });

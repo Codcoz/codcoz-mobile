@@ -139,4 +139,43 @@ public class TarefaService {
             }
         });
     }
+
+    public void finalizarAuditoria(Long id, Integer contagem, TarefaCallback<TarefaResponse> callback) {
+        tarefaApi.finalizarAuditoria(id, contagem).enqueue(new Callback<>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    // Consideramos sucesso se o status code foi 200
+                    ResponseBody body = response.body();
+                    if (body != null) {
+                        try {
+                            String responseText = body.string();
+                            Log.d("TarefaService", "Auditoria finalizada. Resposta: " + responseText);
+                        } catch (Exception e) {
+                            Log.e("TarefaService", "Erro ao ler resposta (mas requisição foi bem-sucedida): " + e.getMessage());
+                        }
+                    }
+                    // Retornar null para indicar sucesso (status 200)
+                    callback.onSuccess(null);
+                } else {
+                    String errorMsg = "Erro ao finalizar auditoria: " + response.code();
+                    try {
+                        if (response.errorBody() != null) {
+                            String errorBody = response.errorBody().string();
+                            errorMsg += " - " + errorBody;
+                        }
+                    } catch (Exception e) {
+                        Log.e("TarefaService", "Erro ao ler errorBody: " + e.getMessage());
+                    }
+                    callback.onError(errorMsg);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("TarefaService", "Falha na requisição: " + t.getMessage(), t);
+                callback.onError("Erro de conexão: " + t.getMessage());
+            }
+        });
+    }
 }
