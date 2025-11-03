@@ -388,6 +388,15 @@ Classes utilitárias e helpers:
 
 ## 💻 Instalação
 
+### 📦 Download do APK
+
+[⬇️ **Baixar APK**](https://github.com/Codcoz/codcoz-mobile/releases/download/CodCoz/Codcoz.apk)
+
+Ou escaneie o QR Code abaixo:
+
+<p align="center">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=https://github.com/Codcoz/codcoz-mobile/releases/download/CodCoz/Codcoz.apk" alt="QR Code para download do APK" />
+</p>
 ### 1. Clonar o Repositório
 
 ```bash
