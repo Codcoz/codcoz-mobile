@@ -21,10 +21,12 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
     private static final String ARG_IS_ERRO = "arg_is_erro";
     private static final String ARG_MSG_ERRO = "arg_msg_erro";
     private static final String ARG_SHOULD_FINISH_ACTIVITY = "arg_should_finish_activity";
+    private static final String ARG_IS_INFO = "arg_is_info";
 
     private BottomsheetProdutoConfirmadoBinding bindingSucesso;
     private BottomSheetErrorBinding bindingErro;
     private boolean isErro;
+    private boolean isInfo;
     private String mensagemErro;
     private boolean shouldFinishActivity = true;
 
@@ -33,6 +35,7 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         Bundle args = getArguments();
         isErro = args != null && args.getBoolean(ARG_IS_ERRO, false);
+        isInfo = args != null && args.getBoolean(ARG_IS_INFO, false);
         mensagemErro = args != null ? args.getString(ARG_MSG_ERRO) : null;
         shouldFinishActivity = args != null && args.getBoolean(ARG_SHOULD_FINISH_ACTIVITY, true);
         if (isErro) {
@@ -63,6 +66,12 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
             if (mensagemErro != null) {
                 bindingErro.tvErrorTitle.setText(mensagemErro);
             }
+            
+            // Se for info, usa o ícone laranja
+            if (isInfo && bindingErro.ivErrorIcon != null) {
+                bindingErro.ivErrorIcon.setImageResource(R.drawable.ic_info_popup);
+            }
+            
             bindingErro.btnFechar.setOnClickListener(v -> {
                 dismiss();
                 if (shouldFinishActivity && getActivity() != null) {
@@ -116,6 +125,24 @@ public class ConfirmacaoBottomSheetDialogFragment extends BottomSheetDialogFragm
         ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
         Bundle args = new Bundle();
         args.putBoolean(ARG_IS_ERRO, true);
+        args.putString(ARG_MSG_ERRO, mensagem);
+        args.putBoolean(ARG_SHOULD_FINISH_ACTIVITY, shouldFinishActivity);
+        fragment.setArguments(args);
+        fragment.show(fm, "ConfirmacaoBottomSheetDialogFragment");
+    }
+    
+    public static void showInfo(FragmentManager fm, String mensagem) {
+        showInfo(fm, mensagem, false);
+    }
+    
+    public static void showInfo(FragmentManager fm, String mensagem, boolean shouldFinishActivity) {
+        // Fechar qualquer bottom sheet existente antes de abrir um novo
+        dismissExistingBottomSheets(fm);
+        
+        ConfirmacaoBottomSheetDialogFragment fragment = new ConfirmacaoBottomSheetDialogFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(ARG_IS_ERRO, true);
+        args.putBoolean(ARG_IS_INFO, true);
         args.putString(ARG_MSG_ERRO, mensagem);
         args.putBoolean(ARG_SHOULD_FINISH_ACTIVITY, shouldFinishActivity);
         fragment.setArguments(args);

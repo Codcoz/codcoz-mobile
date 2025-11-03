@@ -61,6 +61,7 @@ public class InicioFragment extends Fragment {
     private TarefaAdapter tarefaAdapter;
     private EmptyStateAdapter emptyStateAdapter;
     private final Map<LocalDate, List<TarefaResponse>> tarefasPorData = new HashMap<>();
+    private CalendarView calendarView;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -185,7 +186,7 @@ public class InicioFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-        CalendarView calendarView = binding.calendarView;
+        calendarView = binding.calendarView;
 
         YearMonth currentMonth = YearMonth.now();
         YearMonth startMonth = currentMonth.minusMonths(100);
@@ -254,25 +255,29 @@ public class InicioFragment extends Fragment {
 
                     List<TarefaResponse> tarefasDoDia = tarefasPorData.get(date);
                     boolean temTarefaVencida = false;
-                    boolean temTarefaConcluida = false;
-
+                    boolean todasTarefasConcluidas = false;
 
                     if (tarefasDoDia != null && !tarefasDoDia.isEmpty()) {
+                        int totalTarefas = tarefasDoDia.size();
+                        int tarefasConcluidas = 0;
+                        
                         for (TarefaResponse tarefa : tarefasDoDia) {
-
                             // Verifica se a tarefa está concluída
                             if (tarefa.getSituacao() != null && tarefa.getSituacao().toLowerCase().contains("concluída")) {
-                                temTarefaConcluida = true;
+                                tarefasConcluidas++;
                             }
                             // Verifica se a tarefa tem data limite e se está vencida
                             else if (tarefa.getDataLimite() != null && tarefa.getDataLimite().isBefore(LocalDate.now())) {
                                 temTarefaVencida = true;
                             }
                         }
+                        
+                        // Só considera verde se TODAS as tarefas estiverem concluídas
+                        todasTarefasConcluidas = (tarefasConcluidas == totalTarefas && totalTarefas > 0);
                     }
 
-                    if (temTarefaConcluida) {
-                        container.bolinha.setBackgroundResource(R.drawable.bolinha_verde); // Verde para concluídas
+                    if (todasTarefasConcluidas) {
+                        container.bolinha.setBackgroundResource(R.drawable.bolinha_verde); // Verde para todas concluídas
                     } else if (temTarefaVencida) {
                         container.bolinha.setBackgroundResource(R.drawable.bolinha_vermelha);
                     } else {
@@ -307,9 +312,22 @@ public class InicioFragment extends Fragment {
                                         )
                                         .show(getParentFragmentManager(), "TarefaDetalheBottomSheetDialog");
                             } else {
-                                // Se há múltiplas tarefas, mostra uma mensagem
-                                ConfirmacaoBottomSheetDialogFragment.showErro(getParentFragmentManager(),
-                                        "Há " + tarefasDoDia.size() + " tarefas para este dia. Use a lista de tarefas para visualizá-las.", false);
+                                // Se há múltiplas tarefas, verificar se todas estão concluídas
+                                int tarefasConcluidas = 0;
+                                for (TarefaResponse tarefa : tarefasDoDia) {
+                                    if (tarefa.getSituacao() != null && tarefa.getSituacao().toLowerCase().contains("concluída")) {
+                                        tarefasConcluidas++;
+                                    }
+                                }
+                                
+                                if (tarefasConcluidas == tarefasDoDia.size()) {
+                                    // Todas as tarefas estão concluídas
+                                    ConfirmacaoBottomSheetDialogFragment.showSucesso(getParentFragmentManager(), false);
+                                } else {
+                                    // Há tarefas pendentes - avisa para olhar na lista
+                                    ConfirmacaoBottomSheetDialogFragment.showInfo(getParentFragmentManager(),
+                                            "Existem " + tarefasDoDia.size() + " tarefas para este dia. Verifique a lista de tarefas abaixo para visualizá-las.", false);
+                                }
                             }
                         }
                     } else {
@@ -479,6 +497,15 @@ public class InicioFragment extends Fragment {
                 }
                 tarefasPorData.get(dataParaUsar).add(tarefa);
             }
+        }
+        
+        // Notifica o calendário para atualizar as bolinhas
+        if (calendarView != null) {
+            // Força o calendário a recarregar todos os dias visíveis
+            YearMonth currentVisibleMonth = calendarView.findFirstVisibleMonth() != null 
+                    ? calendarView.findFirstVisibleMonth().getYearMonth() 
+                    : YearMonth.now();
+            calendarView.notifyMonthChanged(currentVisibleMonth);
         }
     }
 

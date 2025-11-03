@@ -7,6 +7,7 @@ public class EstoquistaResponse implements Serializable {
     private String nome;
     private String sobrenome;
     private Integer empresaId;
+    private Integer funcaoId;
     private String dataContratacao;
     private String status;
     private String imagemPerfil;
@@ -30,6 +31,10 @@ public class EstoquistaResponse implements Serializable {
         return empresaId;
     }
 
+    public Integer getFuncaoId() {
+        return funcaoId;
+    }
+
     public String getDataContratacao() {
         return dataContratacao;
     }
@@ -44,6 +49,10 @@ public class EstoquistaResponse implements Serializable {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public void setFuncaoId(Integer funcaoId) {
+        this.funcaoId = funcaoId;
     }
 
     public void setSobrenome(String sobrenome) {

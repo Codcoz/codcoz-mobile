@@ -38,4 +38,10 @@ public interface TarefaApi {
     Call<ResponseBody> finalizarTarefa(
             @Path(value = "id", encoded = true) Long id
     );
+
+    @GET("tarefa/buscar-concluidas/{empresaId}")
+    Call<List<TarefaResponse>> buscarConcluidas(
+            @Path(value = "empresaId", encoded = true) Long empresaId,
+            @Query("dias") Integer dias
+    );
 }
