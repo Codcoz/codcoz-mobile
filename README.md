@@ -402,7 +402,7 @@ Ou escaneie o QR Code abaixo:
 ### 1. Clonar o Repositório
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/Codcoz/codcoz-mobile.git
 cd codcoz-mobile
 ```
 
