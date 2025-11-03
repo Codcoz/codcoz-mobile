@@ -44,4 +44,10 @@ public interface TarefaApi {
             @Path(value = "empresaId", encoded = true) Long empresaId,
             @Query("dias") Integer dias
     );
+
+    @PUT("tarefa/finalizar-auditoria/{id}")
+    Call<ResponseBody> finalizarAuditoria(
+            @Path(value = "id", encoded = true) Long id,
+            @Query("contagem") Integer contagem
+    );
 }
