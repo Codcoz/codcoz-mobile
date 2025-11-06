@@ -1,12 +1,15 @@
 package com.sustria.codcoz.actions;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.InputType;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
@@ -14,6 +17,7 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.sustria.codcoz.R;
 import com.sustria.codcoz.api.model.ProdutoResponse;
@@ -49,6 +53,27 @@ public class AuditoriaQuantidadeBottomSheetDialogFragment extends BottomSheetDia
             getDialog().getWindow().setNavigationBarColor(
                     ContextCompat.getColor(requireContext(), R.color.colorSurface)
             );
+            
+            // Configurar largura total para tablets através do BottomSheetBehavior
+            View bottomSheet = getDialog().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+            if (bottomSheet != null) {
+                BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bottomSheet);
+                Configuration configuration = getResources().getConfiguration();
+                int screenWidthDp = configuration.screenWidthDp;
+                
+                // Se for tablet (largura >= 600dp), remover limitação de largura
+                if (screenWidthDp >= 600) {
+                    DisplayMetrics displayMetrics = new DisplayMetrics();
+                    getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+                    int screenWidth = displayMetrics.widthPixels;
+                    behavior.setMaxWidth(screenWidth);
+                    
+                    // Também configurar no Window
+                    WindowManager.LayoutParams params = getDialog().getWindow().getAttributes();
+                    params.width = screenWidth;
+                    getDialog().getWindow().setAttributes(params);
+                }
+            }
         }
     }
 
