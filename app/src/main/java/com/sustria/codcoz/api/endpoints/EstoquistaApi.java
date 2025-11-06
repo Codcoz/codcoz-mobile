@@ -8,6 +8,6 @@ import retrofit2.http.Path;
 
 public interface EstoquistaApi {
 
-    @GET("estoquista/buscar/{email}")
+    @GET("funcionario/buscar/{email}")
     Call<EstoquistaResponse> buscarPorEmail(@Path(value = "email", encoded = true) String email);
 }

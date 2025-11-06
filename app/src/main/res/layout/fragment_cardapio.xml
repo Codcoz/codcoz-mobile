@@ -57,27 +57,14 @@
                     android:orientation="vertical"
                     android:padding="10dp">
 
-
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/nome_cardapio"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/ativos"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_bold"
-                            android:text="Cardápio semanal - "
-                            android:textColor="@color/colorPrimary"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:id="@+id/ativos_valor"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:fontFamily="@font/nunito_bold"
-                            android:text="18/09/2025" />
-                    </LinearLayout>
+                        android:layout_height="wrap_content"
+                        android:fontFamily="@font/nunito_bold"
+                        android:text="Cardápio semanal - 18/09/2025"
+                        android:textColor="@color/colorPrimary"
+                        android:textSize="12sp" />
 
 
                     <TextView
@@ -86,7 +73,7 @@
                         android:fontFamily="@font/nunito_semibold"
                         android:text="Visualizar"
                         android:textColor="@color/colorPrimary"
-                        android:textSize="14sp" />
+                        android:textSize="12sp" />
                 </LinearLayout>
 
             </LinearLayout>

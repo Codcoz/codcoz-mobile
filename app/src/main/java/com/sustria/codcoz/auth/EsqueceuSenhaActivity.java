@@ -1,21 +1,27 @@
 package com.sustria.codcoz.auth;
 
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.sustria.codcoz.databinding.ActivityEsqueceuSenhaBinding;
 import com.sustria.codcoz.actions.ErrorBottomSheet;
+import com.sustria.codcoz.utils.NotificationHelper;
 
 public class EsqueceuSenhaActivity extends AppCompatActivity {
     private ActivityEsqueceuSenhaBinding binding;
     private FirebaseAuth auth;
     private boolean isProcessing = false;
+    private static final int PERMISSION_REQUEST_CODE = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +31,9 @@ public class EsqueceuSenhaActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         auth = FirebaseAuth.getInstance();
+        
+        // Solicitar permissão de notificação se necessário (Android 13+)
+        requestNotificationPermission();
 
         binding.btnEnviarEmail.setOnClickListener(v -> {
             if (isProcessing) return;
@@ -62,6 +71,9 @@ public class EsqueceuSenhaActivity extends AppCompatActivity {
                         Toast.makeText(EsqueceuSenhaActivity.this, 
                                 "E-mail de redefinição enviado! Verifique sua caixa de entrada.", 
                                 Toast.LENGTH_LONG).show();
+                        
+                        // Exibe notificação push informando que o email foi enviado
+                        NotificationHelper.showPasswordResetNotification(EsqueceuSenhaActivity.this, email);
                         
                         // Volta para a tela de login após sucesso
                         voltarParaLogin();
@@ -102,5 +114,34 @@ public class EsqueceuSenhaActivity extends AppCompatActivity {
         binding.editEmail.setEnabled(!loading);
         binding.tvVoltarLogin.setEnabled(!loading);
         binding.btnEnviarEmail.setAlpha(loading ? 0.6f : 1f);
+    }
+    
+    /**
+     * Solicita permissão de notificação (necessário para Android 13+)
+     */
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(
+                        this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS},
+                        PERMISSION_REQUEST_CODE
+                );
+            }
+        }
+    }
+    
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permissão concedida
+            } else {
+                // Permissão negada - a notificação ainda pode ser exibida, mas pode não aparecer
+                // dependendo das configurações do sistema
+            }
+        }
     }
 }

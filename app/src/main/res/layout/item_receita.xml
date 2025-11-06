@@ -26,10 +26,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:layout_marginStart="2dp"
                 android:fontFamily="@font/nunito_bold"
                 android:text="Macarrão a bolonhesa"
                 android:textColor="@color/colorPrimary"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvQuantidades"

@@ -21,8 +21,11 @@ import com.sustria.codcoz.databinding.FragmentCardapioBinding;
 import com.sustria.codcoz.utils.EmptyStateAdapter;
 import com.sustria.codcoz.utils.UserDataManager;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 public class CardapioFragment extends Fragment {
 
@@ -45,6 +48,7 @@ public class CardapioFragment extends Fragment {
         botao();
         setupBusca();
         carregarReceitas();
+        carregarNomeCardapio();
 
         return root;
     }
@@ -169,5 +173,39 @@ public class CardapioFragment extends Fragment {
             Intent intent = new Intent(getContext(), CardapioSemanal.class);
             startActivity(intent);
         });
+    }
+
+    private void carregarNomeCardapio() {
+        // Calcula o período da semana atual (segunda a sexta)
+        Calendar calendar = Calendar.getInstance(Locale.getDefault());
+        
+        // Encontra a segunda-feira da semana atual
+        int diaSemana = calendar.get(Calendar.DAY_OF_WEEK);
+        int diasParaSegunda;
+        
+        // Calendar.DAY_OF_WEEK: Domingo=1, Segunda=2, Terça=3, ..., Sábado=7
+        if (diaSemana == Calendar.SUNDAY) {
+            // Se for domingo, volta 6 dias para chegar na segunda-feira anterior
+            diasParaSegunda = -6;
+        } else {
+            // Para outros dias, calcula quantos dias precisa voltar para chegar na segunda
+            diasParaSegunda = Calendar.MONDAY - diaSemana;
+        }
+        
+        calendar.add(Calendar.DAY_OF_MONTH, diasParaSegunda);
+        Calendar segundaFeira = (Calendar) calendar.clone();
+        
+        // Calcula a sexta-feira (4 dias depois da segunda)
+        calendar.add(Calendar.DAY_OF_MONTH, 4);
+        Calendar sextaFeira = (Calendar) calendar.clone();
+        
+        // Formata as datas
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        String dataInicio = sdf.format(segundaFeira.getTime());
+        String dataFim = sdf.format(sextaFeira.getTime());
+        
+        // Cria o nome do cardápio
+        String nomeCardapio = "Cardápio Semanal - " + dataInicio + " a " + dataFim;
+        binding.nomeCardapio.setText(nomeCardapio);
     }
 }

@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (!queryDocumentSnapshots.isEmpty()) {
                         EstoquistaResponse estoquista = queryDocumentSnapshots.getDocuments().get(0).toObject(EstoquistaResponse.class);
 
-                        if (estoquista != null && "ATIVO".equals(estoquista.getStatus())) {
+                        if (estoquista != null && "Ativo".equalsIgnoreCase(estoquista.getStatus())) {
                             proceedToMainWithUser(estoquista);
                         } else {
                             ErrorBottomSheet.show(LoginActivity.this, "Usuário inativo", "Entre em contato com o administrador");

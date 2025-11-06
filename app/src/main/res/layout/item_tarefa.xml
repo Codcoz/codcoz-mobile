@@ -41,7 +41,7 @@
                 android:layout_height="wrap_content"
                 android:text="Auditoria"
                 android:textColor="#0B2239"
-                android:textSize="14sp"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -67,6 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="40dp"
             android:layout_gravity="center"
+            android:layout_marginStart="8dp"
             android:backgroundTint="@color/colorSecondary"
             android:fontFamily="@font/nunito_bold"
             android:text="Registrar"
