@@ -44,10 +44,22 @@ public class PerfilTarefaAdapter extends RecyclerView.Adapter<PerfilTarefaAdapte
         // Configura o nome da tarefa
         holder.tvNome.setText(tarefa.getTipoTarefa() != null ? tarefa.getTipoTarefa() : "Tarefa");
 
-        // Configurar o código
-        String codigo = tarefa.getPedido() != null ? tarefa.getPedido() :
-                (tarefa.getId() != null ? "ID: " + tarefa.getId() : "");
-        holder.tvCodigo.setText(codigo);
+        // Configurar o ingrediente (prioridade) ou código/pedido
+        String textoCodigo;
+        if (tarefa.getIngrediente() != null && !tarefa.getIngrediente().trim().isEmpty()) {
+            // Se tiver ingrediente, mostra o ingrediente
+            textoCodigo = tarefa.getIngrediente();
+        } else if (tarefa.getPedido() != null && !tarefa.getPedido().trim().isEmpty()) {
+            // Se não tiver ingrediente mas tiver pedido, mostra o pedido
+            textoCodigo = tarefa.getPedido();
+        } else if (tarefa.getId() != null) {
+            // Se não tiver nenhum dos dois, mostra o ID
+            textoCodigo = "ID: " + tarefa.getId();
+        } else {
+            // Fallback
+            textoCodigo = "";
+        }
+        holder.tvCodigo.setText(textoCodigo);
 
         if (tarefa.getDataConclusao() != null) {
             holder.tvData.setText(tarefa.getDataConclusao().format(DateTimeFormatter.ofPattern("dd MMMM", new Locale("pt", "BR"))));
