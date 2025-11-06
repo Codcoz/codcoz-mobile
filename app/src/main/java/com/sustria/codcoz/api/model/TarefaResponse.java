@@ -9,6 +9,7 @@ public class TarefaResponse implements Serializable {
     private Long id;
     private String empresa;
     private String tipoTarefa;
+    @SerializedName("ingrediente")
     private String ingrediente;
     private String relator;
     private String responsavel;
