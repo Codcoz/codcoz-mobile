@@ -21,8 +21,8 @@
 
     <LinearLayout
         android:id="@+id/containerEsqueceuSenha"
-        android:layout_width="600dp"
-        android:layout_height="640dp"
+        android:layout_width="match_parent"
+        android:layout_height="840dp"
         android:layout_gravity="center"
         android:background="@drawable/bg_branco_login"
         android:orientation="vertical"
